@@ -1,20 +1,30 @@
-import React, { useEffect ,useState} from "react";
-import Login from '../Login/Login';
-import Typed from 'typed.js';
-import Modal from './Modal';
+import React, { useEffect, useState} from "react";
+import Typed from "typed.js";
+import Modal from 'react-modal';
+import Registraction from "../Registration/Registration";
 
-
-const [isModalOpen , setisModalOpen] = useState(false);
-
-const handleLoginClick = () => {
-  setIsModalOpen(true);
-};
-
-const handleModalClose = () => {
-  setIsModalOpen(false);
+const customStyles = {
+  content: {
+    top: '50%',
+    left: '50%',
+    right: 'auto',
+    bottom: 'auto',
+    marginRight: '-50%',
+    transform: 'translate(-50%, -50%)',
+  },
 };
 
 export default function Main() {
+  const [modalIsOpen, setIsOpen] = useState(false);
+
+  function openModal() {
+    setIsOpen(true);
+  }
+
+  function closeModal() {
+    setIsOpen(false);
+  }
+
   useEffect(() => {
     const options = {
       strings: ["Push for a Match", "Find love"],
@@ -31,15 +41,24 @@ export default function Main() {
   }, []);
 
   return (
-
     <main>
       <div className="screen">
         <div className="home">
           <h1>matcha</h1>
-          <h2><span className="slogan-app"></span></h2>
-          {/* <a href="register.html" className="primary-button">Create account</a> */}
-          <a onClick={handleLoginClick}>Login</a>
-
+          <h2>
+            <span className="slogan-app"></span>
+          </h2>
+          {/*<button className="primary-button" > Create account</button>*/}
+          <button className="primary-button" onClick={openModal}>register</button>
+          <Modal
+            isOpen={modalIsOpen}
+            onRequestClose={closeModal}
+            style={customStyles}
+          >
+            <button  onClick={closeModal}>close</button>
+            <div>I am a modal</div>
+            <Registraction></Registraction>
+          </Modal>
         </div>
       </div>
     </main>
