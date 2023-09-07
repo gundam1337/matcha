@@ -1,24 +1,16 @@
 import React from "react";
 import "../../styles/register.css";
-import { Helmet } from "react-helmet";
 
 const Registraction = () => {
   return (
     <div>
-      <Helmet>
-        <meta charset="UTF-8" />
-        <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-      </Helmet>
-      
-      <div class="screen">
         <div class="form-container">
           <div class="form-content">
             <h2>
               <a href="./index.html">ChatSpace</a>
             </h2>
             <h3>Create an account</h3>
-            <p>We need informations to help you to found your love</p>
+            <p>We need informations to help you to found your Matcha</p>
             <form action="" method="POST">
               <h3>Tell us more about yourself</h3>
               <div class="main-informations">
@@ -206,7 +198,6 @@ const Registraction = () => {
           </div>
         </div>
       </div>
-    </div>
   );
 };
 

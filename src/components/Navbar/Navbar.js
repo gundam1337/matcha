@@ -1,15 +1,49 @@
 import React from "react";
-import { Link } from 'react-router-dom';
+import { useState } from "react";
+import Modal from "react-modal";
+import Login from "../Login/Login";
+
+function volet() {
+  var hamburgerMenu = document.querySelector(".menu-hamburger");
+  var navbarLinks = document.querySelector(".links-navbar");
+  navbarLinks.classList.toggle("mobile-menu");
+  hamburgerMenu.classList.toggle("open");
+}
+
+const customStyles = {
+  content: {
+    top: "50%",
+    left: "50%",
+    right: "auto",
+    bottom: "auto",
+    marginRight: "-50%",
+    transform: "translate(-50%, -50%)",
+    padding: "0",
+    border: "0",
+    margin : "0",
+    borderRadius: "25px",
+    background: "white",
+  },
+  overlay: {
+    backgroundColor: "rgba(0, 0, 0, 0.6)", 
+  }
+};
+
 
 
 export default function Navbar()
 {
-function volet() {
-    var hamburgerMenu = document.querySelector(".menu-hamburger");
-    var navbarLinks = document.querySelector(".links-navbar");
-    navbarLinks.classList.toggle("mobile-menu");
-    hamburgerMenu.classList.toggle("open");
-}
+  const [modalIsOpen, setIsOpen] = useState(false);
+
+  function openModal() {
+    setIsOpen(true);
+  }
+
+  function closeModal() {
+    setIsOpen(false);
+  }
+
+
     return ( 
     <nav class="navbar">
     <a class="logo" href="index.html">matcha</a>
@@ -23,7 +57,15 @@ function volet() {
           <a href="#">About</a>
         </li>
         <li>
-          <a href="login.html" class="secondary-button">Login</a>
+          <button class = "secondary-button"onClick={openModal}>Login</button>
+          <Modal
+           isOpen={modalIsOpen}
+           onRequestClose={closeModal}
+           style={customStyles}
+           shouldCloseOnOverlayClick={true}
+          >
+              <Login></Login>
+          </Modal>
         </li>
       </ul>
     </div>

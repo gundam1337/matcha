@@ -1,17 +1,24 @@
-import React, { useEffect, useState} from "react";
+import React, { useEffect, useState } from "react";
 import Typed from "typed.js";
-import Modal from 'react-modal';
+import Modal from "react-modal";
 import Registraction from "../Registration/Registration";
 
 const customStyles = {
   content: {
-    top: '50%',
-    left: '50%',
-    right: 'auto',
-    bottom: 'auto',
-    marginRight: '-50%',
-    transform: 'translate(-50%, -50%)',
+    top: "50%",
+    left: "50%",
+    right: "auto",
+    bottom: "auto",
+    marginRight: "-50%",
+    transform: "translate(-50%, -50%)",
+    padding: "0",
+    border: "0",
+    margin : "0",
+    borderRadius: "25px",
   },
+  overlay: {
+    backgroundColor: "rgba(0, 0, 0, 0.6)", 
+  }
 };
 
 export default function Main() {
@@ -48,16 +55,18 @@ export default function Main() {
           <h2>
             <span className="slogan-app"></span>
           </h2>
-          {/*<button className="primary-button" > Create account</button>*/}
-          <button className="primary-button" onClick={openModal}>register</button>
+          <button className="primary-button" onClick={openModal}>
+            Create account
+          </button>
           <Modal
             isOpen={modalIsOpen}
             onRequestClose={closeModal}
             style={customStyles}
           >
-            <button  onClick={closeModal}>close</button>
-            <div>I am a modal</div>
-            <Registraction></Registraction>
+            <div className="custom-modal-content">
+              {/*<button onClick={closeModal}>close</button>*/}
+              <Registraction></Registraction>
+            </div>
           </Modal>
         </div>
       </div>
