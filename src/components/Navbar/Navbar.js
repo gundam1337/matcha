@@ -29,8 +29,6 @@ const customStyles = {
   }
 };
 
-
-
 export default function Navbar()
 {
   const [modalIsOpen, setIsOpen] = useState(false);

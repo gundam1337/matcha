@@ -20,9 +20,6 @@ const Login = () => {
               <input type="password" placeholder="Password" />
               <input class="btn-login" type="submit" value="Login" />
             </form>
-            <p>
-              Don't you have an account ?<a href="register.html">Register</a>
-            </p>
           </div>
         </div>
       </div>

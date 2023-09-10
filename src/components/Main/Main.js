@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import Typed from "typed.js";
 import Modal from "react-modal";
 import Registraction from "../Registration/Registration";
+import "./Main.css"
 
 const customStyles = {
   content: {
@@ -13,12 +14,12 @@ const customStyles = {
     transform: "translate(-50%, -50%)",
     padding: "0",
     border: "0",
-    margin : "0",
+    margin : "0px",
     borderRadius: "25px",
   },
   overlay: {
-    backgroundColor: "rgba(0, 0, 0, 0.6)", 
-  }
+    backgroundColor: "rgba(0, 0, 0, 0.6)",
+  },
 };
 
 export default function Main() {
@@ -63,10 +64,8 @@ export default function Main() {
             onRequestClose={closeModal}
             style={customStyles}
           >
-            <div className="custom-modal-content">
-              {/*<button onClick={closeModal}>close</button>*/}
-              <Registraction></Registraction>
-            </div>
+
+              <Registraction onClick={closeModal}></Registraction>
           </Modal>
         </div>
       </div>
