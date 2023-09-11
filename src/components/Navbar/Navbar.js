@@ -18,11 +18,13 @@ const customStyles = {
     bottom: "auto",
     marginRight: "-50%",
     transform: "translate(-50%, -50%)",
+    width: "auto", // Set the desired width (e.g., 50%)
+    height: "auto", // Set the desired height (e.g., 50%)
     padding: "0",
     border: "0",
-    margin : "0",
+    margin: "0",
     borderRadius: "25px",
-    background: "white",
+    
   },
   overlay: {
     backgroundColor: "rgba(0, 0, 0, 0.6)", 
@@ -62,7 +64,7 @@ export default function Navbar()
            style={customStyles}
            shouldCloseOnOverlayClick={true}
           >
-              <Login></Login>
+              <Login onClick={closeModal}></Login>
           </Modal>
         </li>
       </ul>

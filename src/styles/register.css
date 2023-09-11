@@ -8,6 +8,7 @@
   border: none; /* Remove any border */
   cursor: pointer;
 }
+
 .form-container {
   background: linear-gradient(90deg, #fe3175, #ff6f63);
   border-radius: 10px;
@@ -17,12 +18,11 @@
   align-items: center;
   justify-content: center;
   height: 700px;
-  width: 450px;
+  width: 400px;
   padding: 0px 0;
 }
 
 .form-content {
-  
   display: flex;
   flex-direction: column;
   align-items: center;
