@@ -2,7 +2,8 @@ import React, { useEffect, useState } from "react";
 import Typed from "typed.js";
 import Modal from "react-modal";
 import Registraction from "../Registration/Registration";
-import "./Main.css"
+import Login from "../Login/Login";
+import { useMediaQuery } from "react-responsive";
 
 const customStyles = {
   content: {
@@ -14,7 +15,7 @@ const customStyles = {
     transform: "translate(-50%, -50%)",
     padding: "0",
     border: "0",
-    margin : "0px",
+    margin: "0px",
     borderRadius: "25px",
   },
   overlay: {
@@ -24,6 +25,8 @@ const customStyles = {
 
 export default function Main() {
   const [modalIsOpen, setIsOpen] = useState(false);
+  const [modalIsOpen1, setIsOpen1] = useState(false);
+  const isTabletOrMobile = useMediaQuery({ query: "(max-width: 500px)" });
 
   function openModal() {
     setIsOpen(true);
@@ -31,6 +34,14 @@ export default function Main() {
 
   function closeModal() {
     setIsOpen(false);
+  }
+
+  function openModal1() {
+    setIsOpen1(true);
+  }
+
+  function closeModal1() {
+    setIsOpen1(false);
   }
 
   useEffect(() => {
@@ -64,9 +75,23 @@ export default function Main() {
             onRequestClose={closeModal}
             style={customStyles}
           >
-
-              <Registraction onClick={closeModal}></Registraction>
+            <Registraction onClick={closeModal}></Registraction>
           </Modal>
+          <br/>
+          {isTabletOrMobile && (
+            <div>
+              <button className="primary-button" onClick={openModal1}>
+                login
+              </button>
+              <Modal
+                isOpen={modalIsOpen1}
+                onRequestClose={closeModal1}
+                style={customStyles}
+              >
+                <Login onClick={closeModal1}></Login>
+              </Modal>
+            </div>
+          )}
         </div>
       </div>
     </main>
