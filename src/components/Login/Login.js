@@ -3,7 +3,7 @@ import "../../styles/login.css";
 
 const Login = (props) => {
   return (
-    <div>
+    <>
       <div class="form1-container">
         <button class="close" onClick={props.onClick}>
           &times;
@@ -24,7 +24,7 @@ const Login = (props) => {
           </form>
         </div>
       </div>
-    </div>
+    </>
   );
 };
 

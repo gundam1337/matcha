@@ -214,7 +214,6 @@ footer p {
     background-size: cover;
     background-position: center; /* Shorthand for 'center center' */
     background-repeat: no-repeat;
-    /* Optionally, you can set the size of the background image */
   }
 
   .primary-button {
@@ -236,7 +235,7 @@ footer p {
 
   .navbar .menu-hamburger {
     display: flex;
-    z-index: 1;
+    z-index: 0;
   }
 
   .links-navbar {
@@ -252,7 +251,7 @@ footer p {
     top: 0;
     transition: 0.5s;
     width: 100%;
-    z-index: 1;
+    z-index: 0;
   }
 
   .mobile-menu {

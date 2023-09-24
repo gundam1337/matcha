@@ -1,25 +1,59 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
+import { Formik, Form, useField, useFormikContext } from "formik";
+import * as Yup from "yup";
 import "../../styles/register.css";
 
-const Registraction = (props) => {
+const MyTextInput = ({ label, ...props }) => {
+  // useField() returns [formik.getFieldProps(), formik.getFieldMeta()]
+  // which we can spread on <input> and alse replace ErrorMessage entirely.
+  const [field, meta] = useField(props);
+  return (
+    <>
+      <label htmlFor={props.id || props.name}>{label}</label>
+      <input className="text-input" {...field} {...props} />
+      {meta.touched && meta.error ? (
+        <div className="error">{meta.error}</div>
+      ) : null}
+    </>
+  );
+};
+
+const MyCheckbox = ({ children, ...props }) => {
+  const [field, meta] = useField({ ...props, type: "checkbox" });
+  return (
+    <>
+      <label className="checkbox">
+        <input {...field} {...props} type="checkbox" />
+        {children}
+      </label>
+      {meta.touched && meta.error ? (
+        <div className="error">{meta.error}</div>
+      ) : null}
+    </>
+  );
+};
+
+
+const Registration = (props) => {
   return (
     <div>
-      
       <div class="form-container">
-      <button class="close" onClick={props.onClick}>&times;</button>
+        <button class="close" onClick={props.onClick}>
+          &times;
+        </button>
         <div class="form-content">
-          
-          <h2>
-            <a href="./index.html">ChatSpace</a>
-          </h2>
+          <h2>ChatSpace</h2>
           <h3>Create an account</h3>
           <p>We need informations to help you to found your Matcha</p>
+
+
           <form action="" method="POST">
             <h3>Tell us more about yourself</h3>
             <div class="main-informations">
               <input name="name " type="text" placeholder="Name" />
               <input type="email" placeholder="Email" name="mail" />
               <input type="password" placeholder="Password" name="password" />
+              <h4>Your birthday :</h4>
               <input type="text" placeholder="MM/DD/YYYY" />
             </div>
 
@@ -179,4 +213,4 @@ const Registraction = (props) => {
   );
 };
 
-export default Registraction;
+export default Registration;

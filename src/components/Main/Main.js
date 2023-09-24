@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import Typed from "typed.js";
 import Modal from "react-modal";
-import Registraction from "../Registration/Registration";
+import Registration from "../Registration/Registration";
 import Login from "../Login/Login";
 import { useMediaQuery } from "react-responsive";
 
@@ -47,8 +47,8 @@ export default function Main() {
   useEffect(() => {
     const options = {
       strings: ["Push for a Match", "Find love"],
-      typeSpeed: 90,
-      backSpeed: 30,
+      typeSpeed: 60,
+      backSpeed: 40,
       loop: true,
     };
 
@@ -75,7 +75,7 @@ export default function Main() {
             onRequestClose={closeModal}
             style={customStyles}
           >
-            <Registraction onClick={closeModal}></Registraction>
+            <Registration onClick={closeModal}></Registration>
           </Modal>
           <br/>
           {isTabletOrMobile && (
