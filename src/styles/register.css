@@ -9,7 +9,7 @@
   cursor: pointer;
 }
 
-.form-container {
+.formik-container {
   background: linear-gradient(90deg, #fe3175, #ff6f63);
   border-radius: 10px;
   box-shadow: 3px 4px 50px;
@@ -18,11 +18,11 @@
   align-items: center;
   justify-content: center;
   height: 700px;
-  width: 400px;
+  width: 420px;
   padding: 0px 0;
 }
 
-.form-content {
+.formik-content {
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -30,18 +30,18 @@
   overflow-y: scroll;
 }
 
-.form-content h2 {
+.formik-content h2 {
   margin : 0px;
   color: white;
   font-size: 55px;
 }
 
-.form-content h2 a {
+.formik-content h2 a {
  
   color: white;
 }
 
-.form-content h3 {
+.formik-content h3 {
   color: #ffffff;
   font-size: 25px;
   font-style: italic;
@@ -49,25 +49,25 @@
   text-transform: uppercase;
 }
 
-.form-content h4 {
+.formik-content h4 {
   color: white;
   font-size: 20px;
   text-transform: uppercase;
   margin-top: 20px;
 }
 
-.form-content p {
+.formik-content p {
   text-align: center;
   color: #ffffff;
   margin-top: 20px;
 }
 
-.form-content p a {
+.formik-content p a {
   text-decoration: underline;
   color: white;
 }
 
-form {
+formik {
   margin-top: 20px;
   width: 100%;
 }

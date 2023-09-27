@@ -4,30 +4,14 @@ import * as Yup from "yup";
 import "../../styles/register.css";
 
 const MyTextInput = ({ label, ...props }) => {
-  // useField() returns [formik.getFieldProps(), formik.getFieldMeta()]
-  // which we can spread on <input> and alse replace ErrorMessage entirely.
   const [field, meta] = useField(props);
+  // i must created the error css class 
   return (
     <>
       <label htmlFor={props.id || props.name}>{label}</label>
       <input className="text-input" {...field} {...props} />
       {meta.touched && meta.error ? (
-        <div className="error">{meta.error}</div>
-      ) : null}
-    </>
-  );
-};
-
-const MyCheckbox = ({ children, ...props }) => {
-  const [field, meta] = useField({ ...props, type: "checkbox" });
-  return (
-    <>
-      <label className="checkbox">
-        <input {...field} {...props} type="checkbox" />
-        {children}
-      </label>
-      {meta.touched && meta.error ? (
-        <div className="error">{meta.error}</div>
+        <div className="error">{meta.error}</div> 
       ) : null}
     </>
   );
@@ -36,53 +20,63 @@ const MyCheckbox = ({ children, ...props }) => {
 const Registration = (props) => {
   return (
     <>
-      <div class="form-container">
-        <button class="close" onClick={props.onClick}>
-          &times;
-        </button>
-        <div class="form-content">
-          <h2>ChatSpace</h2>
-          <h3>Create an account</h3>
-          <p>We need informations to help you to found your Matcha</p>
+      <Formik
+        initialValues={{
+          name: "",
+          email: "",
+          password: "",
+          birthday: "",
+          gender: "",
+          search: "",
+          hobbies: {},
+        }}
+        validationSchema={Yup.object({
+          firstName: Yup.string()
+            .max(15, "Must be 15 characters or less")
+            .required("Required"),
+          lastName: Yup.string()
+            .max(20, "Must be 20 characters or less")
+            .required("Required"),
+          email: Yup.string()
+            .email("Invalid email addresss`")
+            .required("Required"),
+          acceptedTerms: Yup.boolean()
+            .required("Required")
+            .oneOf([true], "You must accept the terms and conditions."),
+          jobType: Yup.string()
+            // specify the set of valid values for job type
+            // @see http://bit.ly/yup-mixed-oneOf
+            .oneOf(
+              ["designer", "development", "product", "other"],
+              "Invalid Job Type"
+            )
+            .required("Required"),
+        })}
+        onSubmit={async (values, { setSubmitting }) => {
+          await new Promise((r) => setTimeout(r, 500));
+          setSubmitting(false);
+        }}
+      >
+        <div class="formik-container">
+          <button class="close" onClick={props.onClick}>
+            &times;
+          </button>
+          <div class="formik-content">
+            <h2>ChatSpace</h2>
+            <h3>Create an account</h3>
+            <p>We need informations to help you to found your Matcha</p>
+            <Form>
+              <div className="main-informations">
+              <MyTextInput 
 
-          <Formik
-            initialValues={{
-              name: "",
-              email: "",
-              password: "",
-              birthday : "",
-              gender: "",
-              search: "",
-              hobbies : "",
-            }}
-            validationSchema={Yup.object({
-              firstName: Yup.string()
-                .max(15, "Must be 15 characters or less")
-                .required("Required"),
-              lastName: Yup.string()
-                .max(20, "Must be 20 characters or less")
-                .required("Required"),
-              email: Yup.string()
-                .email("Invalid email addresss`")
-                .required("Required"),
-              acceptedTerms: Yup.boolean()
-                .required("Required")
-                .oneOf([true], "You must accept the terms and conditions."),
-              jobType: Yup.string()
-                // specify the set of valid values for job type
-                // @see http://bit.ly/yup-mixed-oneOf
-                .oneOf(
-                  ["designer", "development", "product", "other"],
-                  "Invalid Job Type"
-                )
-                .required("Required"),
-            })}
-            onSubmit={async (values, { setSubmitting }) => {
-              await new Promise((r) => setTimeout(r, 500));
-              setSubmitting(false);
-            }}
-          >
-            <form action="" method="POST">
+                label="First Name"
+                name="firstName"
+                type="text"
+                placeholder="your name"
+              />
+              </div>
+            </Form>
+            {/*<form action="" method="POST">
               <h3>Tell us more about yourself</h3>
               <div class="main-informations">
                 <input name="name " type="text" placeholder="Name" />
@@ -262,10 +256,10 @@ const Registration = (props) => {
                 </div>
               </div>
               <input class="btn-login" type="submit" value="Register" />
-            </form>
-          </Formik>
+          </form>*/}
+          </div>
         </div>
-      </div>
+      </Formik>
     </>
   );
 };

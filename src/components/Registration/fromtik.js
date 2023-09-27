@@ -114,7 +114,7 @@ const SignupForm = () => {
           setSubmitting(false);
         }}
       >
-        <Form>
+        <Form className="formik">
           <MyTextInput
             label="First Name"
             name="firstName"
