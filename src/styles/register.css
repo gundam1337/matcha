@@ -77,12 +77,13 @@ formik {
   font-weight: bold;
   width: 80%;
   border-radius: 20px;
-  padding: 10px 20px;
+  padding: 10px 20px; /* Adjusted padding */
   margin: 10px 0 0;
   border: 2px solid white;
   background: transparent;
   transition: 0.3s;
   outline: none;
+  position: relative; /* Added relative position */
 }
 ::placeholder {
   color: white;
@@ -151,4 +152,30 @@ input:focus {
   transition: 0.5s;
   padding: 10px 20px;
   width: 80%;
+}
+
+.error {
+  font-size: 12px;
+  color: var(--red-600);
+  width: 400px;
+  margin-top: 0.25rem;
+  &:before {
+    content: "❌ ";
+    font-size: 10px;
+  }
+  @media (prefers-color-scheme: dark) {
+    color: var(--red-300);
+  }
+}
+
+.toggle-password {
+  position: absolute;
+  right: 20px; /* Adjusted according to input padding-right */
+  top: 50%;
+  transform: translateY(-50%);
+  cursor: pointer;
+  color: #aaa;
+  background: transparent; /* Ensuring it does not inherit any background */
+  border: none; /* Removing default button styles */
+  font-size: 14px; /* Adjust font-size if needed */
 }
