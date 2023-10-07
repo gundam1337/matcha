@@ -109,7 +109,7 @@ formik {
   margin: 5px;
 }
 
-.radio div label span {
+/*.radio div label span {
   position: relative;
   display: inline-block;
   background: transparent;
@@ -134,7 +134,7 @@ formik {
   color: #e91e63;
   box-shadow: 0 2px 20px white;
 }
-
+*/
 input:focus {
   transform: scale(1.1);
   border: 2px solid #e91e63;
@@ -160,8 +160,8 @@ input:focus {
   width: 400px;
   margin-top: 0.25rem;
   &:before {
-    content: "❌ ";
-    font-size: 10px;
+    content: "🗝️";
+    font-size: 16px;
   }
   @media (prefers-color-scheme: dark) {
     color: var(--red-300);
@@ -169,13 +169,43 @@ input:focus {
 }
 
 .toggle-password {
-  position: absolute;
-  right: 20px; /* Adjusted according to input padding-right */
-  top: 50%;
-  transform: translateY(-50%);
+  position: center;
+  //right: 20px; /* Adjusted according to input padding-right */
+  //top: 50%;
+  //transform: translateY(-50%);
   cursor: pointer;
   color: #aaa;
   background: transparent; /* Ensuring it does not inherit any background */
   border: none; /* Removing default button styles */
   font-size: 14px; /* Adjust font-size if needed */
 }
+
+.radio {
+  display: inline-block;
+  margin: 5px;
+}
+
+.radio input[type="radio"] {
+  display: none;
+}
+
+.radio span {
+  position: relative;
+  display: inline-block;
+  background: transparent;
+  border: 2px white solid;
+  border-radius: 50px;
+  padding: 10px 30px;
+  color: #ffffff;
+  font-size: 15px;
+  transition: 0.5s all;
+  font-weight: bold;
+  -webkit-tap-highlight-color: transparent;
+}
+
+.radio input[type="radio"]:checked + span {
+  background: white;
+  color: #e91e63;
+  box-shadow: 0 2px 20px white;
+}
+

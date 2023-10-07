@@ -4,11 +4,11 @@ import "../../styles/login.css";
 const Login = (props) => {
   return (
     <>
-      <div class="form1-container">
-        <button class="close" onClick={props.onClick}>
+      <div className="form1-container">
+        <button className="close" onClick={props.onClick}>
           &times;
         </button>
-        <div class="form1-content">
+        <div className="form1-content">
           <h2>
             <a href="./index.html">ChatSpace</a>
           </h2>
@@ -20,7 +20,7 @@ const Login = (props) => {
           <form action="" method="POST">
             <input type="text" placeholder="Username" />
             <input type="password" placeholder="Password" />
-            <input class="btn-login"  type="submit" value="Login" />
+            <input className="btn-login"  type="submit" value="Login" />
           </form>
         </div>
       </div>

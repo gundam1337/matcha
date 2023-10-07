@@ -45,9 +45,9 @@ export default function Navbar()
 
 
     return ( 
-    <nav class="navbar">
-    <a class="logo" href="index.html">matcha</a>
-    <div class="links-navbar">
+    <nav className="navbar">
+    <a className="logo" href="index.html">matcha</a>
+    <div className="links-navbar">
       <ul>
         <li>
           <a href="#">Contact Us</a>
@@ -57,7 +57,7 @@ export default function Navbar()
           <a href="#">About</a>
         </li>
         <li>
-          <button class = "secondary-button"onClick={openModal}>Login</button>
+          <button className = "secondary-button"onClick={openModal}>Login</button>
           <Modal
            isOpen={modalIsOpen}
            onRequestClose={closeModal}
@@ -69,8 +69,8 @@ export default function Navbar()
         </li>
       </ul>
     </div>
-    <div class="menu-hamburger" onClick={volet} style={{ cursor: 'pointer' }}>
-      <div class="button-burger-menu"></div>
+    <div className="menu-hamburger" onClick={volet} style={{ cursor: 'pointer' }}>
+      <div className="button-burger-menu"></div>
     </div>
   </nav>
 );
