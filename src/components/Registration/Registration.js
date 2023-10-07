@@ -105,10 +105,10 @@ const Registration = (props) => {
                 />
                 <div className="gender">
                   <h4>Your gender :</h4>
-                  <MyRadio name="userGender" value="man">
+                  <MyRadio name="gender" value="man">
                     Man
                   </MyRadio>
-                  <MyRadio name="userGender" value="woman">
+                  <MyRadio name="gender" value="woman">
                     Woman
                   </MyRadio>
                 </div>
