@@ -5,6 +5,8 @@ import Registration from "../Registration/Registration";
 import Login from "../Login/Login";
 import { useMediaQuery } from "react-responsive";
 
+Modal.setAppElement('#root');
+
 const customStyles = {
   content: {
     top: "50%",
