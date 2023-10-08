@@ -1,18 +1,26 @@
-import React, { useState } from "react";
 import { Formik, Form, useField } from "formik";
 import * as Yup from "yup";
 import "../../styles/register.css";
+import MyTextInput from "./MytextInput";
 
 
-const MyRadio = ({ children, ...props }) => {
-  const [field, meta] = useField({ ...props, type: "radio" });
+const MyRadioGroup = ({ label, name, options, ...props }) => {
+  const [field, meta] = useField({ ...props, type: "radio", name });
 
   return (
     <>
-      <label className="radio">
-        <input {...field} {...props} type="radio" />
-        <span>{children}</span>
-      </label>
+      {options.map((option) => (
+        <label  key={option.value} >
+          <input
+            type="radio"
+            name={name}
+            value={option.value}
+            onChange={field.onChange}
+            {...props}
+          />
+          <span>{option.label}</span>
+        </label>
+      ))}
       {meta.touched && meta.error ? (
         <div className="error">{meta.error}</div>
       ) : null}
@@ -20,35 +28,8 @@ const MyRadio = ({ children, ...props }) => {
   );
 };
 
-const MyTextInput = ({ ...props }) => {
-  const [field, meta] = useField(props);
-  const [showPassword, setShowPassword] = useState(false);
-
-  const handleTogglePassword = () => {
-    setShowPassword(!showPassword);
-  };
-  return (
-    <>
-      <input
-        className="text-input"
-        {...field}
-        {...props}
-        type={props.type === "password" && showPassword ? "text" : props.type}
-      />
-      {props.type === "password" && (
-        <span className="toggle-password" onClick={handleTogglePassword}>
-          {showPassword ? "Hide" : "Show"}
-        </span>
-      )}
-      {meta.touched && meta.error ? (
-        <div className="error">{meta.error}</div>
-      ) : null}
-    </>
-  );
-};
 
 const Registration = (props) => {
-  
   return (
     <>
       <Formik
@@ -56,10 +37,7 @@ const Registration = (props) => {
           name: "",
           email: "",
           password: "",
-          birthday: "",
           gender: "",
-          search: "",
-          hobbies: {},
         }}
         validationSchema={Yup.object({
           name: Yup.string()
@@ -76,7 +54,7 @@ const Registration = (props) => {
               "Must Contain 8 Characters And One Number"
             ),
           gender: Yup.string()
-          .required("Please select your gender"),
+            .required("Please select your gender"),
         })}
         onSubmit={(values) => {
           console.log(values);
@@ -103,18 +81,23 @@ const Registration = (props) => {
                   type="password"
                   placeholder="your password"
                 />
-                <div className="gender">
+                <div className="gender radio">
                   <h4>Your gender :</h4>
-                  <MyRadio name="gender" value="man">
-                    Man
-                  </MyRadio>
-                  <MyRadio name="gender" value="woman">
-                    Woman
-                  </MyRadio>
+                  <MyRadioGroup
+                    name="gender"
+                    label="Your gender:"
+                    options={[
+                      { label: "Man", value: "man" },
+                      { label: "Woman", value: "woman" },
+                    ]}
+                  />
                 </div>
-                
+                <input
+                  className="btn-login"
+                  type="submit"
+                  value="Register"
+                ></input>
               </div>
-              <input className="btn-login" type="submit" value="Register"></input>
             </Form>
           </div>
         </div>
