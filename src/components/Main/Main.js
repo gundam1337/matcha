@@ -25,40 +25,39 @@ const customStyles = {
   },
 };
 
+
+const TYPED_OPTIONS = {
+  strings: ["Push for a Match", "Find love"],
+  typeSpeed: 60,
+  backSpeed: 40,
+  loop: true,
+};
+
+// Consider moving customStyles to a separate file if they are substantial.
+
+export const ModalButton = ({ label, handleOpen }) => (
+  <button className="primary-button" onClick={handleOpen}>
+    {label}
+  </button>
+);
+
+export const AppModal = ({ isOpen, handleClose, children }) => (
+  <Modal isOpen={isOpen} onRequestClose={handleClose} style={customStyles}>
+    {children}
+  </Modal>
+);
+
 export default function Main() {
-  const [modalIsOpen, setIsOpen] = useState(false);
-  const [modalIsOpen1, setIsOpen1] = useState(false);
+  const [isRegistrationModalOpen, setRegistrationModalOpen] = useState(false);
+  const [isLoginModalOpen, setLoginModalOpen] = useState(false);
   const isTabletOrMobile = useMediaQuery({ query: "(max-width: 500px)" });
 
-  function openModal() {
-    setIsOpen(true);
-  }
-
-  function closeModal() {
-    setIsOpen(false);
-  }
-
-  function openModal1() {
-    setIsOpen1(true);
-  }
-
-  function closeModal1() {
-    setIsOpen1(false);
-  }
+  const handleModal = (setter) => () => setter((prev) => !prev);
 
   useEffect(() => {
-    const options = {
-      strings: ["Push for a Match", "Find love"],
-      typeSpeed: 60,
-      backSpeed: 40,
-      loop: true,
-    };
+    const typed = new Typed(".slogan-app", TYPED_OPTIONS);
 
-    const typed = new Typed(".slogan-app", options);
-
-    return () => {
-      typed.destroy();
-    };
+    return () => typed.destroy();
   }, []);
 
   return (
@@ -69,29 +68,17 @@ export default function Main() {
           <h2>
             <span className="slogan-app"></span>
           </h2>
-          <button className="primary-button" onClick={openModal}>
-            Create account
-          </button>
-          <Modal
-            isOpen={modalIsOpen}
-            onRequestClose={closeModal}
-            style={customStyles}
-          >
-            <Registration onClick={closeModal}></Registration>
-          </Modal>
-          <br/>
+          <ModalButton label="Create account" handleOpen={handleModal(setRegistrationModalOpen)} />
+          <AppModal isOpen={isRegistrationModalOpen} handleClose={handleModal(setRegistrationModalOpen)}>
+            <Registration onClick={handleModal(setRegistrationModalOpen)} />
+          </AppModal>
+
           {isTabletOrMobile && (
             <div>
-              <button className="primary-button" onClick={openModal1}>
-                login
-              </button>
-              <Modal
-                isOpen={modalIsOpen1}
-                onRequestClose={closeModal1}
-                style={customStyles}
-              >
-                <Login onClick={closeModal1}></Login>
-              </Modal>
+              <ModalButton label="Login" handleOpen={handleModal(setLoginModalOpen)} />
+              <AppModal isOpen={isLoginModalOpen} handleClose={handleModal(setLoginModalOpen)}>
+                <Login onClick={handleModal(setLoginModalOpen)} />
+              </AppModal>
             </div>
           )}
         </div>

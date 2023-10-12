@@ -1,11 +1,14 @@
-var express = require("express");
-var logger = require("morgan");
-var http = require("http");
-var app = express();
-app.use(logger("short"));
-logger("short")
-app.use(function (request, response) {
-    response.writeHead(200, { "Content-Type": "text/plain" });
-    response.end("Hello, world!");
+const express = require('express');
+const path = require('path');
+const app = express();
+const PORT = process.env.PORT || 3001;
+
+app.use(express.static(path.join(__dirname, '..', 'build')));
+
+app.get('*', (req, res) => {
+  res.sendFile(path.join(__dirname, '..', 'build', 'index.html'));
 });
-http.createServer(app).listen(3000);
+
+app.listen(PORT, () => {
+  console.log(`Server is running on http://localhost:${PORT}`);
+});
