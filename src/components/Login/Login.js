@@ -2,7 +2,7 @@ import React from "react";
 import { Formik, Form} from "formik";
 import * as Yup from "yup";
 import MyTextInput from "../Registration/MytextInput";
-import "../../styles/register.css";
+import "../../styles/login.css";
 
 const Login = (props) => {
   return (
@@ -46,7 +46,7 @@ const Login = (props) => {
                 <input
                   className="btn-login"
                   type="submit"
-                  value="Register"
+                  value="login"
                 ></input>
               </div>
             </Form>
