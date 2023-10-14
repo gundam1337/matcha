@@ -15,9 +15,9 @@ const customStyles = {
     bottom: "auto",
     marginRight: "-50%",
     transform: "translate(-50%, -50%)",
-    padding: "0",
-    border: "0",
-    margin: "0px",
+    padding: "0px",
+    border: "10px",
+    margin: "10px",
     borderRadius: "25px",
   },
   overlay: {
@@ -72,7 +72,7 @@ export default function Main() {
           <AppModal isOpen={isRegistrationModalOpen} handleClose={handleModal(setRegistrationModalOpen)}>
             <Registration onClick={handleModal(setRegistrationModalOpen)} />
           </AppModal>
-
+            <br/>
           {isTabletOrMobile && (
             <div>
               <ModalButton label="Login" handleOpen={handleModal(setLoginModalOpen)} />

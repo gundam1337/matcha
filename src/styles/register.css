@@ -17,9 +17,9 @@
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  height: 700px;
+  height: 500px;
   width: 420px;
-  padding: 0px 0;
+  padding: 5px;
 }
 
 .formik-content {
@@ -37,7 +37,6 @@
 }
 
 .formik-content h2 a {
- 
   color: white;
 }
 
@@ -104,11 +103,6 @@ formik {
   margin: 5px;
 }
 
-.hobbies div{
-  display: inline-block;
-  margin: 5px;
-}
-
 input:focus {
   display: inline-block;
   transform: scale(1.1);
@@ -141,16 +135,15 @@ input:focus {
   @media (prefers-color-scheme: dark) {
     color: var(--red-300);
   }
-  position: absolute;
   bottom: -20px; /* or adjust as needed */
   left: 0;
 }
 
 .toggle-password {
-  position: fixed; 
+  position: absolute; 
   top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
+  right: 10px; /* 10 pixels from the right edge of the container */
+  transform: translateY(-50%); /* vertically center the button */
   background-color: #eee; 
   padding: 10px;
   border-radius: 5px;
