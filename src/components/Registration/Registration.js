@@ -1,4 +1,6 @@
 import { Formik, Form, useField } from "formik";
+import { useState } from "react";
+import axios from 'axios';
 import * as Yup from "yup";
 import "../../styles/register.css";
 import MyTextInput from "./MytextInput";
@@ -30,6 +32,7 @@ const MyRadioGroup = ({ label, name, options, ...props }) => {
 
 
 const Registration = (props) => {
+  const [submitError, setSubmitError] = useState(null);
   return (
     <>
       <Formik
@@ -56,9 +59,20 @@ const Registration = (props) => {
           gender: Yup.string()
             .required("Please select your gender"),
         })}
-        onSubmit={(values) => {
-          console.log(values);
-        }}
+        onSubmit={(values, { setSubmitting }) => {
+          axios.post('http://localhost:3001/register', values)
+              .then(response => {
+                  console.log(response);
+                  // Handle response accordingly
+              })
+              .catch(error => {
+                  console.error(error);
+                  // Handle error accordingly
+              })
+              .finally(() => {
+                  setSubmitting(false);
+              });
+      }}
       >
         <div className="formik-container">
           <button className="close" onClick={props.onClick}>
@@ -68,7 +82,8 @@ const Registration = (props) => {
             <h2>ChatSpace</h2>
             <h3>Create an account</h3>
             <p>We need informations to help you to found your Matcha</p>
-            <Form autoComplete="off">
+            {/*<Form autoComplete="off">*/}
+            <Form autoComplete="on">
               <div className="main-informations">
                 <MyTextInput name="name" type="text" placeholder="your name" />
                 <MyTextInput
@@ -97,6 +112,7 @@ const Registration = (props) => {
                   type="submit"
                   value="Register"
                 ></input>
+                {submitError && <p>Registration failed: {submitError.message}</p>}
               </div>
             </Form>
           </div>
