@@ -1,0 +1,78 @@
+HTTP Response Message
+│
+├── Start Line
+│   ├── Protocol Version (e.g., HTTP/1.1 or HTTP/2)
+│   ├── Status Code (e.g., 200 for OK, 404 for Not Found, etc.)
+│   └── Reason Phrase (e.g., "OK", "Not Found", "Internal Server Error")
+│
+├── Headers
+│   ├── General Headers
+│   │   ├── Cache-Control (Directives for caching mechanisms)
+│   │   ├── Connection (Control options for the current connection)
+│   │   ├── Date (Date and time at which the message was sent)
+│   │   └── ... (Other general headers)
+│   │
+│   ├── Response Headers
+│   │   ├── Accept-Ranges (Whether the server accepts range requests)
+│   │   ├── Location (Used in redirections or when a new resource has been created)
+│   │   ├── Server (Information about the software used by the origin server)
+│   │   └── ... (Other response headers)
+│   │
+│   ├── Entity Headers
+│   │   ├── Allow (Valid methods for a specified resource)
+│   │   ├── Content-Encoding (The type of encoding transformations applied)
+│   │   ├── Content-Language (The natural language of the intended audience)
+│   │   ├── Content-Length (The length of the response body in octets)
+│   │   ├── Content-Location (An alternate location for the returned data)
+│   │   ├── Content-Type (The media type of the resource or data)
+│   │   ├── Expires (Gives the date/time after which the response is considered stale)
+│   │   ├── Last-Modified (The last modified date for the requested object)
+│   │   └── ... (Other entity headers)
+│   │
+│   └── Custom Headers (Headers specific to the server or application, prefixed often with "X-")
+│
+└── Body (Optional)
+    ├── Data (The main content of the response, can be HTML, JSON, XML, an image, etc.)
+    └── Chunked Data (In case of "Transfer-Encoding: chunked", data is sent in chunks)
+
+***************************************************************************************
+
+HTTP Request Message
+│
+├── Start Line
+│   ├── Method (e.g., GET, POST, PUT, DELETE, etc.)
+│   ├── Request-URI (The URI identifying the requested resource)
+│   └── Protocol Version (e.g., HTTP/1.1 or HTTP/2)
+│
+├── Headers
+│   ├── General Headers
+│   │   ├── Cache-Control (Directives for caching mechanisms)
+│   │   ├── Connection (Control options for the current connection)
+│   │   ├── Date (Date and time at which the message was sent)
+│   │   └── ... (Other general headers)
+│   │
+│   ├── Request Headers
+│   │   ├── Accept (Media type(s) that is/are acceptable for the response)
+│   │   ├── Accept-Charset (Character sets that are acceptable)
+│   │   ├── Accept-Encoding (Acceptable encodings)
+│   │   ├── Accept-Language (Acceptable languages for the response)
+│   │   ├── Authorization (Credentials for authenticating the client with the server)
+│   │   ├── Host (The domain name of the server and the port number)
+│   │   ├── User-Agent (String about the user agent originating the request)
+│   │   └── ... (Other request headers)
+│   │
+│   ├── Entity Headers
+│   │   ├── Content-Encoding (The type of encoding transformations applied)
+│   │   ├── Content-Language (The natural language of the intended audience)
+│   │   ├── Content-Length (The length of the request body in octets)
+│   │   ├── Content-Location (An alternate location for the returned data)
+│   │   ├── Content-Type (The media type of the resource or data)
+│   │   ├── Expires (Gives the date/time after which the response is considered stale)
+│   │   ├── Last-Modified (The last modified date for the requested object)
+│   │   └── ... (Other entity headers)
+│   │
+│   └── Custom Headers (Headers specific to the application or additional headers, often prefixed with "X-")
+│
+└── Body (Optional)
+    ├── Data (The main content of the request, can be form data, JSON, XML, etc.)
+    └── Chunked Data (In case of "Transfer-Encoding: chunked", data is sent in chunks)
