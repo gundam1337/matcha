@@ -1,0 +1,42 @@
+app
+│
+├── Routing Methods:
+│   ├── .all(path, callback)            - Handles all HTTP verbs.
+│   ├── .delete(path, callback)         - Handle DELETE requests.
+│   ├── .get(path, callback)            - Handle GET requests.
+│   ├── .post(path, callback)           - Handle POST requests.
+│   ├── .put(path, callback)            - Handle PUT requests.
+│   └── .patch(path, callback)          - Handle PATCH requests.
+│
+├── Middleware & Routing:
+│   ├── .use([path], middleware)        - Mounts middleware function(s) at the specified path.
+│   └── .route(path)                    - Returns an instance of a single route.
+│       ├── .get(callback)
+│       ├── .post(callback)
+│       └── ...
+│
+├── Configuration:
+│   ├── .set(name, value)               - Assigns setting name to value.
+│   ├── .get(name)                      - Get value of the given setting.
+│   ├── .enable(setting)                - Sets the given setting to `true`.
+│   ├── .disable(setting)               - Sets the given setting to `false`.
+│   ├── .enabled(setting)               - Checks if the given setting is `true`.
+│   └── .disabled(setting)              - Checks if the given setting is `false`.
+│
+├── Template Engine:
+│   ├── .engine(ext, callback)          - Defines a custom template engine.
+│   ├── .render(view, locals, callback) - Renders a view template.
+│   └── .views                          - The directory where the template files are located. Default: `process.cwd() + '/views'`
+│
+├── Params:
+│   └── .param(name, callback)          - Adds callback triggers to route parameters.
+│
+├── Server Listening:
+│   └── .listen(port, [hostname], [backlog], [callback]) - Binds and listens for connections on the specified host and port.
+│
+├── Local Variables:
+│   └── .locals                         - An object that contains response local variables scoped to the request.
+│
+└── Router-related:
+    ├── .router                         - A default router instance.
+    └── .routes (deprecated)            - Deprecated. A placeholder for router methods.

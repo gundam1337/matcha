@@ -1,10 +1,12 @@
-import React from "react";
+import React, {useState} from "react";
 import { Formik, Form} from "formik";
+import axios from 'axios';
 import * as Yup from "yup";
 import MyTextInput from "../Registration/MytextInput";
 import "../../styles/login.css";
 
 const Login = (props) => {
+  const [submitError, setSubmitError] = useState(null);
   return (
     <>
       <Formik
@@ -20,9 +22,21 @@ const Login = (props) => {
             .required("Passwor is required")
          ,
         })}
-        onSubmit={(values) => {
+        onSubmit={(values, { setSubmitting }) => {
           console.log(values);
-        }}
+          axios.post('http://localhost:3001/login', values)
+              .then(response => {
+                  console.log(response);
+                  // Handle response accordingly
+              })
+              .catch(error => {
+                  console.error(error);
+                  // Handle error accordingly
+              })
+              .finally(() => {
+                  setSubmitting(false);
+              });
+      }}
       >
         <div className="formik-container">
           <button className="close" onClick={props.onClick}>
@@ -48,6 +62,7 @@ const Login = (props) => {
                   type="submit"
                   value="login"
                 ></input>
+                {submitError && <p>Registration failed: {submitError.message}</p>}
               </div>
             </Form>
           </div>

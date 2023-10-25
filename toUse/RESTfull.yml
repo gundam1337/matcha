@@ -1,0 +1,45 @@
+RESTful API
+│
+├── Introduction
+│   ├── What is an API?
+│   └── Definition of REST
+│
+├── Principles of REST
+│   ├── Stateless Communication
+│   ├── Client-Server Architecture
+│   ├── Cacheable
+│   ├── Uniform Interface
+│   │   ├── Resources
+│   │   ├── CRUD Operations (Create, Read, Update, Delete)
+│   │   └── Standardized Methods (GET, POST, PUT, DELETE, etc.)
+│   └── Layered System
+│
+├── Data Formats
+│   ├── JSON (JavaScript Object Notation)
+│   └── XML (eXtensible Markup Language)
+│
+├── Designing RESTful APIs
+│   ├── Naming conventions
+│   ├── Versioning
+│   ├── Pagination and Filtering
+│   └── Error handling
+│
+├── Security
+│   ├── Authentication (e.g., JWT, OAuth)
+│   ├── Authorization
+│   ├── HTTPS and SSL/TLS
+│   └── Rate limiting and throttling
+│
+├── Documentation and Testing
+│   ├── Swagger/OpenAPI
+│   ├── Postman
+│   └── Unit and integration testing
+│
+├── Implementation
+│   ├── Frameworks (e.g., Express.js for Node.js, Flask for Python)
+│   └── Databases and their integration
+│
+└── Best Practices
+    ├── Maintainability
+    ├── Scalability
+    └── Performance optimization
