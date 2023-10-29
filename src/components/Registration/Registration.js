@@ -71,6 +71,7 @@ const Registration = (props) => {
               })
               .finally(() => {
                   setSubmitting(false);
+                  // the final result 
               });
       }}
       >

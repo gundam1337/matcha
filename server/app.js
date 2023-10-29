@@ -1,9 +1,57 @@
+require('dotenv').config({ path: './config.env' });
 const express = require('express');
 const path = require('path');
 const bodyParser = require('body-parser');
+const mongoose = require('mongoose');
 
-var Login = require('./models/Login');
+// connection to the MongoDB atlas cloud 
+// the goal is connect the to db and log it ot the console
 
+const  uri  = 'mongodb+srv://omarderkaoui:W4oykDL3mK85vw6M@atlascluster.3ngvfcu.mongodb.net/matcha'; // I added the database name "matcha" at the end of the URI
+
+mongoose.connect(uri, { useNewUrlParser: true, useUnifiedTopology: true })
+    .then(() => {
+        console.log("Connected to MongoDB");
+
+        const userAccountSchema = new mongoose.Schema({}, { strict: false }); // Using a non-strict schema to fetch all fields without defining them
+        const UserAccount = mongoose.model('UserAccount', userAccountSchema, 'user_account'); // 'user_account' is the collection name
+
+        return UserAccount.find({}).exec(); // Fetching all documents
+    })
+    .then(documents => {
+        console.log(documents);
+    })
+    .catch(err => {
+        console.error('Error connecting to the database', err);
+    })
+    .finally(() => {
+        mongoose.connection.close();
+    });
+
+
+
+/*mongoose.connect(uri, { useNewUrlParser: true, useUnifiedTopology: true })
+    .then(() => {
+        console.log("Connected to MongoDB");
+
+        const userAccountSchema = new mongoose.Schema({}, { strict: false }); // Using a non-strict schema to fetch all fields without defining them
+        const UserAccount = mongoose.model('UserAccount', userAccountSchema, 'user_account'); // 'user_account' is the collection name
+
+        return UserAccount.find({}).exec(); // Fetching all documents
+    })
+    .then(documents => {
+		console.log("the data");
+        console.log(documents);
+    })
+    .catch(err => {
+        console.error('Error connecting to the database', err);
+    })
+    .finally(() => {
+        mongoose.connection.close();
+    });
+*/
+
+//
 const app = express();
 const router = express.Router();
 const PORT = process.env.PORT || 3001;
@@ -27,8 +75,9 @@ app.get('*', (req, res) => {
 
 // -b POST /register endpoint
 router.route('/register/')
-	.post(function(req, res) {
+	.post((req, res) => {
     console.log(req.body)
+	res.send("you are in ")
 		/*
 		 const login = new Login();
 		Login.findOne({"username": req.body.username}, function(err, user_data){
@@ -70,7 +119,6 @@ router.route('/login').post((req,res)=>
 app.use('/',router);
 
 // 5) the server 
-
 app.listen(PORT, () => {
   console.log(`Server is running on http://localhost:${PORT}`);
 });
