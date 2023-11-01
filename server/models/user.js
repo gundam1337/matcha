@@ -1,3 +1,11 @@
+var mongoose     = require('mongoose');
+var Schema       = mongoose.Schema;
+
+var validateEmail = function(email) {
+    var re = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/;
+    return re.test(email);
+};
+
 const userSchema = new Schema({
     username: {
         type: String,
@@ -7,11 +15,21 @@ const userSchema = new Schema({
     email: {
         type: String,
         required: true,
+        validate: [validateEmail, 'Please fill a valid email address'],
         unique: true
     },
     passwordHash: {
         type: String,
         required: true
+    },
+    emailVerificationToken: {
+        type: String,
+        unique: true,
+        sparse: true // This makes sure that this field is not considered in uniqueness checks if it's not set
+    },
+    emailVerified: {
+        type: Boolean,
+        default: false
     },
     profile: {
         firstName: {
@@ -40,7 +58,7 @@ const userSchema = new Schema({
         photos: [String]
     },
     preferences: {
-        gender: [String],
+        gender: String,
         ageRange: {
             min: Number,
             max: Number
@@ -58,4 +76,6 @@ const userSchema = new Schema({
         default: 'active'
     }
 });
+
 const User = mongoose.model('User',userSchema);
+module.exports = mongoose.model('USER', User);
