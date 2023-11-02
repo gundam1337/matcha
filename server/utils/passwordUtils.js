@@ -9,7 +9,7 @@ const saltRounds = process.env.SALT_ROUNDS; // You can increase the salt rounds 
 
 const hashPassword = async (password) => {
     try {
-        const salt = await bcrypt.genSalt(saltRounds);
+        const salt = await bcrypt.genSalt(Number(saltRounds));
         const hashedPassword = await bcrypt.hash(password, salt);
         return hashedPassword;
     } catch (error) {

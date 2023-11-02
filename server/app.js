@@ -4,22 +4,27 @@ const path = require("path");
 const bodyParser = require("body-parser");
 const mongoose = require("mongoose");
 
+//FIXME: mongoose.model() 
+//const USER = require("./models/user");
 const hashPassword = require("./utils/passwordUtils");
 const generateVerificationToken = require("./utils/generateVerificationToken");
+const { prepareEmailContent, sendEmail } = require("./utils/sendEmail");
 
-var USER = require("./models/user");
+//TODO: serve the image (the logo image ) using express router
+//TODO : Handle Verification
+//TODO : Store the Token (creation date, and an expiration date.)
 
-// connection to the MongoDB atlas cloud
-// the goal is connect the to db and log it ot the console (DONE)
-//make the the connection in the await and synch style
+// DONE :connection to the MongoDB atlas cloud
+//DONE : the goal is connect the to db and log it ot the console (DONE)
+//TODO :make the the connection in the await and synch style
 
 const DB_USERNAME = process.env.DB_USERNAME;
 const DB_PASSWORD = process.env.DB_PASSWORD;
 const DB_DATABASENAME = process.env.DB_DATABASE;
 
-const uri = `mongodb+srv://${DB_USERNAME}:${DB_PASSWORD}@atlascluster.3ngvfcu.mongodb.net/${DB_DATABASENAME}`; // I added the database name "matcha" at the end of the URI
+//const uri = `mongodb+srv://${DB_USERNAME}:${DB_PASSWORD}@atlascluster.3ngvfcu.mongodb.net/${DB_DATABASENAME}`; // I added the database name "matcha" at the end of the URI
 
-mongoose.connect(uri, { useNewUrlParser: true, useUnifiedTopology: true });
+//mongoose.connect(uri, { useNewUrlParser: true, useUnifiedTopology: true });
 /*.then(() => {
     console.log("Connected to MongoDB");
 
@@ -69,61 +74,56 @@ app.get("*", (req, res) => {
 // -b POST /register endpoint
 
 router.route("/register/").post((req, res) => {
-  const newUser = new USER();
-  const token = generateVerificationToken();
+  // const newUser = new USER();
   
+  const recipientEmail = req.body.email;
 
+  //TODO : verify the email patren  
+  //TODO : searche for the user in the database
+  //TODO : if the user alerdy exit dont create the user in DB 
+  //TODO : if the user is new to the create a user in db with no active account
+  //TODO :  Store the token in your database associated with the user record.
+
+
+  //DONE : hach the password 
   (async () => {
     try {
-      const hashedPassword = await hashPassword("s3cr3t_p@ssword");
+      const hashedPassword = await hashPassword(req.body.password);
       console.log("Hashed Password:", hashedPassword);
     } catch (error) {
       console.error("Error:", error.message);
     }
   })();
-  
-  //TODO : I should add the password from the request body
-  //TODO : searche for the user in the database
-  //TODO : Choose an Email Service Provider 
-  //TODO : Compose the Verification Email
-  //TODO : Send the Email
-  //TODO : Handle Verification
 
-  res.send("you are in ");
-  /*
-		 const login = new Login();
-		Login.findOne({"username": req.body.username}, function(err, user_data){
-			if(err){
-				console.log(err)
-			}
-			if(user_data){
-				return res.json({
-					status : 400,
-					message : "User already exist"
-				});
-			}
-			
-			login.username = req.body.username;
-			login.password = req.body.password;
-			login.confirm_password = req.body.confirm_password;
-			login.email	   = req.body.email;
-			
-			login.save(function(err, login_data){
-				if(err)
-					return res.status(400).send(err);
-				res.json({
-					status: 200,
-					message : 'You have succesfully registered.'
-				});
-			});
-		});
-    */
+  //DONE : Compose the Verification Email
+  
+  const createVerificationLink = (userId = "test", token) => {
+    const baseUrl = "https://yourapp.com/verify";
+    return `${baseUrl}?token=${encodeURIComponent(token)}&userId=${userId}`;
+  };
+
+  //DONE : Send the Email
+  prepareEmailContent(createVerificationLink)
+    .then((emailContent) => sendEmail(recipientEmail, emailContent))
+    .catch(console.error);
+
+  //res.send("you are in ");
 });
 
 router.route("/login").post((req, res) => {
   console.log(req.body);
   res.send("login is ok");
 });
+
+// verfication of the email link
+router.route("/verify").get(
+  (req, res) => {
+    //TODO : if the email is verfied (Validating the Token)then you can store the user  and Activate the Account
+    //TODO :and that mean I should verfiy the link i sent  
+    //TODO : if the user doesnt use the like i should delet the user in database  
+    res.send("registration is ok");
+  }
+);
 
 // 4) Mount the router
 app.use("/", router);
