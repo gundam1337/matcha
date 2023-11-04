@@ -5,10 +5,12 @@ const bodyParser = require("body-parser");
 const mongoose = require("mongoose");
 
 //FIXME: mongoose.model() 
-//const USER = require("./models/user");
+//FIXME: dont push the .env file to the git 
+const USER = require("./models/user");
 const hashPassword = require("./utils/passwordUtils");
 const generateVerificationToken = require("./utils/generateVerificationToken");
 const { prepareEmailContent, sendEmail } = require("./utils/sendEmail");
+const isValidEmail = require("./utils/isValidEmail");
 
 //TODO: serve the image (the logo image ) using express router
 //TODO : Handle Verification
@@ -22,30 +24,30 @@ const DB_USERNAME = process.env.DB_USERNAME;
 const DB_PASSWORD = process.env.DB_PASSWORD;
 const DB_DATABASENAME = process.env.DB_DATABASE;
 
-//const uri = `mongodb+srv://${DB_USERNAME}:${DB_PASSWORD}@atlascluster.3ngvfcu.mongodb.net/${DB_DATABASENAME}`; // I added the database name "matcha" at the end of the URI
+// const uri = `mongodb+srv://${DB_USERNAME}:${DB_PASSWORD}@atlascluster.3ngvfcu.mongodb.net/${DB_DATABASENAME}`; 
 
-//mongoose.connect(uri, { useNewUrlParser: true, useUnifiedTopology: true });
-/*.then(() => {
-    console.log("Connected to MongoDB");
+// mongoose.connect(uri, { useNewUrlParser: true, useUnifiedTopology: true })
+// .then(() => {
+//     console.log("Connected to MongoDB");
 
-    const userAccountSchema = new mongoose.Schema({}, { strict: false }); // Using a non-strict schema to fetch all fields without defining them
-    const UserAccount = mongoose.model(
-      "UserAccount",
-      userAccountSchema,
-      "user_account"
-    ); // 'user_account' is the collection name
+//     const userAccountSchema = new mongoose.Schema({}, { strict: false }); // Using a non-strict schema to fetch all fields without defining them
+//     const UserAccount = mongoose.model(
+//       "UserAccount",
+//       userAccountSchema,
+//       "user_account"
+//     ); // 'user_account' is the collection name
 
-    return UserAccount.find({}).exec(); // Fetching all documents
-  })
-  .then((documents) => {
-    console.log(documents);
-  })
-  .catch((err) => {
-    console.error("Error connecting to the database", err);
-  })
-  .finally(() => {
-    mongoose.connection.close();
-  });*/
+//     return UserAccount.find({}).exec(); // Fetching all documents
+//   })
+//   .then((documents) => {
+//     console.log(documents);
+//   })
+//   .catch((err) => {
+//     console.error("Error connecting to the database", err);
+//   })
+//   .finally(() => {
+//     mongoose.connection.close();
+//   });
 
 //
 const app = express();
@@ -75,16 +77,16 @@ app.get("*", (req, res) => {
 
 router.route("/register/").post((req, res) => {
   // const newUser = new USER();
-  
   const recipientEmail = req.body.email;
-
-  //TODO : verify the email patren  
+ 
   //TODO : searche for the user in the database
   //TODO : if the user alerdy exit dont create the user in DB 
   //TODO : if the user is new to the create a user in db with no active account
   //TODO :  Store the token in your database associated with the user record.
 
-
+  //DONE : Verifying the email pattern
+    if (!isValidEmail(recipientEmail))
+    return ;
   //DONE : hach the password 
   (async () => {
     try {
@@ -101,6 +103,7 @@ router.route("/register/").post((req, res) => {
     const baseUrl = "https://yourapp.com/verify";
     return `${baseUrl}?token=${encodeURIComponent(token)}&userId=${userId}`;
   };
+ 
 
   //DONE : Send the Email
   prepareEmailContent(createVerificationLink)
