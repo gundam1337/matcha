@@ -2,9 +2,9 @@ require("dotenv").config({ path: "./config.env" });
 const express = require("express");
 const path = require("path");
 const bodyParser = require("body-parser");
-const mongoose = require("mongoose");
 
-//FIXME: mongoose.model() 
+
+
 //FIXME: dont push the .env file to the git 
 const USER = require("./models/user");
 const hashPassword = require("./utils/passwordUtils");
@@ -20,39 +20,9 @@ const isValidEmail = require("./utils/isValidEmail");
 //DONE : the goal is connect the to db and log it ot the console (DONE)
 //TODO :make the the connection in the await and synch style
 
-const DB_USERNAME = process.env.DB_USERNAME;
-const DB_PASSWORD = process.env.DB_PASSWORD;
-const DB_DATABASENAME = process.env.DB_DATABASE;
 
-// const uri = `mongodb+srv://${DB_USERNAME}:${DB_PASSWORD}@atlascluster.3ngvfcu.mongodb.net/${DB_DATABASENAME}`; 
-
-// mongoose.connect(uri, { useNewUrlParser: true, useUnifiedTopology: true })
-// .then(() => {
-//     console.log("Connected to MongoDB");
-
-//     const userAccountSchema = new mongoose.Schema({}, { strict: false }); // Using a non-strict schema to fetch all fields without defining them
-//     const UserAccount = mongoose.model(
-//       "UserAccount",
-//       userAccountSchema,
-//       "user_account"
-//     ); // 'user_account' is the collection name
-
-//     return UserAccount.find({}).exec(); // Fetching all documents
-//   })
-//   .then((documents) => {
-//     console.log(documents);
-//   })
-//   .catch((err) => {
-//     console.error("Error connecting to the database", err);
-//   })
-//   .finally(() => {
-//     mongoose.connection.close();
-//   });
-
-//
 const app = express();
 const router = express.Router();
-const PORT = process.env.PORT || 3001;
 
 //1)  Node.js middleware and global middleware and seting headres
 app.use(bodyParser.json());
@@ -91,7 +61,7 @@ router.route("/register/").post((req, res) => {
   (async () => {
     try {
       const hashedPassword = await hashPassword(req.body.password);
-      console.log("Hashed Password:", hashedPassword);
+      //console.log("Hashed Password:", hashedPassword);
     } catch (error) {
       console.error("Error:", error.message);
     }
@@ -104,13 +74,12 @@ router.route("/register/").post((req, res) => {
     return `${baseUrl}?token=${encodeURIComponent(token)}&userId=${userId}`;
   };
  
-
   //DONE : Send the Email
-  prepareEmailContent(createVerificationLink)
-    .then((emailContent) => sendEmail(recipientEmail, emailContent))
-    .catch(console.error);
+  // prepareEmailContent(createVerificationLink)
+  //   .then((emailContent) => sendEmail(recipientEmail, emailContent))
+  //   .catch(console.error);
 
-  //res.send("you are in ");
+  res.send("you are in ");
 });
 
 router.route("/login").post((req, res) => {
@@ -131,7 +100,4 @@ router.route("/verify").get(
 // 4) Mount the router
 app.use("/", router);
 
-// 5) the server
-app.listen(PORT, () => {
-  console.log(`Server is running on http://localhost:${PORT}`);
-});
+module.exports = app;
