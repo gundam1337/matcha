@@ -7,8 +7,8 @@ const helmet = require("helmet")
 const app = express();
 const authRoutes = require ('./routes/auth.routes');
 
-app.use(bodyParser.json());
-app.use(helmet);
+app.use(helmet());
+//app.use(express.json());
 app.use(function (req, res, next) {
   res.header("Access-Control-Allow-Origin", "*");
   res.header(
@@ -17,6 +17,7 @@ app.use(function (req, res, next) {
   );
   next();
 });
+app.use(bodyParser.json());
 
 
 app.use(express.static(path.join(__dirname, "..", "build")));

@@ -4,6 +4,8 @@ const authController = require('../controllers/auth.controller'); // Correct the
 
 const router = express.Router();
 
+router.use(express.urlencoded({ extended: true }));
+
 router.route('/signin')
   .post(authController.signin);
 

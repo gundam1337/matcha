@@ -62,11 +62,12 @@ const Registration = (props) => {
         onSubmit={(values, { setSubmitting }) => {
           axios.post('http://localhost:3001/register', values)
               .then(response => {
-                  console.log(response);
+                console.log(values);
+                  console.log('i printing the response',response);
                   // Handle response accordingly
               })
               .catch(error => {
-                  console.error(error);
+                  console.error('i printing the response error',error);
                   // Handle error accordingly
               })
               .finally(() => {
