@@ -1,0 +1,187 @@
+diff --git a/server/app.js b/server/app.js
+index 0a71768..5059b74 100644
+--- a/server/app.js
++++ b/server/app.js
+@@ -7,8 +7,8 @@ const helmet = require("helmet")
+ const app = express();
+ const authRoutes = require ('./routes/auth.routes');
+ 
+-app.use(helmet());
+-//app.use(express.json());
++
++app.use(bodyParser.json());
+ app.use(function (req, res, next) {
+   res.header("Access-Control-Allow-Origin", "*");
+   res.header(
+@@ -17,7 +17,8 @@ app.use(function (req, res, next) {
+   );
+   next();
+ });
+-app.use(bodyParser.json());
++app.use(helmet());
++
+ 
+ 
+ app.use(express.static(path.join(__dirname, "..", "build")));
+diff --git a/server/controllers/auth.controller.js b/server/controllers/auth.controller.js
+index 4bc14de..bbd1656 100644
+--- a/server/controllers/auth.controller.js
++++ b/server/controllers/auth.controller.js
+@@ -1,4 +1,6 @@
+ const User = require("../models/user");
++const VerificationToken = require("../models/verificationTokensEmail"); // The Verification Token model we just created
++
+ const hashPassword = require("../utils/passwordUtils");
+ const generateVerificationToken = require("../utils/generateVerificationToken");
+ const { prepareEmailContent, sendEmail } = require("../utils/sendEmail");
+@@ -21,53 +23,100 @@ const registerValidationRules = [
+ 
+ const validationResultChecking = (req, res, next) => {
+   const errors = validationResult(req);
+-   console.log(errors); // If needed for debugging, otherwise it can be removed.
+-   console.log("the user name is = ",req.body.username)
+-
++  //console.log(errors); // If needed for debugging, otherwise it can be removed.
+   if (!errors.isEmpty()) {
+     // Modify this line to return the actual errors from express-validator
+-    return res.status(400).json({ errors: errors.array().map(err => err.msg) });
++    return res
++      .status(400)
++      .json({ errors: errors.array().map((err) => err.msg) });
+   }
+-  
+-  req.validationResult = "ok";
+   next();
+ };
+ 
+ //NOTE : Check if user already exists
+-//FIXME : 
++//DONE:
+ const checkIfUserAlreadyExists = async (req, res, next) => {
+-  if (req.validationResult !== "ok") {
+-    return res.status(400).json({ errors: "something is wrong" });
+-  }
++  // Assuming 'User' is your user model and you have defined it somewhere in your project
+   const { name, email } = req.body;
++
+   try {
+-    const user = await User.findOne({ username: name , email : email});
++    const user = await User.findOne({ username: name, email: email });
++
+     if (user) {
+-      res.status(404).json(user);
++      // If a user exists, send a response and do not call next()
++      return res.status(400).json({ message: "User already exists" });
+     } else {
+-      res.status(404).send('User not found');
++      // If no user is found, proceed to the next middleware
++      //return res.status(200).json({ message: "no user is found" });
++      next();
+     }
+   } catch (error) {
+-    throw error; // Or handle error as appropriate
++    // Properly handle the error
++    res
++      .status(500)
++      .json({ error: "An error occurred while checking the user" });
+   }
+-  res.status(200).send("ther is no user with this name")
+-  next();
++};
++
++//NOTE : verify the email
++const verifyEmailToken = async (req, res, next) => {
++  try {
++    // Get the token from the request, usually from the query string or in the body
++    const { token } = req.query;
++
++    // Find the token in the database
++    const tokenDoc = await VerificationToken.findOne({ token: token }).exec();
++    if (!tokenDoc) {
++      return res
++        .status(400)
++        .send("This verification token is invalid or has expired.");
++    }
++
++    // If the token is found, find the associated user
++    const user = await User.findById(tokenDoc.user).exec();
++    if (!user) {
++      return res
++        .status(400)
++        .send("We were unable to find a user for this verification token.");
++    }
++
++    if (user.isVerified) {
++      return res.status(400).send("This user has already been verified.");
++    }
++
++    // Verify the user's email
++    user.isVerified = true;
++    await user.save();
++
++    // Remove the verification token from the database
++    await VerificationToken.findByIdAndRemove(tokenDoc._id).exec();
++
++    // Proceed to the next middleware
++    next();
++  } catch (error) {
++    console.error("Error verifying email token:", error);
++    res.status(500).send("Internal server error.");
++  }
++
++  module.exports = verifyEmailToken;
+ };
+ 
+ //NOTE : Create a new user instance
++const createUserInstance = (req, res, next) => {
++  //I hached the password
++  (async () => {
++    try {
++      const hashedPassword = await hashPassword(req.body.password);
++      console.log("Hashed Password:", hashedPassword);
++    } catch (error) {
++      console.error("Error:", error.message);
++    }
++  })();
++  next();
++};
+ 
+ const registeration = (req, res, next) => {
+-  const { username, email, password } = req.body;
+-  const recipientEmail = req.body.email;
+-
+-  // (async () => {
+-  //   try {
+-  //     const hashedPassword = await hashPassword(req.body.password);
+-  //     console.log("Hashed Password:", hashedPassword);
+-  //   } catch (error) {
+-  //     console.error("Error:", error.message);
+-  //   }
+-  // })();
++  const { name, email, password } = req.body;
+ 
+   // const createVerificationLink = (userId = "test", token) => {
+   //   const baseUrl = "https://yourapp.com/verify";
+@@ -85,7 +134,8 @@ const register = [
+   registerValidationRules,
+   validationResultChecking,
+   checkIfUserAlreadyExists,
+-  registeration,
++  verifyEmailToken,
++  createUserInstance,
+ ];
+ 
+ const signin = async (req, res, next) => {
+diff --git a/server/routes/auth.routes.js b/server/routes/auth.routes.js
+index 777896f..781974e 100644
+--- a/server/routes/auth.routes.js
++++ b/server/routes/auth.routes.js
+@@ -4,7 +4,7 @@ const authController = require('../controllers/auth.controller'); // Correct the
+ 
+ const router = express.Router();
+ 
+-router.use(express.urlencoded({ extended: true }));
++// router.use(express.urlencoded({ extended: true }));
+ 
+ router.route('/signin')
+   .post(authController.signin);
