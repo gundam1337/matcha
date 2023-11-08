@@ -20,12 +20,7 @@ const userSchema = new Schema({
     },
     passwordHash: {
         type: String,
-        required: true
-    },
-    emailVerificationToken: {
-        type: String,
-        unique: true,
-        sparse: true // This makes sure that this field is not considered in uniqueness checks if it's not set
+        //required: true
     },
     emailVerified: {
         type: Boolean,
@@ -34,19 +29,19 @@ const userSchema = new Schema({
     profile: {
         firstName: {
             type: String,
-            required: true
+            //required: true
         },
         lastName: {
             type: String,
-            required: true
+            //required: true
         },
         birthdate: {
             type: Date,
-            required: true
+            //required: true
         },
         gender: {
             type: String,
-            required: true
+            //required: true
         },
         location: {
             city: String,

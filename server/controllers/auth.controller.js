@@ -1,8 +1,8 @@
 const User = require("../models/user");
+const VerificationToken = require("../models/verificationTokensEmail"); // The Verification Token model we just created
 const hashPassword = require("../utils/passwordUtils");
 const generateVerificationToken = require("../utils/generateVerificationToken");
 const { prepareEmailContent, sendEmail } = require("../utils/sendEmail");
-const isValidEmail = require("../utils/isValidEmail");
 
 const { body, validationResult } = require("express-validator");
 
@@ -21,45 +21,129 @@ const registerValidationRules = [
 
 const validationResultChecking = (req, res, next) => {
   const errors = validationResult(req);
-   console.log(errors); // If needed for debugging, otherwise it can be removed.
-   console.log("the user name is = ",req.body.username)
-
+  //console.log(errors); // If needed for debugging, otherwise it can be removed.
   if (!errors.isEmpty()) {
     // Modify this line to return the actual errors from express-validator
-    return res.status(400).json({ errors: errors.array().map(err => err.msg) });
+    return res
+      .status(400)
+      .json({ errors: errors.array().map((err) => err.msg) });
   }
-  
-  req.validationResult = "ok";
   next();
 };
 
 //NOTE : Check if user already exists
-//FIXME : 
 const checkIfUserAlreadyExists = async (req, res, next) => {
-  if (req.validationResult !== "ok") {
-    return res.status(400).json({ errors: "something is wrong" });
-  }
+  // Assuming 'User' is your user model and you have defined it somewhere in your project
   const { name, email } = req.body;
+
   try {
-    const user = await User.findOne({ username: name , email : email});
+    const user = await User.findOne({ username: name, email: email });
+
     if (user) {
-      res.status(404).json(user);
+      // If a user exists, send a response and do not call next()
+      return res.status(400).json({ message: "User already exists" });
     } else {
-      res.status(404).send('User not found');
+      // If no user is found, proceed to the next middleware
+      //return res.status(200).json({ message: "no user is found" });
+     
+      next();
     }
   } catch (error) {
-    throw error; // Or handle error as appropriate
+    // Properly handle the error
+    res
+      .status(500)
+      .json({ error: "An error occurred while checking the user" });
   }
-  res.status(200).send("ther is no user with this name")
+};
+
+//NOTE :  send a verification email with a token
+const sendVerificationEmail = async (req, res, next) => {
+  try {
+    const { name, email } = req.body;
+    //TODO : add the error handle 
+    const newUser = new User({ username : name,email : email });
+    const savedUser = await newUser.save();
+
+    const token = generateVerificationToken();
+
+    // Create a verification token for this user
+    //FIXME  the verificationToken is not in the database
+    const verificationToken = new VerificationToken({
+      user: savedUser._id, // try to convert the name to the userID
+      token: token, // Generate a random token
+    });
+
+    // Save the verification token
+    await verificationToken.save();
+
+    // Email message and send message
+    const createVerificationLink = ( token) => {
+      const baseUrl =
+        "http://localhost:3001/register";
+      return `${baseUrl}?token=${encodeURIComponent(token)}`;
+    };
+
+    const verificationLink = createVerificationLink(
+      verificationToken.token
+    );
+
+    prepareEmailContent(verificationLink)
+      .then((emailContent) => sendEmail(email, emailContent))
+      .catch(console.error);
+    console.log("A verification email has been sent to " + email + ".");
+  } catch (error) {
+    console.error("sendVerificationEmail error:", error);
+    //throw error;
+  }
+  next();
+};
+
+//NOTE : verify the email
+const verifyEmailToken = async (req, res, next) => {
+ //FIXME
+  try {
+    // Get the token from the request, usually from the query string or in the body
+    const {token} = req.query;
+    console.log( "the token is = ",token );
+    // Find the token in the database
+    // const tokenDoc = await VerificationToken.findOne({ token: token }).exec();
+    // if (!tokenDoc) {
+    //   return res
+    //     .status(400)
+    //     .send("This verification token is invalid or has expired.");
+    // }
+    // //DONE: i dont have the token in the user collection 
+    // //DONE : i should found the the user ID in the verifcation DOC uisng the token  
+    // const user = await User.findById(tokenDoc.user).exec();
+    // if (!user) {
+    //   return res
+    //     .status(400)
+    //     .send("We were unable to find a user for this verification token.");
+    // }
+
+    // if (user.isVerified) {
+    //   return res.status(400).send("This user has already been verified.");
+    // }
+
+    // // Verify the user's email
+    // user.isVerified = true;
+    // await user.save();
+
+    // // Remove the verification token from the database
+    // await VerificationToken.findByIdAndRemove(tokenDoc._id).exec();
+
+    // // Proceed to the next middleware
+    // next();
+  } catch (error) {
+    // console.error("Error verifying email token:", error);
+    // res.status(500).send("Internal server error.");
+  }
   next();
 };
 
 //NOTE : Create a new user instance
-
-const registeration = (req, res, next) => {
-  const { username, email, password } = req.body;
-  const recipientEmail = req.body.email;
-
+const createUserInstance = (req, res, next) => {
+  //I hached the password
   // (async () => {
   //   try {
   //     const hashedPassword = await hashPassword(req.body.password);
@@ -68,25 +152,20 @@ const registeration = (req, res, next) => {
   //     console.error("Error:", error.message);
   //   }
   // })();
-
-  // const createVerificationLink = (userId = "test", token) => {
-  //   const baseUrl = "https://yourapp.com/verify";
-  //   return `${baseUrl}?token=${encodeURIComponent(token)}&userId=${userId}`;
-  // };
-
-  // prepareEmailContent(createVerificationLink)
-  //   .then((emailContent) => sendEmail(recipientEmail, emailContent))
-  //   .catch(console.error);
-
-  res.send("you are in ");
+  next();
 };
 
-const register = [
+const validateAndSend = [
   registerValidationRules,
   validationResultChecking,
   checkIfUserAlreadyExists,
-  registeration,
+  sendVerificationEmail,
 ];
+
+const verifyAndCreatUser = [
+  verifyEmailToken,
+  createUserInstance,
+]
 
 const signin = async (req, res, next) => {
   try {
@@ -105,4 +184,4 @@ const signout = (req, res, next) => {
   res.status(200).send("Sign out successful"); // Example response
 };
 
-module.exports = { signin, signout, register };
+module.exports = { signin, signout, validateAndSend, verifyAndCreatUser };

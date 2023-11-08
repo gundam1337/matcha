@@ -3,6 +3,7 @@ const mongoose = require('mongoose');
 const verificationTokenSchema = new mongoose.Schema({
   user: {
     type: mongoose.Schema.Types.ObjectId,
+    //type : String ,
     required: true,
     ref: 'User' // Assuming 'User' is your user model
   },
