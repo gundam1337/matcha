@@ -30,7 +30,10 @@ const MyRadioGroup = ({ label, name, options, ...props }) => {
   );
 };
 
-
+//TODO: add the loading when make the post request 
+//TODO: use the side effect 
+//TODO : use the awit and the async to make the request (optionnal)
+// TODOD : add "the this link is invalid"
 const Registration = (props) => {
   const [submitError, setSubmitError] = useState(null);
   return (
@@ -67,6 +70,7 @@ const Registration = (props) => {
                   // Handle response accordingly
               })
               .catch(error => {
+                //TODO : based on this error message 
                   console.error('i printing the response error',error);
                   // Handle error accordingly
               })

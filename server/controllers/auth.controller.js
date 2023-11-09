@@ -45,7 +45,7 @@ const checkIfUserAlreadyExists = async (req, res, next) => {
     } else {
       // If no user is found, proceed to the next middleware
       //return res.status(200).json({ message: "no user is found" });
-     
+
       next();
     }
   } catch (error) {
@@ -60,14 +60,14 @@ const checkIfUserAlreadyExists = async (req, res, next) => {
 const sendVerificationEmail = async (req, res, next) => {
   try {
     const { name, email } = req.body;
-    //TODO : add the error handle 
-    const newUser = new User({ username : name,email : email });
+    //TODO : add the error handle
+    const newUser = new User({ username: name, email: email });
     const savedUser = await newUser.save();
 
     const token = generateVerificationToken();
 
     // Create a verification token for this user
-    //FIXME  the verificationToken is not in the database
+    //DONE:  the verificationToken is not in the database
     const verificationToken = new VerificationToken({
       user: savedUser._id, // try to convert the name to the userID
       token: token, // Generate a random token
@@ -77,81 +77,70 @@ const sendVerificationEmail = async (req, res, next) => {
     await verificationToken.save();
 
     // Email message and send message
-    const createVerificationLink = ( token) => {
-      const baseUrl =
-        "http://localhost:3001/register";
+    const createVerificationLink = (token) => {
+      const baseUrl = "http://localhost:3001/register";
       return `${baseUrl}?token=${encodeURIComponent(token)}`;
     };
 
-    const verificationLink = createVerificationLink(
-      verificationToken.token
-    );
+    const verificationLink = createVerificationLink(verificationToken.token);
 
     prepareEmailContent(verificationLink)
       .then((emailContent) => sendEmail(email, emailContent))
-      .catch(console.error);
-    console.log("A verification email has been sent to " + email + ".");
+  //     .then(() => {
+  //       //console.log("the email has been sent");
+  //       res.status(200).send("please check ur email box");
+  //     })
+  //     // .catch(() => {
+  //     //   res.status(400).send("somethis is wrong with our services");
+  //     // });
   } catch (error) {
     console.error("sendVerificationEmail error:", error);
-    //throw error;
   }
   next();
 };
 
 //NOTE : verify the email
 const verifyEmailToken = async (req, res, next) => {
- //FIXME
+  //FIXME
   try {
     // Get the token from the request, usually from the query string or in the body
-    const {token} = req.query;
-    console.log( "the token is = ",token );
+    const { token } = req.query;
+    console.log("the token is = ", token);
     // Find the token in the database
-    // const tokenDoc = await VerificationToken.findOne({ token: token }).exec();
-    // if (!tokenDoc) {
-    //   return res
-    //     .status(400)
-    //     .send("This verification token is invalid or has expired.");
-    // }
-    // //DONE: i dont have the token in the user collection 
-    // //DONE : i should found the the user ID in the verifcation DOC uisng the token  
-    // const user = await User.findById(tokenDoc.user).exec();
-    // if (!user) {
-    //   return res
-    //     .status(400)
-    //     .send("We were unable to find a user for this verification token.");
-    // }
+    const tokenDoc = await VerificationToken.findOne({ token: token }).exec();
+    if (!tokenDoc) {
+      //TODOD : to add the date verification
+      return res
+        .status(400)
+        .send("This verification token is invalid or has expired.");
+    }
+    //DONE: i dont have the token in the user collection
+    //DONE : i should found the the user ID in the verifcation DOC uisng the token
+    const user = await User.findById(tokenDoc.user).exec();
+    if (!user) {
+      return res
+        .status(400)
+        .send("We were unable to find a user for this verification token.");
+    }
 
-    // if (user.isVerified) {
-    //   return res.status(400).send("This user has already been verified.");
-    // }
+    if (user.isVerified) {
+      return res.status(400).send("This user has already been verified.");
+    }
 
-    // // Verify the user's email
-    // user.isVerified = true;
-    // await user.save();
+    // Verify the user's email
+    //TODO : add the error handel
+    user.isVerified = true;
+    await user.save();
 
-    // // Remove the verification token from the database
-    // await VerificationToken.findByIdAndRemove(tokenDoc._id).exec();
+    // Remove the verification token from the database
+    await VerificationToken.findByIdAndRemove(tokenDoc._id).exec();
 
     // // Proceed to the next middleware
-    // next();
+    next();
   } catch (error) {
-    // console.error("Error verifying email token:", error);
-    // res.status(500).send("Internal server error.");
+    console.error("Error verifying email token:", error);
+    res.status(500).send("Internal server error.");
   }
-  next();
-};
-
-//NOTE : Create a new user instance
-const createUserInstance = (req, res, next) => {
-  //I hached the password
-  // (async () => {
-  //   try {
-  //     const hashedPassword = await hashPassword(req.body.password);
-  //     console.log("Hashed Password:", hashedPassword);
-  //   } catch (error) {
-  //     console.error("Error:", error.message);
-  //   }
-  // })();
   next();
 };
 
@@ -162,10 +151,7 @@ const validateAndSend = [
   sendVerificationEmail,
 ];
 
-const verifyAndCreatUser = [
-  verifyEmailToken,
-  createUserInstance,
-]
+const verifyAndCreatUser = [verifyEmailToken];
 
 const signin = async (req, res, next) => {
   try {
