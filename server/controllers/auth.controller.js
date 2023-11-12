@@ -11,27 +11,22 @@ const validateRegistration = (req, res, next) => {
   
   const { name, email, password } = req.body;
    const errors = [];
-  // Validate name
   if (!name || name.length < 5) {
     errors.push("Username must be at least 5 characters long");
   }
 
-  // Validate email with a simple regex (for more robust validation, consider a package like validator)
   const emailRegex = /\S+@\S+\.\S+/;
   if (!email || !emailRegex.test(email)) {
     errors.push("Must be a valid email address");
   }
 
-  // Validate password
   if (!password || password.length < 8) {
     errors.push("Password must be at least 8 characters long");
   }
 
-  // If there are errors, send a 400 response with the errors, otherwise proceed to the next middleware
   if (errors.length > 0) {
-    return res.status(400).json({ errors });
+    return res.status(400).json({ message : "review you inputs name,email and password"});
   }
-  //res.status(200).json({ ok : "everything is ok" });
   next();
 };
 
@@ -43,17 +38,11 @@ const checkIfUserAlreadyExists = async (req, res, next) => {
     const user = await User.findOne({ username: name, email: email });
 
     if (user) {
-      // If a user exists, send a response and do not call next()
       return res.status(400).json({ message: "User already exists" });
     } else {
-      // If no user is found, proceed to the next middleware
-      //go the next middlware
-      //return res.status(200).json({message : "u can register now "})
       next();
     }
   } catch (error) {
-    // Properly handle the error
-    
     res
       .status(500)
       .json({ error: "An error occurred while checking the user" });
@@ -62,7 +51,7 @@ const checkIfUserAlreadyExists = async (req, res, next) => {
 
 //NOTE :  send a verification email with a token
 const sendVerificationEmail = async (req, res, next) => {
- 
+  //TODO sendVerificationEmail error: MongoServerError: E11000 duplicate key error collection
   try {
     const { name, email, password } = req.body;
     const passwordHach = hashPassword(password);
