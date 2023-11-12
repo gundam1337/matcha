@@ -34,8 +34,37 @@ const MyRadioGroup = ({ label, name, options, ...props }) => {
 //TODO: use the side effect 
 //TODO : use the awit and the async to make the request (optionnal)
 // TODOD : add "the this link is invalid"
+//TODOD :  Use the useEffect hook to submit the form data to a server and redirect to the login page
 const Registration = (props) => {
   const [submitError, setSubmitError] = useState(null);
+  const handleSubmit = (values, { setSubmitting }) => {
+    console.log('Sending values:', values);
+    axios.post('http://localhost:3001/register', values) //register
+      .then(response => {
+        console.log('Response:', response);
+      })
+      .catch(error => {
+        console.error('Error:', error);
+        if (error.response) {
+          // The request was made and the server responded with a status code
+          // that falls out of the range of 2xx
+          console.error('Data:', error.response.data);
+          console.error('Status:', error.response.status);
+          console.error('Headers:', error.response.headers);
+        } else if (error.request) {
+          // The request was made but no response was received
+          console.error('Request:', error.request);
+        } else {
+          // Something happened in setting up the request that triggered an Error
+          console.error('Message:', error.message);
+        }
+      })
+      .finally(() => {
+        setSubmitting(false);
+      });
+  };
+  
+  
   return (
     <>
       <Formik
@@ -62,23 +91,7 @@ const Registration = (props) => {
           gender: Yup.string()
             .required("Please select your gender"),
         })}
-        onSubmit={(values, { setSubmitting }) => {
-          axios.post('http://localhost:3001/register', values)
-              .then(response => {
-                console.log(values);
-                  console.log('i printing the response',response);
-                  // Handle response accordingly
-              })
-              .catch(error => {
-                //TODO : based on this error message 
-                  console.error('i printing the response error',error);
-                  // Handle error accordingly
-              })
-              .finally(() => {
-                  setSubmitting(false);
-                  // the final result 
-              });
-      }}
+        onSubmit={handleSubmit}
       >
         <div className="formik-container">
           <button className="close" onClick={props.onClick}>
