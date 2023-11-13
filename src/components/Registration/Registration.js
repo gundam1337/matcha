@@ -1,10 +1,11 @@
 import { Formik, Form, useField } from "formik";
 import { useState } from "react";
-import axios from 'axios';
+import axios from "axios";
 import * as Yup from "yup";
 import "../../styles/register.css";
 import MyTextInput from "./MytextInput";
-
+import AnimatedLoader from "../AnimatedLoader/AnimatedLoader";
+import EmailSuccessComponent from "../EmailSuccessComponent/EmailSuccessComponent";
 
 const MyRadioGroup = ({ label, name, options, ...props }) => {
   const [field, meta] = useField({ ...props, type: "radio", name });
@@ -12,7 +13,7 @@ const MyRadioGroup = ({ label, name, options, ...props }) => {
   return (
     <>
       {options.map((option) => (
-        <label  key={option.value} >
+        <label key={option.value}>
           <input
             type="radio"
             name={name}
@@ -30,115 +31,132 @@ const MyRadioGroup = ({ label, name, options, ...props }) => {
   );
 };
 
-//TODO: add the loading when make the post request 
-//TODO: use the side effect 
+//DONE: add the loading when make the post request
+//TODO : make the text inside the modale fit the modal
+//TODO: use the side effect
 //TODO : use the awit and the async to make the request (optionnal)
 // TODOD : add "the this link is invalid"
 //TODOD :  Use the useEffect hook to submit the form data to a server and redirect to the login page
 const Registration = (props) => {
   const [submitError, setSubmitError] = useState(null);
+  const [isLoading, setIsLoading] = useState(false);
+  const [isSent, setIsSent] = useState(false);
+  const [existingUserError, setExistingUserError] = useState(null);
+
   const handleSubmit = (values, { setSubmitting }) => {
-    console.log('Sending values:', values);
-    axios.post('http://localhost:3001/register', values) //register
-      .then(response => {
-        console.log('Response:', response);
-      })
-      .catch(error => {
-        console.error('Error:', error);
-        if (error.response) {
-          // The request was made and the server responded with a status code
-          // that falls out of the range of 2xx
-          console.error('Data:', error.response.data);
-          console.error('Status:', error.response.status);
-          console.error('Headers:', error.response.headers);
-        } else if (error.request) {
-          // The request was made but no response was received
-          console.error('Request:', error.request);
+    console.log("Sending values:", values);
+    setIsLoading(true);
+
+    axios
+      .post("http://localhost:3001/register", values) //register
+      .then((response) => {
+        console.log("Response:", response);
+        if (response.data === "Please check your email box") {
+          setIsSent(true);
         } else {
-          // Something happened in setting up the request that triggered an Error
-          console.error('Message:', error.message);
+          setSubmitError({ message: "Unexpected response from the server." });
         }
+        if (response.data === "Username already exists")
+        {
+          console.log("i am at the response.data === Username already exists")
+          setSubmitError({ message: "Username already exists" });
+        }
+          
+        if (response.data === "Email already exists")
+          setSubmitError({ message: "Email already exists." });
+      })
+      .catch((error) => {
+        //console.error("Error:", error);
+        setSubmitError({ message: "Registration failed. Please try again." });
       })
       .finally(() => {
         setSubmitting(false);
+        setIsLoading(false);
       });
   };
-  
-  
-  return (
-    <>
-      <Formik
-        initialValues={{
-          name: "",
-          email: "",
-          password: "",
-          gender: "",
-        }}
-        validationSchema={Yup.object({
-          name: Yup.string()
-            .max(15, "Must be 15 characters or less")
-            .required("Required"),
-          email: Yup.string()
-            .email("Invalid email addresss`")
-            .required("Required"),
-          password: Yup.string()
-            .required("Passwor is required")
-            .min(8, "Password must be at least 8 characters")
-            .matches(
-              /^(?=.*[a-z])(?=.*[0-9])/,
-              "Must Contain 8 Characters And One Number"
-            ),
-          gender: Yup.string()
-            .required("Please select your gender"),
-        })}
-        onSubmit={handleSubmit}
-      >
-        <div className="formik-container">
-          <button className="close" onClick={props.onClick}>
-            &times;
-          </button>
-          <div className="formik-content">
-            <h2>ChatSpace</h2>
-            <h3>Create an account</h3>
-            <p>We need informations to help you to found your Matcha</p>
-            {/*<Form autoComplete="off">*/}
-            <Form autoComplete="on">
-              <div className="main-informations">
-                <MyTextInput name="name" type="text" placeholder="your name" />
-                <MyTextInput
-                  name="email"
-                  type="text"
-                  placeholder="your email"
-                />
-                <MyTextInput
-                  name="password"
-                  type="password"
-                  placeholder="your password"
-                />
-                <div className="gender radio">
-                  <h4>Your gender :</h4>
-                  <MyRadioGroup
-                    name="gender"
-                    label="Your gender:"
-                    options={[
-                      { label: "Man", value: "man" },
-                      { label: "Woman", value: "woman" },
-                    ]}
+
+  if (isSent) {
+    return <EmailSuccessComponent />; // This is shown when the email has been sent
+  }
+  if (!isLoading && !isSent)
+    return (
+      <div>
+        <Formik
+          initialValues={{
+            name: "",
+            email: "",
+            password: "",
+            gender: "",
+          }}
+          validationSchema={Yup.object({
+            name: Yup.string()
+              .max(15, "Must be 15 characters or less")
+              .required("Required"),
+            email: Yup.string()
+              .email("Invalid email address")
+              .required("Required"),
+            password: Yup.string()
+              .required("Password is required")
+              .min(8, "Password must be at least 8 characters")
+              .matches(
+                /^(?=.*[a-z])(?=.*[0-9])/,
+                "Must contain 8 characters and one number"
+              ),
+            gender: Yup.string().required("Please select your gender"),
+          })}
+          onSubmit={handleSubmit}
+        >
+          <div className="formik-container">
+            <button className="close" onClick={props.onClick}>
+              &times;
+            </button>
+            <div className="formik-content">
+              <h2>ChatSpace</h2>
+              <h3>Create an account</h3>
+              <p>We need information to help you find your Matcha</p>
+              <Form autoComplete="on">
+                <div className="main-informations">
+                  <MyTextInput
+                    name="name"
+                    type="text"
+                    placeholder="Your name"
+                    error = {submitError?.message}
                   />
+                  <MyTextInput
+                    name="email"
+                    type="text"
+                    placeholder="Your email"
+                  />
+                  <MyTextInput
+                    name="password"
+                    type="password"
+                    placeholder="Your password"
+                  />
+                  <div className="gender radio">
+                    <h4>Your gender:</h4>
+                    <MyRadioGroup
+                      name="gender"
+                      label="Your gender:"
+                      options={[
+                        { label: "Man", value: "man" },
+                        { label: "Woman", value: "woman" },
+                      ]}
+                    />
+                  </div>
+                  <input className="btn-login" type="submit" value="Register" />
+                  {submitError && (
+                    <p>Registration failed: {submitError.message}</p>
+                  )}
                 </div>
-                <input
-                  className="btn-login"
-                  type="submit"
-                  value="Register"
-                ></input>
-                {submitError && <p>Registration failed: {submitError.message}</p>}
-              </div>
-            </Form>
+              </Form>
+            </div>
           </div>
-        </div>
-      </Formik>
-    </>
-  );
+        </Formik>
+      </div>
+    );
+  if (isLoading) {
+    return <AnimatedLoader />;
+  }
 };
 
 export default Registration;

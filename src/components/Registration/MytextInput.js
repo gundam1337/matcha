@@ -25,8 +25,11 @@ const MyTextInput = ({ ...props }) => {
           {showPassword ? "Hide" : "Show"}
         </span>
       )}
-      {meta.touched && meta.error ? (
+      {meta.touched && meta.error  ? (
         <div className="error">{meta.error}</div>
+      ) : null}
+       {props.error  ? (
+        <div className="error">{props?.error}</div>
       ) : null}
     </div>
   );

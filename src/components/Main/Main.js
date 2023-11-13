@@ -5,7 +5,7 @@ import Registration from "../Registration/Registration";
 import Login from "../Login/Login";
 import { useMediaQuery } from "react-responsive";
 
-Modal.setAppElement('#root');
+Modal.setAppElement("#root");
 
 const customStyles = {
   content: {
@@ -24,7 +24,6 @@ const customStyles = {
     backgroundColor: "rgba(0, 0, 0, 0.6)",
   },
 };
-
 
 const TYPED_OPTIONS = {
   strings: ["Push for a Match", "Find love"],
@@ -68,15 +67,27 @@ export default function Main() {
           <h2>
             <span className="slogan-app"></span>
           </h2>
-          <ModalButton label="Create account" handleOpen={handleModal(setRegistrationModalOpen)} />
-          <AppModal isOpen={isRegistrationModalOpen} handleClose={handleModal(setRegistrationModalOpen)}>
+          <ModalButton
+            label="Create account"
+            handleOpen={handleModal(setRegistrationModalOpen)}
+          />
+          <AppModal
+            isOpen={isRegistrationModalOpen}
+            handleClose={handleModal(setRegistrationModalOpen)}
+          >
             <Registration onClick={handleModal(setRegistrationModalOpen)} />
           </AppModal>
-            <br/>
+          <br />
           {isTabletOrMobile && (
             <div>
-              <ModalButton label="Login" handleOpen={handleModal(setLoginModalOpen)} />
-              <AppModal isOpen={isLoginModalOpen} handleClose={handleModal(setLoginModalOpen)}>
+              <ModalButton
+                label="Login"
+                handleOpen={handleModal(setLoginModalOpen)}
+              />
+              <AppModal
+                isOpen={isLoginModalOpen}
+                handleClose={handleModal(setLoginModalOpen)}
+              >
                 <Login onClick={handleModal(setLoginModalOpen)} />
               </AppModal>
             </div>
