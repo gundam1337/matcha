@@ -1,4 +1,3 @@
-import React from 'react';
 import { FaCheckCircle } from 'react-icons/fa'; // This is for the checkmark, you'll need to install react-icons or use another method for the icon
 
 const EmailSuccessComponent = ({ onOkClick }) => {
@@ -6,7 +5,7 @@ const EmailSuccessComponent = ({ onOkClick }) => {
     <div style={styles.container}>
       <FaCheckCircle style={styles.icon} />
       <h1 style={styles.header}>Email sent successfully.</h1>
-      <h2 style={styles.header}>Please check your email inbox react component.</h2>
+      <h2 style={styles.header}>Please check your email inbox .</h2>
       <p style={styles.subtext}>Thanks</p>
       <button style={styles.button} onClick={onOkClick}>
        Login

@@ -46,7 +46,7 @@ const handleValidationErrors = (req, res, next) => {
 
 //NOTE : Check if user already exists
 //DONE check if the user name and email if there exist in the database
-
+//FIXME:
 const checkIfUserAlreadyExists = async (req, res, next) => {
   const { name, email } = req.body;
 
@@ -60,9 +60,11 @@ const checkIfUserAlreadyExists = async (req, res, next) => {
       // Determine which field caused the match
       let message = 'User already exists';
       if (user.username === name) {
+        console.log("Username already exists")
         message = 'Username already exists';
       } else if (user.email === email) {
         message = 'Email already exists';
+        console.log("Email already exists")
       }
       return res.status(400).json({ message });
     } 

@@ -63,7 +63,7 @@ export default function Main() {
     <main>
       <div className="screen">
         <div className="home">
-          <h1>matcha</h1>
+          <h1>Matcha</h1>
           <h2>
             <span className="slogan-app"></span>
           </h2>
