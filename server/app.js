@@ -18,7 +18,6 @@ app.use(function (req, res, next) {
   );
   next();
 });
-//NOTE this is for clearning the cache 
 app.use((req, res, next) => {
   res.set('Cache-Control', 'no-store');
   next();

@@ -6,33 +6,28 @@ const { prepareEmailContent, sendEmail } = require("../utils/sendEmail");
 
 const { body, validationResult } = require("express-validator");
 
-//TODO :how senior make an request and how he handl it in the fornt-end 
-
-//DONE :  Validation rules
-//DONE: change the patren verfication make it pro
+//TODO :how senior make an request and how he handl it in the fornt-end
 
 const validate = [
-  body('name')
+  body("name")
     .isLength({ max: 15 })
-    .withMessage('Must be 15 characters or less')
+    .withMessage("Must be 15 characters or less")
     .notEmpty()
-    .withMessage('Required'),
+    .withMessage("Required"),
 
-  body('email')
+  body("email")
     .isEmail()
-    .withMessage('Invalid email address')
+    .withMessage("Invalid email address")
     .notEmpty()
-    .withMessage('Required'),
+    .withMessage("Required"),
 
-  body('password')
+  body("password")
     .isLength({ min: 8 })
-    .withMessage('Password must be at least 8 characters')
+    .withMessage("Password must be at least 8 characters")
     .matches(/^(?=.*[a-z])(?=.*[0-9])/)
-    .withMessage('Must contain 8 characters and one number'),
+    .withMessage("Must contain 8 characters and one number"),
 
-  body('gender')
-    .notEmpty()
-    .withMessage('Please select your gender'),
+  body("gender").notEmpty().withMessage("Please select your gender"),
 ];
 
 const handleValidationErrors = (req, res, next) => {
@@ -43,59 +38,49 @@ const handleValidationErrors = (req, res, next) => {
   next();
 };
 
-
 //NOTE : Check if user already exists
-//DONE check if the user name and email if there exist in the database
-//FIXME:
 const checkIfUserAlreadyExists = async (req, res, next) => {
   const { name, email } = req.body;
-
   try {
-    // Check if a user exists with the same username or the same email
     const user = await User.findOne({
-      $or: [{ username: name }, { email: email }]
+      $or: [{ username: name }, { email: email }],
     });
 
     if (user) {
-      // Determine which field caused the match
-      let message = 'User already exists';
       if (user.username === name) {
-        console.log("Username already exists")
-        message = 'Username already exists';
-      } else if (user.email === email) {
-        message = 'Email already exists';
-        console.log("Email already exists")
+        return res.status(400).json({ message: "Username already exists" });
       }
-      return res.status(400).json({ message });
-    } 
-    next();
+      if (user.email === email) {
+        return res.status(400).json({ message: "Email already exists" });
+      }
+    }
   } catch (error) {
-    res.status(500).json({ error: "An error occurred while checking the user" });
+    res
+      .status(500)
+      .json({ error: "An error occurred while checking the user" });
   }
+  next();
 };
 
-
-
 //NOTE :  send a verification email with a token
-//TODO sendVerificationEmail error: MongoServerError: E11000 duplicate key error collection
-  //TODO after one day remove any account that is not verified by email
-   //TODO save the hached password in database and why this is undifind
-   //TODO add the error handler 
 const sendVerificationEmail = async (req, res, next) => {
-  
   try {
     const { name, email, password } = req.body;
-    const passwordHach = hashPassword(password);
-    
-    const newUser = new User({ username: name, email: email });
+    const passwordHach = await hashPassword(password);
+
+    const newUser = new User({
+      username: name,
+      email: email,
+      passwordHash: passwordHach,
+    });
     const savedUser = await newUser.save();
     const token = generateVerificationToken();
 
-    //DONE:  the verificationToken is not in the database
     const verificationToken = new VerificationToken({
-      user: savedUser._id, 
-      token: token, 
+      user: savedUser._id,
+      token: token,
     });
+
     await verificationToken.save();
 
     const createVerificationLink = (token) => {
@@ -111,7 +96,7 @@ const sendVerificationEmail = async (req, res, next) => {
       })
       .then(() => {
         console.log("The email has been sent");
-        res.status(200).send("Please check your email box");
+        res.status(200).json({ message: "Please check your email box" });
       })
       .catch((error) => {
         if (!res.headersSent) {
@@ -128,43 +113,35 @@ const verifyEmailToken = async (req, res, next) => {
   try {
     const { token } = req.query;
     const tokenDoc = await VerificationToken.findOne({ token: token }).exec();
-    //TODO : to add the date verification
-    //TODO : Delete the user
-    if (!tokenDoc) {
-      return res
-        .status(400)
-        .json({
-          message: "This verification token is invalid or has expired.",
-        });
+    const oneDay = 24 * 60 * 60 * 1000; // 24 hours in milliseconds
+    const now = new Date();
+    //DONE : to add the date verification
+    if (!tokenDoc || now - tokenDoc.createdAt.getTime() > oneDay) {
+      return res.status(400).json({
+        message: "This verification token is invalid or has expired.",
+      });
     }
     const user = await User.findById(tokenDoc.user).exec();
     if (!user) {
-      return res
-        .status(400)
-        .json({
-          message: "We were unable to find a user for this verification token.",
-        });
+      return res.status(400).json({
+        message: "We were unable to find a user for this verification token.",
+      });
     }
-
     if (user.isVerified) {
       return res.status(400).send("This user has already been verified.");
     }
 
-    //TODO : add the error handel
-    user.isVerified = true;
+    user.emailVerified = true;
     await user.save();
-
-    // Remove the verification token from the database
+    
     await VerificationToken.findByIdAndRemove(tokenDoc._id).exec();
   } catch (error) {
     console.error("Error verifying email token:", error);
     res.status(500).send("Internal server error.");
   }
-  res
-    .status(200)
-    .json({
-      message: "We were able to add the user for this verification token.",
-    });
+  res.status(200).json({
+    message: "We were able to add the user for this verification token.",
+  });
 };
 
 const validateAndSend = [
@@ -173,13 +150,6 @@ const validateAndSend = [
   checkIfUserAlreadyExists,
   sendVerificationEmail,
 ];
-
-
-
-
-
-
-
 
 const signin = async (req, res, next) => {
   try {
@@ -198,4 +168,4 @@ const signout = (req, res, next) => {
   res.status(200).send("Sign out successful"); // Example response
 };
 
-module.exports = { signin, signout, validateAndSend, verifyEmailToken};
+module.exports = { signin, signout, validateAndSend, verifyEmailToken };

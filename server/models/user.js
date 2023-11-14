@@ -20,7 +20,7 @@ const userSchema = new Schema({
     },
     passwordHash: {
         type: String,
-        //required: true
+        required: true
     },
     emailVerified: {
         type: Boolean,

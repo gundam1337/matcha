@@ -41,33 +41,33 @@ const Registration = (props) => {
   const [submitError, setSubmitError] = useState(null);
   const [isLoading, setIsLoading] = useState(false);
   const [isSent, setIsSent] = useState(false);
-  const [existingUserError, setExistingUserError] = useState(null);
+  //const [existingUserError, setExistingUserError] = useState(null);
 
   const handleSubmit = (values, { setSubmitting }) => {
     console.log("Sending values:", values);
     setIsLoading(true);
 
     axios
-      .post("http://localhost:3001/register", values) //register
+      .post("http://localhost:3001/register", values)
       .then((response) => {
-        console.log("Response:", response);
-        if (response.data === "Please check your email box") {
+        const { message } = response.data;
+        if (message === "Please check your email box") {
           setIsSent(true);
+        }
+      })
+      .catch((error) => {
+        let message = "";
+        if (error.response && error.response.data) {
+          message = error.response.data.message;
+        }
+        if (message === "Username already exists") {
+          console.log("Username already exists");
+          setSubmitError({ message: "Username already exists" });
+        } else if (message === "Email already exists") {
+          setSubmitError({ message: "Email already exists." });
         } else {
           setSubmitError({ message: "Unexpected response from the server." });
         }
-        if (response.data === "Username already exists")
-        {
-          console.log("i am at the response.data === Username already exists")
-          setSubmitError({ message: "Username already exists" });
-        }
-          
-        if (response.data === "Email already exists")
-          setSubmitError({ message: "Email already exists." });
-      })
-      .catch((error) => {
-        //console.error("Error:", error);
-        setSubmitError({ message: "Registration failed. Please try again." });
       })
       .finally(() => {
         setSubmitting(false);
@@ -116,12 +116,12 @@ const Registration = (props) => {
               <p>We need information to help you find your Matcha</p>
               <Form autoComplete="on">
                 <div className="main-informations">
-                  <MyTextInput
-                    name="name"
-                    type="text"
-                    placeholder="Your name"
-                    error = {submitError?.message}
-                  />
+                    <MyTextInput
+                      name="name"
+                      type="text"
+                      placeholder="Your name"
+                      error={submitError?.message}
+                    />
                   <MyTextInput
                     name="email"
                     type="text"
