@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from "react";
+import queryString from "query-string";
 import Typed from "typed.js";
 import Modal from "react-modal";
 import Registration from "../Registration/Registration";
@@ -49,9 +50,18 @@ export const AppModal = ({ isOpen, handleClose, children }) => (
 export default function Main() {
   const [isRegistrationModalOpen, setRegistrationModalOpen] = useState(false);
   const [isLoginModalOpen, setLoginModalOpen] = useState(false);
-  const isTabletOrMobile = useMediaQuery({ query: "(max-width: 500px)" });
-
+  const [isVerified,setIsVerified] = useState(true);
   const handleModal = (setter) => () => setter((prev) => !prev);
+
+  useEffect(() => {
+    if (window.location.hash === "#login") {
+      setLoginModalOpen(true);
+    }
+    const queryParams = queryString.parse(window.location.search);
+     if (queryParams.openLogin) {
+      setIsVerified(true);
+     }
+  }, []);
 
   useEffect(() => {
     const typed = new Typed(".slogan-app", TYPED_OPTIONS);
@@ -76,9 +86,21 @@ export default function Main() {
             handleClose={handleModal(setRegistrationModalOpen)}
           >
             <Registration onClick={handleModal(setRegistrationModalOpen)} />
+           
           </AppModal>
           <br />
-          {isTabletOrMobile && (
+          <ModalButton
+            label="login"
+            handleOpen={handleModal(setRegistrationModalOpen)}
+          />
+          <AppModal
+            isOpen={isLoginModalOpen}
+            handleClose={handleModal(setLoginModalOpen)}
+          >
+            <Login onClick={handleModal(setLoginModalOpen)} isVerified= {isVerified} />
+          </AppModal>
+          
+          {/*isTabletOrMobile && (
             <div>
               <ModalButton
                 label="Login"
@@ -91,7 +113,7 @@ export default function Main() {
                 <Login onClick={handleModal(setLoginModalOpen)} />
               </AppModal>
             </div>
-          )}
+          )*/}
         </div>
       </div>
     </main>

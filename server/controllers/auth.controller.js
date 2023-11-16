@@ -139,9 +139,7 @@ const verifyEmailToken = async (req, res, next) => {
     console.error("Error verifying email token:", error);
     res.status(500).send("Internal server error.");
   }
-  res.status(200).json({
-    message: "We were able to add the user for this verification token.",
-  });
+  res.redirect('http://localhost:3000/?openLogin=true#login');
 };
 
 const validateAndSend = [
