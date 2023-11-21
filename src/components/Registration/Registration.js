@@ -31,10 +31,9 @@ const MyRadioGroup = ({ label, name, options, ...props }) => {
   );
 };
 
-//DONE: add the loading when make the post request
 //TODO : make the text inside the modale fit the modal
-//TODO : use the awit and the async to make the request (optionnal)
 // TODOD : add "the this link is invalid"
+//NOTE : make sure that every response take a propre UI  
 //TODOD :  Use the useEffect hook to submit the form data to a server and redirect to the login page
 //TODO : add the conection error handler 
 const Registration = (props) => {

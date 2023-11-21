@@ -1,12 +1,12 @@
-import { FaCheckCircle } from 'react-icons/fa'; // This is for the checkmark, you'll need to install react-icons or use another method for the icon
+import { FaCheckCircle } from 'react-icons/fa'; 
 
 const EmailSuccessComponent = ({ onOkClick }) => {
   return (
     <div style={styles.container}>
       <FaCheckCircle style={styles.icon} />
       <h1 style={styles.header}>Email sent successfully.</h1>
+      <br/>
       <h2 style={styles.header}>Please check your email inbox .</h2>
-      <p style={styles.subtext}>Thanks</p>
       <button style={styles.button} onClick={onOkClick}>
        Login
       </button>
@@ -14,7 +14,6 @@ const EmailSuccessComponent = ({ onOkClick }) => {
   );
 };
 
-// You can define the styles as an object
 const styles = {
   container: {
     display: 'flex',

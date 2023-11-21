@@ -5,7 +5,7 @@ var validateEmail = function(email) {
     var re = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/;
     return re.test(email);
 };
-
+//TODO add a field that I will use to see is this user complet his profile registration
 const userSchema = new Schema({
     username: {
         type: String,

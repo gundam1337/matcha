@@ -4,7 +4,6 @@ import Typed from "typed.js";
 import Modal from "react-modal";
 import Registration from "../Registration/Registration";
 import Login from "../Login/Login";
-import { useMediaQuery } from "react-responsive";
 
 Modal.setAppElement("#root");
 

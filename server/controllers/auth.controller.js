@@ -149,6 +149,7 @@ const validateAndSend = [
   sendVerificationEmail,
 ];
 
+//TODO move this function to another file 
 const signin = async (req, res, next) => {
   try {
     console.log("sign in logic");
