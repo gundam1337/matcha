@@ -1,0 +1,197 @@
+body {
+  font-family: "Comic Sans MS", cursive, sans-serif; /* Changed to a more rounded font */
+  background: linear-gradient(rgb(0, 0, 0), rgba(0, 0, 0, 0.5)),
+    url("/home/gundam/Desktop/matcha/src/assets/images/back_ground.jpg");
+  color: #ffffff; /* White text color for better contrast on hot pink background */
+  background-repeat: no-repeat;
+  background-size: cover;
+  background-position: center; /* Center the image */
+  margin: 0;
+  overflow-y: auto;
+}
+
+/* //NOTE for the box */
+
+.settings-box {
+  border-radius: 10px;
+  background: linear-gradient(90deg, #fe3175, #ff6f63);
+  width: 50%;
+  height: 80%;
+  margin: 20px auto;
+  border: none; /* Removing border as it's not visible in the image */
+  padding: 20px;
+  color: #ffffff; /* White text color */
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+
+.settings-box h2 {
+  font-size: 20px;
+  color: #333;
+  margin-bottom: 20px;
+}
+
+.form-row {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center; /* This will center the children elements */
+  margin-right: -15px; /* Adjusting this might be necessary if you have negative margins */
+  margin-left: -15px; /* Adjusting this might be necessary if you have negative margins */
+}
+
+input[type="text"],
+input[type="email"],
+input[type="tel"] {
+  color: white;
+  font-weight: bold;
+  width: 80%;
+  border-radius: 20px;
+  padding: 10px 20px;
+  margin: 10px 0 0;
+  border: 2px solid white;
+  background: transparent;
+  transition: 0.3s;
+  outline: none;
+}
+input[type="date"] {
+  color: white;
+  font-weight: bold;
+  width: 80%;
+  border-radius: 20px; /* Matched with text input */
+  padding: 10px 20px; /* Matched with text input */
+  margin: 10px 0 0;
+  border: 2px solid white; /* Matched with text input */
+  background: transparent;
+  transition: 0.3s;
+  outline: none;
+  font-family: "Comic Sans MS", cursive, sans-serif; /* Matched with the body font-family */
+}
+
+::placeholder {
+  color: white;
+  text-transform: uppercase;
+  font-weight: bold;
+}
+
+.btn-login {
+  background: white;
+  color: #fe3175;
+  font-size: 20px;
+  font-weight: bold;
+  box-shadow: 0px 0px 10px white;
+  border-radius: 30px;
+  border: 2px solid white;
+  margin: 20px 0px 20px 0;
+  transition: 0.5s;
+  padding: 10px 20px;
+  width: 80%;
+}
+
+/* //NOTE for image */
+.profile-photo-upload {
+  font-family: Arial, sans-serif; /* Use a common sans-serif font */
+  background-color: #f3f3f3; /* Light grey background */
+  padding: 20px; /* Add some padding around the content */
+  border-radius: 10px; /* Rounded corners */
+  width: 200px; /* Set a fixed width */
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); /* Add a subtle shadow */
+  text-align: center; /* Center-align the text */
+  margin: auto; /* Add margin around the div */
+  display: block;
+  text-align: center; /* Center-align the text */
+}
+.form-group.profile-photo-upload label[for="profilePhoto"] {
+  font-weight: bold; /* Makes the text bold */
+  font-size: 20px; /* Increases the size of the text, you can adjust the value as needed */
+  color: black;
+}
+.profile-img-container {
+  border: 1px solid #ccc; /* Light grey border */
+  padding: 5px; /* Padding around the image */
+  margin-bottom: 20px; /* Space below the image container */
+}
+
+.profile-img {
+  width: 100%; /* Make the image expand to cover the container */
+  height: auto; /* Keep the image aspect ratio */
+  border-radius: 5px; /* Slightly rounded corners for the image */
+}
+
+.file-type-info {
+  color: #666; /* Medium grey for the info text */
+  font-size: 0.8rem; /* Smaller font size for the info text */
+  margin-bottom: 20px; /* Space below the info text */
+}
+
+.btn-upload {
+  background-color: #ff6f63; /* Bootstrap primary color */
+  color: white;
+  font-size: 20px;
+  font-weight: bold;
+  box-shadow: 0px 0px 10px white;
+  border-radius: 30px;
+  border: 2px solid white;
+  margin: 20px 0px 20px 0;
+  transition: 0.5s;
+  padding: 10px 20px;
+  width: 80%;
+}
+
+.btn-upload:hover {
+  background-color: #0056b3; /* Darker blue on hover */
+}
+
+/* //NOTE :  for the radio gender*/
+.radio input[type="radio"] {
+  display: none;
+}
+.radio input[type="checkbox"] {
+  display: none;
+}
+.gender div {
+  display: inline-block;
+  margin: 5px;
+}
+.radio div label span {
+  position: relative;
+  display: inline-block;
+  background: transparent;
+  border: 2px black solid;
+  border-radius: 50px;
+  padding: 10px 30px;
+  color: #fffff;
+  font-size: 15px;
+  transition: 0.5s all;
+  font-weight: bold;
+  -webkit-tap-highlight-color: transparent;
+}
+.radio div label input[type="radio"]:checked ~ span {
+  background: white;
+  color: #e91e63;
+  box-shadow: 0 2px 20px white;
+}
+.radio div label input[type="checkbox"]:checked ~ span {
+  background: white;
+  color: #e91e63;
+  box-shadow: 0 2px 20px white;
+}
+.hobbies div {
+  display: inline-block;
+  margin: 5px;
+}
+
+/* //NOTE for the resposive */
+@media (max-width: 576px) {
+  .settings-box {
+    border-radius: 8px;
+    padding: 20px;
+    width: 90%;
+    height: 80%;
+  }
+  .form-group {
+    flex: 0 0 100%;
+    width: 90%;
+  }
+}
