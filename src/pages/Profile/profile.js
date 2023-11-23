@@ -1,11 +1,12 @@
 import React from "react";
 import "./profile.css";
+import  Location  from "./Location";
 
 const Hobies = () => {
   return (
     <div>
       <h4>Your Hobbies :</h4>
-      <div class="hobbies radio">
+      <div className="hobbies radio">
         <div>
           <label>
             <input type="checkbox" name="user-hobbies" value="cooking" />
@@ -104,11 +105,10 @@ const Profile = () => {
   return (
     <div style={{ textAlign: "center" }}>
       <div className="settings-box">
-
         {/* //NOTE this for the image  */}
 
         <div className="form-group profile-photo-upload">
-          <label for="profilePhoto">Profile Photo</label>
+          <label htmlFor="profilePhoto">Profile Photo</label>
           <img
             src="https://images.pexels.com/photos/1037995/pexels-photo-1037995.jpeg?auto=compress&cs=tinysrgb&dpr=1&w=500"
             alt="Person's profile"
@@ -128,32 +128,33 @@ const Profile = () => {
         <br />
         <div className="form-row">
           <div>
-            <label for="firstName">First Name</label>
+            <label htmlFor="firstName">First Name</label>
             <input type="text" id="firstName" name="firstName" />
           </div>
           <div>
-            <label for="lastName">Last Name</label>
+            <label htmlFor="lastName">Last Name</label>
             <input type="text" id="lastName" name="lastName" />
           </div>
         </div>
         <div className="form-row">
           <div>
-            <label for="date">Birthday</label>
+            <label htmlFor="date">Birthday</label>
             <input type="date" id="date" name="birthday" />
           </div>
+          {/* NOTE add some phone number calsse  */}
           <div>
-            <label for="phone">Phone Number</label>
+            <label htmlFor="phone">Phone Number</label>
             <input type="text" id="phone" name="phone" />
           </div>
         </div>
 
         {/* //NOTE the gender */}
-
-        <div class="gender radio">
+        <br />
+        <div className="gender radio">
           <h4>Your gender :</h4>
           <div>
             <label>
-              <input type="radio" name="user-gender" value="man" checked />
+              <input type="radio" name="user-gender" value="man" />
               <span>Man</span>
             </label>
           </div>
@@ -165,8 +166,11 @@ const Profile = () => {
             </label>
           </div>
         </div>
+        {/* NOTE location  */}
+        <br/>
+        <Location></Location>
         {/* //NOTE hobies */}
-
+        <br />
         <Hobies />
 
         {/* //NOTE THE SUBMTION */}

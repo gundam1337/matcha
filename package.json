@@ -33,6 +33,7 @@
     "jest": "^27.4.3",
     "jest-resolve": "^27.4.2",
     "jest-watch-typeahead": "^1.0.0",
+    "leaflet": "^1.9.4",
     "mini-css-extract-plugin": "^2.4.5",
     "postcss": "^8.4.4",
     "postcss-flexbugs-fixes": "^5.0.2",
@@ -47,6 +48,7 @@
     "react-dom": "^18.2.0",
     "react-helmet": "^6.1.0",
     "react-icons": "^4.11.0",
+    "react-leaflet": "^4.2.1",
     "react-modal": "^3.16.1",
     "react-overlays": "^5.2.1",
     "react-refresh": "^0.11.0",
@@ -150,6 +152,5 @@
       "jest-watch-typeahead/testname"
     ],
     "resetMocks": true
-  },
-  "proxy": "http://localhost:3001"
+  }
 }

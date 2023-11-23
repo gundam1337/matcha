@@ -98,21 +98,6 @@ export default function Main() {
           >
             <Login onClick={handleModal(setLoginModalOpen)} isVerified= {isVerified} />
           </AppModal>
-          
-          {/*isTabletOrMobile && (
-            <div>
-              <ModalButton
-                label="Login"
-                handleOpen={handleModal(setLoginModalOpen)}
-              />
-              <AppModal
-                isOpen={isLoginModalOpen}
-                handleClose={handleModal(setLoginModalOpen)}
-              >
-                <Login onClick={handleModal(setLoginModalOpen)} />
-              </AppModal>
-            </div>
-          )*/}
         </div>
       </div>
     </main>
