@@ -124,7 +124,7 @@ input[type="date"] {
 
 .file-type-info {
   color: #666; /* Medium grey for the info text */
-  font-size: 0.8rem; /* Smaller font size for the info text */
+  font-size: 1.5rem; /* Smaller font size for the info text */
   margin-bottom: 20px; /* Space below the info text */
 }
 
@@ -184,6 +184,9 @@ input[type="date"] {
   display: inline-block;
   margin: 5px;
 }
+/* NOTE : message box for what the use choose  */
+
+
 
 /* //NOTE for the resposive */
 @media (max-width: 576px) {
@@ -196,5 +199,18 @@ input[type="date"] {
   .form-group {
     flex: 0 0 100%;
     width: 90%;
+  }
+}
+
+@media (max-width: 600px) {
+  .file-type-info {
+    font-size: 4vw;
+  }
+}
+
+/* Adjust the font size for larger screens */
+@media (min-width: 1200px) {
+  .file-type-info {
+    font-size: 1.5rem; /* Fixed font size for larger screens */
   }
 }

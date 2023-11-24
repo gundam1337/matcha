@@ -1,112 +1,15 @@
 import React from "react";
 import "./profile.css";
-import  Location  from "./Location";
+import Location from "./Location";
+import { SliderComponent, DualRangeSlider } from "./SliderComponent";
+import Hobies from "./Hobies";
 
-const Hobies = () => {
-  return (
-    <div>
-      <h4>Your Hobbies :</h4>
-      <div className="hobbies radio">
-        <div>
-          <label>
-            <input type="checkbox" name="user-hobbies" value="cooking" />
-            <span>Cooking</span>
-          </label>
-        </div>
+// TODO add the phone fild
 
-        <div>
-          <label>
-            <input type="checkbox" name="user-hobbies" value="sport" />
-            <span>Sport</span>
-          </label>
-        </div>
-
-        <div>
-          <label>
-            <input type="checkbox" name="user-hobbies" value="reading" />
-            <span>Reading</span>
-          </label>
-        </div>
-
-        <div>
-          <label>
-            <input type="checkbox" name="user-hobbies" value="music" />
-            <span>Music</span>
-          </label>
-        </div>
-
-        <div>
-          <label>
-            <input type="checkbox" name="user-hobbies" value="dance" />
-            <span>Dance</span>
-          </label>
-        </div>
-
-        <div>
-          <label>
-            <input type="checkbox" name="user-hobbies" value="astronomy" />
-            <span>Astronomy</span>
-          </label>
-        </div>
-
-        <div>
-          <label>
-            <input type="checkbox" name="user-hobibes" value="gardening" />
-            <span>Gardening</span>
-          </label>
-        </div>
-
-        <div>
-          <label>
-            <input type="checkbox" name="user-hobbies" value="photography" />
-            <span>Photography</span>
-          </label>
-        </div>
-
-        <div>
-          <label>
-            <input type="checkbox" name="user-hobbies" value="travel" />
-            <span>Travel</span>
-          </label>
-        </div>
-
-        <div>
-          <label>
-            <input type="checkbox" name="user-hobbies" value="cinema" />
-            <span>Cinema</span>
-          </label>
-        </div>
-
-        <div>
-          <label>
-            <input type="checkbox" name="user-hobbies" value="videos-games" />
-            <span>Video-Games</span>
-          </label>
-        </div>
-
-        <div>
-          <label>
-            <input type="checkbox" name="user-hobbies" value="drawing" />
-            <span>Drawing</span>
-          </label>
-        </div>
-
-        <div>
-          <label>
-            <input type="checkbox" name="user-hobbies" value="animals" />
-            <span>Animals</span>
-          </label>
-        </div>
-      </div>
-    </div>
-  );
-};
 const Profile = () => {
   return (
     <div style={{ textAlign: "center" }}>
       <div className="settings-box">
-        {/* //NOTE this for the image  */}
-
         <div className="form-group profile-photo-upload">
           <label htmlFor="profilePhoto">Profile Photo</label>
           <img
@@ -122,8 +25,6 @@ const Profile = () => {
             Upload
           </button>
         </div>
-
-        {/* //NOTE this for the inputs */}
 
         <br />
         <div className="form-row">
@@ -141,14 +42,12 @@ const Profile = () => {
             <label htmlFor="date">Birthday</label>
             <input type="date" id="date" name="birthday" />
           </div>
-          {/* NOTE add some phone number calsse  */}
           <div>
             <label htmlFor="phone">Phone Number</label>
             <input type="text" id="phone" name="phone" />
           </div>
         </div>
 
-        {/* //NOTE the gender */}
         <br />
         <div className="gender radio">
           <h4>Your gender :</h4>
@@ -166,14 +65,13 @@ const Profile = () => {
             </label>
           </div>
         </div>
-        {/* NOTE location  */}
-        <br/>
+        <br />
         <Location></Location>
-        {/* //NOTE hobies */}
         <br />
         <Hobies />
-
-        {/* //NOTE THE SUBMTION */}
+        <br />
+        <SliderComponent></SliderComponent>
+        {/* <DualRangeSlider></DualRangeSlider> */}
         <input className="btn-login" type="submit" value="Submit" />
       </div>
     </div>
