@@ -27,7 +27,7 @@ export const SliderComponent = () => {
 
 //NOTE ***************************************************************************************
 export const DualRangeSlider = () => {
-  const [ageRange, setAgeRange] = useState({ min: 18, max: 45 });
+  const [ageRange, setAgeRange] = useState({ min: 18, max: 60 });
 
   const handleMinAgeChange = (e) => {
     const minValue = Math.min(Number(e.target.value), ageRange.max );
@@ -44,15 +44,16 @@ export const DualRangeSlider = () => {
         <input
           type="range"
           id="minAge"
-          min="18"
-          max="30"
+          min = "18"
+          max= "60"
           value={ageRange.min}
           onChange={handleMinAgeChange}
         />
+        <br/>
         <input
           type="range"
           id="maxAge"
-          min="25"
+          min = "18"
           max="60"
           value={ageRange.max}
           onChange={handleMaxAgeChange}
