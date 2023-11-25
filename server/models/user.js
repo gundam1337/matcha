@@ -6,65 +6,64 @@ var validateEmail = function (email) {
   return re.test(email);
 };
 const userSchema = new Schema({
-  username: {
+  username: { //DONE
     type: String,
     required: true,
     unique: true,
   },
-  email: {
+  email: {  //DONE
     type: String,
     required: true,
     validate: [validateEmail, "Please fill a valid email address"],
     unique: true,
   },
-  passwordHash: {
+  passwordHash: { //DONE
     type: String,
     required: true,
   },
-  emailVerified: {
+  emailVerified: { //DONE
     type: Boolean,
     default: false,
   },
-  //DONE add the profile picture
-  profile: {
-    profilePicture: {
+  profile: { 
+    profilePicture: { //DONE
       type: String,
       required: false, // Set to true if you want the image to be mandatory
     },
-    firstName: {
+    firstName: {  //DONE
       type: String,
       //required: true
     },
-    lastName: {
+    lastName: { //DONE
       type: String,
       //required: true
     },
-    birthdate: {
+    birthdate: {  //DONE
       type: Date,
       //required: true
     },
-    phoneNumber: {
+    phoneNumber: {  //FIXME
       type: String,
       //required: true
     },
-    gender: {
+    gender: { //DONE
       type: String,
       //required: true
     },
-    location: {
+    location: { //DONE
       city: String,
       country: String,
     },
-    bio: String,
+    bio: String,  //FIXME
     interests: [String],//NOTE hobies 
   },
-  preferences: { // NOTE auto fill in the server
-    gender: String,
-    ageRange: { // NOTE add the age 
+  preferences: { 
+    gender: String, // DONE in the server 
+    ageRange: { //FIXME
       min: Number,
       max: Number,
     },
-    distance: Number, // NOTE add the distance 
+    distance: Number, //DONE
   },
   matches: [
     {

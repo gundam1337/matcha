@@ -71,7 +71,8 @@ const Profile = () => {
         <Hobies />
         <br />
         <SliderComponent></SliderComponent>
-        {/* <DualRangeSlider></DualRangeSlider> */}
+        <br />
+        <DualRangeSlider></DualRangeSlider>
         <input className="btn-login" type="submit" value="Submit" />
       </div>
     </div>
