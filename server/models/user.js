@@ -42,7 +42,7 @@ const userSchema = new Schema({
       type: Date,
       //required: true
     },
-    phoneNumber: {  //FIXME
+    phoneNumber: {  //DONE
       type: String,
       //required: true
     },
@@ -59,7 +59,7 @@ const userSchema = new Schema({
   },
   preferences: { 
     gender: String, // DONE in the server 
-    ageRange: { //FIXME
+    ageRange: { //DONE
       min: Number,
       max: Number,
     },

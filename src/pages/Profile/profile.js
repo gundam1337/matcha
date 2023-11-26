@@ -1,9 +1,13 @@
-import React from "react";
+import React ,{useState} from "react";
 import "./profile.css";
 import Location from "./Location";
 import { SliderComponent, DualRangeSlider } from "./SliderComponent";
 import Hobies from "./Hobies";
 import Bio from "./Bio";
+import PhoneInput from 'react-phone-number-input'
+import 'react-phone-number-input/style.css'
+
+
 
 // TODO add the phone fild
 
@@ -42,19 +46,29 @@ const Info = () => {
           <input type="text" id="lastName" name="lastName" />
         </div>
       </div>
+      <br/>
       <div className="form-row">
         <div>
           <label htmlFor="date">Birthday</label>
           <input type="date" id="date" name="birthday" />
         </div>
-        <div>
-          <label htmlFor="phone">Phone Number</label>
-          <input type="text" id="phone" name="phone" />
-        </div>
+  
       </div>
     </>
   );
 };
+
+function PhoneNumber() {
+  // `value` will be the parsed phone number in E.164 format.
+  // Example: "+12133734253".
+  const [value, setValue] = useState()
+  return (
+    <PhoneInput
+      placeholder="Enter phone number"
+      value={value}
+      onChange={setValue}/>
+  )
+}
 
 const Gender = () => {
   return (
@@ -77,6 +91,9 @@ const Gender = () => {
   );
 };
 
+//TODO add a spccial input for the phone number 
+//TODO Add the fromik form to get all inputs 
+
 const Profile = () => {
   return (
     <div style={{ textAlign: "center" }}>
@@ -84,6 +101,8 @@ const Profile = () => {
         <Image></Image>
         <br />
         <Info></Info>
+        <br />
+        <PhoneNumber></PhoneNumber>
         <br />
         <Gender></Gender>
         <br />
@@ -94,6 +113,7 @@ const Profile = () => {
         <SliderComponent></SliderComponent>
         <br />
         <DualRangeSlider></DualRangeSlider>
+        <br />
         <Bio></Bio>
         <input className="btn-login" type="submit" value="Submit" />
       </div>
