@@ -54,7 +54,7 @@ const userSchema = new Schema({
       city: String,
       country: String,
     },
-    bio: String,  //FIXME
+    bio: String,  //DONE
     interests: [String],//NOTE hobies 
   },
   preferences: { 

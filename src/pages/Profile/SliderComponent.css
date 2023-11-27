@@ -85,6 +85,8 @@
     max-width: 600px; /* Adjust the max-width as needed */
     margin: auto; /* Center the box */
     position: relative; /* Needed for absolute positioning of children */
+    width: 60%;
+    height: 80px;
   }
   
   
