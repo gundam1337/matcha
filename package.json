@@ -154,4 +154,6 @@
     ],
     "resetMocks": true
   }
+  ,"proxy": "http://localhost:3001"
+
 }

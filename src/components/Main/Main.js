@@ -49,7 +49,7 @@ export const AppModal = ({ isOpen, handleClose, children }) => (
 export default function Main() {
   const [isRegistrationModalOpen, setRegistrationModalOpen] = useState(false);
   const [isLoginModalOpen, setLoginModalOpen] = useState(false);
-  const [isVerified,setIsVerified] = useState(true);
+  const [isVerified,setIsVerified] = useState(false);
   const handleModal = (setter) => () => setter((prev) => !prev);
 
   useEffect(() => {
@@ -76,6 +76,7 @@ export default function Main() {
           <h2>
             <span className="slogan-app"></span>
           </h2>
+
           <ModalButton
             label="Create account"
             handleOpen={handleModal(setRegistrationModalOpen)}
@@ -88,9 +89,10 @@ export default function Main() {
            
           </AppModal>
           <br />
+
           <ModalButton
             label="login"
-            handleOpen={handleModal(setRegistrationModalOpen)}
+            handleOpen={handleModal(setLoginModalOpen)}
           />
           <AppModal
             isOpen={isLoginModalOpen}

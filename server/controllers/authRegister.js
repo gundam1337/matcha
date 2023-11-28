@@ -6,8 +6,6 @@ const { prepareEmailContent, sendEmail } = require("../utils/sendEmail");
 
 const { body, validationResult } = require("express-validator");
 
-//TODO :how senior make an request and how he handl it in the fornt-end
-
 const validate = [
   body("name")
     .isLength({ max: 15 })
@@ -26,8 +24,6 @@ const validate = [
     .withMessage("Password must be at least 8 characters")
     .matches(/^(?=.*[a-z])(?=.*[0-9])/)
     .withMessage("Must contain 8 characters and one number"),
-
-  body("gender").notEmpty().withMessage("Please select your gender"),
 ];
 
 const handleValidationErrors = (req, res, next) => {
@@ -149,22 +145,4 @@ const validateAndSend = [
   sendVerificationEmail,
 ];
 
-//TODO move this function to another file 
-const signin = async (req, res, next) => {
-  try {
-    console.log("sign in logic");
-    // Your sign-in logic here
-    res.status(200).send("Sign in successful"); // Example response
-  } catch (err) {
-    console.error(err);
-    res.status(500).send(err.message); // Send back the error
-  }
-};
-
-const signout = (req, res, next) => {
-  console.log("sign out logic");
-  // Your sign-out logic here
-  res.status(200).send("Sign out successful"); // Example response
-};
-
-module.exports = { signin, signout, validateAndSend, verifyEmailToken };
+module.exports = {validateAndSend, verifyEmailToken };

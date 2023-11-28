@@ -7,46 +7,14 @@ import MyTextInput from "./MytextInput";
 import AnimatedLoader from "../AnimatedLoader/AnimatedLoader";
 import EmailSuccessComponent from "../EmailSuccessComponent/EmailSuccessComponent";
 
-const MyRadioGroup = ({ label, name, options, ...props }) => {
-  const [field, meta] = useField({ ...props, type: "radio", name });
-
-  return (
-    <>
-      {options.map((option) => (
-        <label key={option.value}>
-          <input
-            type="radio"
-            name={name}
-            value={option.value}
-            onChange={field.onChange}
-            {...props}
-          />
-          <span>{option.label}</span>
-        </label>
-      ))}
-      {meta.touched && meta.error ? (
-        <div className="error">{meta.error}</div>
-      ) : null}
-    </>
-  );
-};
-
-//TODO : make the text inside the modale fit the modal
-// TODOD : add "the this link is invalid"
-//NOTE : make sure that every response take a propre UI  
-//TODOD :  Use the useEffect hook to submit the form data to a server and redirect to the login page
-//TODO : add the conection error handler 
 const Registration = (props) => {
   const [submitError, setSubmitError] = useState(null);
   const [isLoading, setIsLoading] = useState(false);
   const [isSent, setIsSent] = useState(false);
-  
-  //const [existingUserError, setExistingUserError] = useState(null);
- 
+
   const handleSubmit = (values, { setSubmitting }) => {
     console.log("Sending values:", values);
     setIsLoading(true);
-
     axios
       .post("http://localhost:3001/register", values)
       .then((response) => {
@@ -86,7 +54,6 @@ const Registration = (props) => {
             name: "",
             email: "",
             password: "",
-            gender: "",
           }}
           validationSchema={Yup.object({
             name: Yup.string()
@@ -101,8 +68,7 @@ const Registration = (props) => {
               .matches(
                 /^(?=.*[a-z])(?=.*[0-9])/,
                 "Must contain 8 characters and one number"
-              ),
-            gender: Yup.string().required("Please select your gender"),
+              )
           })}
           onSubmit={handleSubmit}
         >
@@ -116,12 +82,12 @@ const Registration = (props) => {
               <p>We need information to help you find your Matcha</p>
               <Form autoComplete="on">
                 <div className="main-informations">
-                  <MyTextInput
-                    name="name"
-                    type="text"
-                    placeholder="Your name"
-                    error={submitError?.message}
-                  />
+                    <MyTextInput
+                      name="name"
+                      type="text"
+                      placeholder="Your name"
+                      error={submitError?.message}
+                    />
                   <MyTextInput
                     name="email"
                     type="text"
@@ -132,17 +98,6 @@ const Registration = (props) => {
                     type="password"
                     placeholder="Your password"
                   />
-                  <div className="gender radio">
-                    <h4>Your gender:</h4>
-                    <MyRadioGroup
-                      name="gender"
-                      label="Your gender:"
-                      options={[
-                        { label: "Man", value: "man" },
-                        { label: "Woman", value: "woman" },
-                      ]}
-                    />
-                  </div>
                   <input className="btn-login" type="submit" value="Register" />
                   {submitError && (
                     <p>Registration failed: {submitError.message}</p>
