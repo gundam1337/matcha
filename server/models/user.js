@@ -77,6 +77,10 @@ const userSchema = new Schema({
     enum: ["active", "inactive", "banned"],
     default: "active",
   },
+  refreshToken: {
+    type: String,
+    required: false
+},
 });
 
 const User = mongoose.model("User", userSchema);

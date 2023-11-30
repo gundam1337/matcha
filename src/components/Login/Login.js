@@ -12,7 +12,7 @@ import "../../styles/login.css";
 //TODO Password Recovery
 //TODO User-Friendly Error Messages
 //TODO add a Loading step
-
+//TODO API Request with Access Token and Refreshing Access Token
 const Login = (props) => {
   const [submitError, setSubmitError] = useState(null);
   const [isLoading, setIsLoading] = useState(false);
@@ -24,8 +24,10 @@ const Login = (props) => {
     axios
       .post("http://localhost:3001/signin", values)
       .then((response) => {
+        console.log("the response ")
       })
       .catch((error) => {
+        console.log("the error",error.response.data)
       })
       .finally(() => {
         setSubmitting(false);

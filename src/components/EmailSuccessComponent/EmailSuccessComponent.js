@@ -7,9 +7,9 @@ const EmailSuccessComponent = ({ onOkClick }) => {
       <h1 style={styles.header}>Email sent successfully.</h1>
       <br/>
       <h2 style={styles.header}>Please check your email inbox .</h2>
-      <button style={styles.button} onClick={onOkClick}>
+      {/* <button style={styles.button} onClick={onOkClick}>
        Login
-      </button>
+      </button> */}
     </div>
   );
 };
