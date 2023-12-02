@@ -32,41 +32,56 @@ const handleValidationErrors = (req, res, next) => {
 };
 //NOTE :Authentication Middleware
 
+const findUserByName = async (name) => {
+  try {
+    const user = await User.findOne({ username: name });
+    return user || null;
+  } catch (error) {
+    console.error("Error in findUserByName:", error);
+    return null;
+  }
+};
+
 const authentication = async (req, res, next) => {
   try {
     const { name, password } = req.body;
 
-    const user = await User.findOne({ name });
+    const user = await findUserByName(name);
     if (!user) {
-      return res.status(400).send("User not found");
+      res.status(400).send("User not found");
+      return;
     }
 
-    const isMatch = await bcrypt.compare(password, user.password);
+    const isMatch = await bcrypt.compare(password, user.passwordHash); // Assuming the field is passwordHash
     if (!isMatch) {
       return res.status(400).send("Invalid credentials");
     }
+
+    next(); // Proceed only if authentication is successful
   } catch (error) {
+    console.error("Authentication error:", error);
     res.status(500).send("Server error");
   }
-  next();
 };
 
 //NOTE  : Session Management Middleware
 //TODO  : Create Refresh- and Accesstoken AND Store Refreshtoken with user in database
 //TODO  : Send token. Refreshtoken as a cookie and accesstoken as a regular response
 
-const handleSessionManagement = async (req, res, next) => {
+const handleSessionManagement = async (req, res) => {
   const { name } = req.body;
+
   try {
-    //FIXME  duplcated code 
-    const user = await User.findOne({ name }); 
+    const user = await findUserByName(name);
+    if (!user) {
+      res.status(400).send("User not found");
+      return;
+    }
 
     const accessToken = jwt.sign(
       { username: user.username },
       accessTokenSecret,
-      {
-        expiresIn: "1m",
-      }
+      { expiresIn: "1m" }
     );
 
     // Create Refresh Token
@@ -76,19 +91,23 @@ const handleSessionManagement = async (req, res, next) => {
     );
 
     // Store Refresh Token with User in Database
-    user.refreshToken = refreshToken; // Assuming your user model has a field for refreshToken
+    user.refreshToken = refreshToken;
     await user.save();
 
-    res.cookie("refreshToken", refreshToken, { httpOnly: true, secure: true }); // Secure flag for HTTPS
+    res.cookie("refreshToken", refreshToken, {
+      httpOnly: true,
+    }); // Added secure and sameSite attributes for security
     res.json({ accessToken });
   } catch (err) {
-    res.send({
+    console.error("Session Management Error:", err);
+    res.status(500).send({
       error: `${err.message}`,
     });
   }
 };
 
 //NOTE : Two-Factor Authentication Middleware
+//TODO : create the content of the email 'a new login is happend '
 
 //NOTE : Rate Limiting Middleware
 
