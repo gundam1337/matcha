@@ -3,7 +3,7 @@ const jwt = require("jsonwebtoken");
 const User = require("../models/user");
 const bcrypt = require("bcrypt");
 const { body, validationResult } = require("express-validator");
-const { prepareEmailContent, sendEmail } = require("../utils/sendEmail");
+const {sendEmail } = require("../utils/sendEmail");
 
 const accessTokenSecret = "yourAccessTokenSecret"; // Replace with your secret key for access token
 const refreshTokenSecret = "yourRefreshTokenSecret";
@@ -51,12 +51,14 @@ const authentication = async (req, res, next) => {
       res.status(400).send("User not found");
       return;
     }
+    //adding the email to req object for later use  
+    req.email = user.email;
 
     const isMatch = await bcrypt.compare(password, user.passwordHash); // Assuming the field is passwordHash
     if (!isMatch) {
       return res.status(400).send("Invalid credentials");
     }
-
+    
     next(); // Proceed only if authentication is successful
   } catch (error) {
     console.error("Authentication error:", error);
@@ -65,10 +67,10 @@ const authentication = async (req, res, next) => {
 };
 
 //NOTE  : Session Management Middleware
-//TODO  : Create Refresh- and Accesstoken AND Store Refreshtoken with user in database
-//TODO  : Send token. Refreshtoken as a cookie and accesstoken as a regular response
+//DONE  : Create Refresh- and Accesstoken AND Store Refreshtoken with user in database
+//DONE  : Send token. Refreshtoken as a cookie and accesstoken as a regular response
 
-const handleSessionManagement = async (req, res) => {
+const handleSessionManagement = async (req, res,next) => {
   const { name } = req.body;
 
   try {
@@ -95,9 +97,18 @@ const handleSessionManagement = async (req, res) => {
     await user.save();
 
     res.cookie("refreshToken", refreshToken, {
-      httpOnly: true,
-    }); // Added secure and sameSite attributes for security
-    res.json({ accessToken });
+      httpOnly: true,     // Makes the cookie inaccessible to client-side scripts, enhancing security against XSS attacks
+      sameSite: 'strict', // Strictly controls when cookies are sent; use 'lax' for less strict control
+      path: '/',          // Sets the cookie to be accessible for the entire site
+      maxAge: 24 * 60 * 60 * 1000 // Sets the cookie to expire in 24 hours (in milliseconds)
+    });
+    // res.json({ accessToken , message : "the user is exist"});
+
+     // Storing tokens in the request object to be used by subsequent middleware
+     req.accessToken = accessToken;
+     req.refreshToken = refreshToken;
+     next();
+
   } catch (err) {
     console.error("Session Management Error:", err);
     res.status(500).send({
@@ -107,7 +118,27 @@ const handleSessionManagement = async (req, res) => {
 };
 
 //NOTE : Two-Factor Authentication Middleware
-//TODO : create the content of the email 'a new login is happend '
+//DONE : create the content of the email 'a new login is happend '
+const sendLoginNotifactionEmail = async (req, res) => {
+  //DONE :find the email of the user 
+  const email = req.email;
+  //DONE : send the email
+
+  sendEmail(email, 'login')
+  .then(() => {
+      console.log("The email has been sent");
+      //res.status(200).json({ message: "Please check your email box" });
+    })
+    .catch((error) => {
+      if (!res.headersSent) {
+        res.status(500).send("Something is wrong with our email services");
+      }
+    });
+  //DONE : end the chain 
+  const accessToken = req.accessToken;
+  res.json({ accessToken , message : "the user is exist"});
+}
+
 
 //NOTE : Rate Limiting Middleware
 
@@ -116,6 +147,7 @@ const login = [
   handleValidationErrors,
   authentication,
   handleSessionManagement,
+  sendLoginNotifactionEmail
 ];
 
 const signout = (req, res, next) => {
@@ -139,3 +171,18 @@ module.exports = { login, signout };
 // module.exports = {
 //   isAuth,
 // };
+
+//NOTE this is for sending emails 
+// prepareEmailContent(verificationLink)
+// .then((emailContent) => {
+//   return sendEmail(email, emailContent);
+// })
+// .then(() => {
+//   console.log("The email has been sent");
+//   res.status(200).json({ message: "Please check your email box" });
+// })
+// .catch((error) => {
+//   if (!res.headersSent) {
+//     res.status(500).send("Something is wrong with our email services");
+//   }
+// });

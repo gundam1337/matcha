@@ -22,12 +22,12 @@ const Login = (props) => {
     console.log("Sending values:", values);
     setIsLoading(true);
     axios
-      .post("http://localhost:3001/signin", values)
+      .post("http://localhost:3001/signin", values, { withCredentials: true })
       .then((response) => {
-        console.log("the response ")
+        console.log("the response ",response)
       })
       .catch((error) => {
-        console.log("the error",error.response.data)
+        console.log("the error",error.response?.data )
       })
       .finally(() => {
         setSubmitting(false);

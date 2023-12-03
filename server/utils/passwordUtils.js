@@ -1,7 +1,6 @@
 const bcrypt = require('bcrypt');
 const saltRounds = process.env.SALT_ROUNDS || 10 ; // You can increase the salt rounds for better security
 
-console.log("the salt = ",saltRounds);
 /**
  * Hashes a password using bcrypt with specified salt rounds.
  * @param {string} password - The plaintext password to hash.

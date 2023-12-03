@@ -2,7 +2,7 @@ const User = require("../models/user");
 const VerificationToken = require("../models/verificationTokensEmail"); // The Verification Token model we just created
 const hashPassword = require("../utils/passwordUtils");
 const generateVerificationToken = require("../utils/generateVerificationToken");
-const { prepareEmailContent, sendEmail } = require("../utils/sendEmail");
+const {sendEmail } = require("../utils/sendEmail");
 
 const { body, validationResult } = require("express-validator");
 
@@ -34,7 +34,7 @@ const handleValidationErrors = (req, res, next) => {
   next();
 };
 
-//NOTE : Check if user already exists
+//NOTE : Check if the user already exists
 const checkIfUserAlreadyExists = async (req, res, next) => {
   const { name, email } = req.body;
   try {
@@ -86,11 +86,8 @@ const sendVerificationEmail = async (req, res, next) => {
 
     const verificationLink = createVerificationLink(verificationToken.token);
 
-    prepareEmailContent(verificationLink)
-      .then((emailContent) => {
-        return sendEmail(email, emailContent);
-      })
-      .then(() => {
+   sendEmail(email, 'verification', verificationLink)
+    .then(() => {
         console.log("The email has been sent");
         res.status(200).json({ message: "Please check your email box" });
       })
@@ -102,6 +99,7 @@ const sendVerificationEmail = async (req, res, next) => {
   } catch (error) {
     console.error("sendVerificationEmail error:", error);
   }
+
 };
 
 //NOTE : verify the email
