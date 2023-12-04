@@ -9,14 +9,16 @@ import AnimatedLoader from "../AnimatedLoader/AnimatedLoader";
 import "../../styles/common.css";
 import "../../styles/login.css";
 
-//TODO Password Recovery
+//TODO Password Recovery 
+//NOTE added but not implmeted 
 //TODO User-Friendly Error Messages
-//TODO add a Loading step
+//DONE add a Loading step
 //TODO API Request with Access Token and Refreshing Access Token
 const Login = (props) => {
   const [submitError, setSubmitError] = useState(null);
   const [isLoading, setIsLoading] = useState(false);
-  const [isSent, setIsSent] = useState(false);
+  const [isSent, setIsSent] = useState(false)
+  //TODO : add a state for the forget password logic
 
   const handleSubmit = (values, { setSubmitting }) => {
     console.log("Sending values:", values);
@@ -24,10 +26,10 @@ const Login = (props) => {
     axios
       .post("http://localhost:3001/signin", values, { withCredentials: true })
       .then((response) => {
-        console.log("the response ",response)
+        console.log("the response ", response);
       })
       .catch((error) => {
-        console.log("the error",error.response?.data )
+        console.log("the error", error.response?.data);
       })
       .finally(() => {
         setSubmitting(false);
@@ -93,7 +95,11 @@ const Login = (props) => {
                   {submitError && (
                     <p>Registration failed: {submitError.message}</p>
                   )}
-                  
+                  {/* TODO : add forget password buton  */}
+                  {/* TODO : display the  */}
+                  <p>
+                    Already have an account ?<a href="login.html">Login</a>
+                  </p>
                 </div>
               </Form>
             </div>

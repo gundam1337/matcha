@@ -51,6 +51,7 @@ const generateSaveResetToken = async (req, res, next) => {
 };
 
 //NOTE  : send the unique token to the user email  
+//NOTE : https://yourapp.com/reset-password?token=<JWT>
 
 const sendResetEmail = async (req, res, next) => {
     // Use email service to send the reset link
