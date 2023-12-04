@@ -1,4 +1,4 @@
-require("dotenv").config({ path: "../config.env" });
+require("dotenv").config({ path: "../config.env" });//FIXME I am not using the .env variables
 const jwt = require("jsonwebtoken");
 const User = require("../models/user");
 const bcrypt = require("bcrypt");
@@ -139,8 +139,6 @@ const sendLoginNotifactionEmail = async (req, res) => {
   res.json({ accessToken , message : "the user is exist"});
 }
 
-
-//NOTE : Rate Limiting Middleware
 
 const login = [
   validate,

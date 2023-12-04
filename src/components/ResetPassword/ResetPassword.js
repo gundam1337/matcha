@@ -1,19 +1,17 @@
-import React, { useState } from "react";
-import { Formik, Form } from "formik";
+import { Formik, Form, useField } from "formik";
+import { useState } from "react";
 import axios from "axios";
 import * as Yup from "yup";
+//import "../../styles/register.css";
 import MyTextInput from "../Registration/MytextInput";
-import EmailSuccessComponent from "../EmailSuccessComponent/EmailSuccessComponent";
 import AnimatedLoader from "../AnimatedLoader/AnimatedLoader";
+import EmailSuccessComponent from "../EmailSuccessComponent/EmailSuccessComponent";
 
-import "../../styles/common.css";
-import "../../styles/login.css";
+const ForgotPassword = (props)=>{
 
-//TODO Password Recovery
-//TODO User-Friendly Error Messages
-//TODO add a Loading step
-//TODO API Request with Access Token and Refreshing Access Token
-const Login = (props) => {
+}
+
+const ResetPassword = (props) => {
   const [submitError, setSubmitError] = useState(null);
   const [isLoading, setIsLoading] = useState(false);
   const [isSent, setIsSent] = useState(false);
@@ -22,13 +20,9 @@ const Login = (props) => {
     console.log("Sending values:", values);
     setIsLoading(true);
     axios
-      .post("http://localhost:3001/signin", values, { withCredentials: true })
-      .then((response) => {
-        console.log("the response ",response)
-      })
-      .catch((error) => {
-        console.log("the error",error.response?.data )
-      })
+      .post("http://localhost:3001/reset-password", values)
+      .then()
+      .catch()
       .finally(() => {
         setSubmitting(false);
         setIsLoading(false);
@@ -38,18 +32,21 @@ const Login = (props) => {
   if (isSent) {
     return <EmailSuccessComponent />; // This is shown when the email has been sent
   }
-
   if (!isLoading && !isSent)
     return (
-      <>
+      <div>
         <Formik
           initialValues={{
             name: "",
+            email: "",
             password: "",
           }}
           validationSchema={Yup.object({
             name: Yup.string()
               .max(15, "Must be 15 characters or less")
+              .required("Required"),
+            email: Yup.string()
+              .email("Invalid email address")
               .required("Required"),
             password: Yup.string()
               .required("Password is required")
@@ -57,7 +54,7 @@ const Login = (props) => {
               .matches(
                 /^(?=.*[a-z])(?=.*[0-9])/,
                 "Must contain 8 characters and one number"
-              ),
+              )
           })}
           onSubmit={handleSubmit}
         >
@@ -67,44 +64,40 @@ const Login = (props) => {
             </button>
             <div className="formik-content">
               <h2>ChatSpace</h2>
-              <h3>Login</h3>
-              {props.isVerified ? (
-                <p>your email is verified ✅</p>
-              ) : (
-                <p>please enter your informations</p>
-              )}
-              <Form autoComplete="off">
+              <h3>Create an account</h3>
+              <p>We need information to help you find your Matcha</p>
+              <Form autoComplete="on">
                 <div className="main-informations">
+                    <MyTextInput
+                      name="name"
+                      type="text"
+                      placeholder="Your name"
+                      error={submitError?.message}
+                    />
                   <MyTextInput
-                    name="name"
+                    name="email"
                     type="text"
-                    placeholder="your username"
+                    placeholder="Your email"
                   />
                   <MyTextInput
                     name="password"
                     type="password"
-                    placeholder="your password"
+                    placeholder="Your password"
                   />
-                  <input
-                    className="btn-login"
-                    type="submit"
-                    value="login"
-                  ></input>
+                  <input className="btn-login" type="submit" value="Register" />
                   {submitError && (
                     <p>Registration failed: {submitError.message}</p>
                   )}
-                  
                 </div>
               </Form>
             </div>
           </div>
         </Formik>
-      </>
+      </div>
     );
-
   if (isLoading) {
     return <AnimatedLoader />;
   }
 };
 
-export default Login;
+export default ResetPassword;
