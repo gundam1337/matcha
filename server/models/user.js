@@ -81,6 +81,16 @@ const userSchema = new Schema({
     type: String,
     required: false
 },
+resetToken : {
+  token: {
+    type: String,
+    // required: true,
+  },
+  expiresAt: {
+    type: Date,
+    // required: true,
+  }
+}
 });
 
 const User = mongoose.model("User", userSchema);

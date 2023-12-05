@@ -6,18 +6,25 @@ import * as Yup from "yup";
 import MyTextInput from "../Registration/MytextInput";
 import AnimatedLoader from "../AnimatedLoader/AnimatedLoader";
 import EmailSuccessComponent from "../EmailSuccessComponent/EmailSuccessComponent";
+//FIXME : fix the css style for this modal
 
-const ForgotPassword = (props) => {
+export const ForgotPassword = () => {
+  //NOTE : tokens should have a very short validity period (e.g., 10-20 minutes)
+  //NOTE : implement measures to detect and block repeated failed attempts or unusual patterns of behavior
   const [submitError, setSubmitError] = useState(null);
   const [isLoading, setIsLoading] = useState(false);
   const [isSent, setIsSent] = useState(false);
+  const [is, setIs] = useState(false); // this for the reset password componet
+  //TODO : USE THE useEfect to update the state of the reset password
 
   const handleSubmit = (values, { setSubmitting }) => {
     console.log("Sending values:", values);
     setIsLoading(true);
     axios
       .post("http://localhost:3001/forgot-password", values)
-      .then()
+      .then((response) => {
+        console.log("the response ", response);
+      })
       .catch()
       .finally(() => {
         setSubmitting(false);
@@ -26,8 +33,9 @@ const ForgotPassword = (props) => {
   };
 
   if (isSent) {
-    return <EmailSuccessComponent />; // This is shown when the email has been sent
+    return <EmailSuccessComponent />; //TODO : make this message depend on the step I am doing
   }
+
   if (!isLoading && !isSent)
     return (
       <div>
@@ -43,13 +51,15 @@ const ForgotPassword = (props) => {
           onSubmit={handleSubmit}
         >
           <div className="formik-container">
-            <button className="close" onClick={props.onClick}>
+            {/* <button className="close" onClick={props.onClick}>
               &times;
-            </button>
+            </button> */}
             <div className="formik-content">
               <h2>ChatSpace</h2>
-              <h3>Create an account</h3>
-              <p>We need information to help you find your Matcha</p>
+              <h3>Account Recovery</h3>
+              <p>
+                We'll email you a link that will make you reset your password{" "}
+              </p>
               <Form autoComplete="on">
                 <div className="main-informations">
                   <MyTextInput
@@ -59,7 +69,9 @@ const ForgotPassword = (props) => {
                   />
                   <input className="btn-login" type="submit" value="Register" />
                   {submitError && (
-                    <p>Registration failed: {submitError.message}</p>
+                    <p>
+                      send resetor password failed failed: {submitError.message}
+                    </p>
                   )}
                 </div>
               </Form>
@@ -68,12 +80,13 @@ const ForgotPassword = (props) => {
         </Formik>
       </div>
     );
+
   if (isLoading) {
     return <AnimatedLoader />;
   }
 };
 
-const ResetPassword = (props) => {
+export const ResetPassword = (props) => {
   const [submitError, setSubmitError] = useState(null);
   const [isLoading, setIsLoading] = useState(false);
   const [isSent, setIsSent] = useState(false);
@@ -157,4 +170,4 @@ const ResetPassword = (props) => {
   }
 };
 
-export default ResetPassword;
+//export default ResetPassword;

@@ -5,6 +5,7 @@ import * as Yup from "yup";
 import MyTextInput from "../Registration/MytextInput";
 import EmailSuccessComponent from "../EmailSuccessComponent/EmailSuccessComponent";
 import AnimatedLoader from "../AnimatedLoader/AnimatedLoader";
+import {ForgotPassword, ResetPassword} from "../ResetPassword/ResetPassword"
 
 import "../../styles/common.css";
 import "../../styles/login.css";
@@ -18,6 +19,7 @@ const Login = (props) => {
   const [submitError, setSubmitError] = useState(null);
   const [isLoading, setIsLoading] = useState(false);
   const [isSent, setIsSent] = useState(false)
+  const [isFogoten,setIsForgten] = useState(false);
   //TODO : add a state for the forget password logic
 
   const handleSubmit = (values, { setSubmitting }) => {
@@ -41,7 +43,7 @@ const Login = (props) => {
     return <EmailSuccessComponent />; // This is shown when the email has been sent
   }
 
-  if (!isLoading && !isSent)
+  if (!isLoading && !isSent && !isFogoten)
     return (
       <>
         <Formik
@@ -97,8 +99,9 @@ const Login = (props) => {
                   )}
                   {/* TODO : add forget password buton  */}
                   {/* TODO : display the  */}
-                  <p>
-                    Already have an account ?<a href="login.html">Login</a>
+                  <p
+                    onClick={()=>{setIsForgten(true)}}>
+                    Forget your password ?
                   </p>
                 </div>
               </Form>
@@ -111,6 +114,8 @@ const Login = (props) => {
   if (isLoading) {
     return <AnimatedLoader />;
   }
+  if (isFogoten)
+  return <ForgotPassword></ForgotPassword>
 };
 
 export default Login;
