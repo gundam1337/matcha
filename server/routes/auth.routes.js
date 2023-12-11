@@ -11,7 +11,7 @@ router.use(express.urlencoded({ extended: true }));
 router.route("/signin").post(authLogin.login);
 
 router.route("/forgot-password").post(authReset.forgotPassword);
-router.route("/reset-password").post(authReset.reset);
+router.route("/reset-password").post(authReset.reset).get(authReset.authResetVerification);
 
 
 router.route("/register").post(authRegister.validateAndSend); 

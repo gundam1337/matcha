@@ -1,7 +1,8 @@
-const password = "cucjvikcxdzdkugi"; // FIXME add this the .env
+const password = "cucjvikcxdzdkugi"; // FIXME : add this the .env
 const nodemailer = require("nodemailer");
 const fs = require("fs").promises;
 
+//FIXME : the function is not  perfect
 const path = require("path");
 
 async function sendEmail(recipientEmail, purpose, url) {
@@ -18,6 +19,7 @@ async function sendEmail(recipientEmail, purpose, url) {
   let htmlContent;
   let subject;
 
+  //NOTE : this is for login
   // Determine the template and subject based on the purpose
   if (purpose === "login") {
     //FIXME
@@ -46,6 +48,7 @@ async function sendEmail(recipientEmail, purpose, url) {
     htmlContent = htmlContent.replace(PLACEHOLDER_DATE, formattedDate);
 
     subject = "Login Notification";
+    //NOTE : this is for verifcation
   } else if (purpose === "verification") {
     try {
       const PLACEHOLDER_ID = "ID133742";
@@ -63,6 +66,25 @@ async function sendEmail(recipientEmail, purpose, url) {
       console.error("Error in prepareEmailContent:", error.message);
       throw error;
     }
+     //NOTE : this is for reset password 
+  } else if (purpose === "reset") {
+    try {
+      const PLACEHOLDER_ID = "ID133742";
+      const TEMPLATE_PATH = path.join(__dirname, "/resetEmail.html");
+      htmlContent = await fs.readFile(TEMPLATE_PATH, "utf8");
+
+      if (!htmlContent.includes(PLACEHOLDER_ID)) {
+        throw new Error(
+          `Placeholder ID '${PLACEHOLDER_ID}' not found in the template.`
+        );
+      }
+      htmlContent = htmlContent.replace(PLACEHOLDER_ID, url);
+      subject = "Verify your email address ✔";
+    } catch (error) {
+      console.error("Error in prepareEmailContent:", error.message);
+      throw error;
+    }
+
   } else {
     throw new Error("Invalid email purpose");
   }

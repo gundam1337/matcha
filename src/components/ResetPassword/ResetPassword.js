@@ -170,4 +170,3 @@ export const ResetPassword = (props) => {
   }
 };
 
-//export default ResetPassword;
