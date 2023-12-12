@@ -19,7 +19,8 @@ const validate = [
 
 const handleValidationErrors = (req, res, next) => {
   const errors = validationResult(req);
-  console.log(req)
+  const { email } = req.body;
+  console.log(email);
   if (!errors.isEmpty()) {
     return res.status(400).json({ errors: "the email is not valid" });
   }
@@ -28,6 +29,7 @@ const handleValidationErrors = (req, res, next) => {
 
 //NOTE  : check if the user exists in the database using the provided email
 const checkUserExists = async (req, res, next) => {
+  //TODO : check if the email is verified if not we cant reset the password 
   const { email } = req.body;
   try {
     const user = await User.findOne({ email: email });
@@ -40,6 +42,7 @@ const checkUserExists = async (req, res, next) => {
   }
   next();
 };
+
 
 //NOTE  : generate a unique, time-sensitive reset token
 //NOTE  : save the generated token and its expiry time in the database associated with the user's email
@@ -71,7 +74,15 @@ const sendResetEmail = async (req, res) => {
   const token = req.token;
   const { email } = req.body;
 
-  sendEmail(email, "reset", token)
+
+  const createVerificationLink = (tokenToSend) => {
+    const baseUrl = "http://localhost:3001/reset-password";
+    return `${baseUrl}?token=${encodeURIComponent(tokenToSend)}`;
+  };
+
+  const verificationLink = createVerificationLink(token);
+
+  sendEmail(email, "reset", verificationLink)
     .then(() => {
       console.log("The email has been sent");
       res.status(200).json({ message: "Please check your email box" });
@@ -83,21 +94,23 @@ const sendResetEmail = async (req, res) => {
     });
 };
 
+//GOAL : this is for the get request 
+
 //NOTE  : verify the token
 const authResetVerification = async (req, res) => {
   try {
     // Extract token from the query parameter or header
     const token = req.query.token;
-
+    console.log("token is :",token);
     if (!token) {
       return res.status(401).json({ message: "No token provided" });
     }
 
     // const decoded = jwt.verify(token, process.env.JWT_SECRET);
-    const decoded = jwt.verify(token, resetTokenSecret);
+    //const decoded = jwt.verify(token, resetTokenSecret);
 
     // Check if the token exists in the database
-    const tokenDoc = await Token.findOne({ email: decoded.email, token });
+    const tokenDoc = await Token.findOne({token:token });
     if (!tokenDoc || tokenDoc.expiresAt < Date.now()) {
       return res.status(401).json({ message: "Invalid or expired token" });
     }
@@ -112,6 +125,7 @@ const authResetVerification = async (req, res) => {
 
     res.cookie("tempAuthToken", tempToken, { httpOnly: true, maxAge: 600000 }); // 10 minutes
     res.redirect("http://localhost:3000/?openReset=true#Reset");
+    //res.status(200).json({ message: "Please check cockies" });
   } catch (error) {
     console.error("Error verifying email token:", error);
     res.status(500).send("Internal server error.");

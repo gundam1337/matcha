@@ -7,9 +7,10 @@ const helmet = require("helmet");
 const app = express();
 const authRoutes = require("./routes/auth.routes");
 
-//app.use(helmet());
+app.use(helmet());
 app.use(express.json());
 app.use(bodyParser.json());
+app.use(express.urlencoded({ extended: false }));
 app.use(function(req, res, next) {
   // Set to allow the specific origin
   res.header("Access-Control-Allow-Origin", "http://localhost:3000");

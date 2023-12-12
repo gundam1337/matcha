@@ -6,12 +6,11 @@ const authReset = require("../controllers/authReset");
 const router = express.Router();
 
 //TODO add the isAuth midllware ; this function check the if the usr is legit
-router.use(express.urlencoded({ extended: true }));
 
 router.route("/signin").post(authLogin.login);
 
 router.route("/forgot-password").post(authReset.forgotPassword);
-router.route("/reset-password").post(authReset.reset).get(authReset.authResetVerification);
+router.route("/reset-password").get(authReset.authResetVerification).post(authReset.reset);
 
 
 router.route("/register").post(authRegister.validateAndSend); 
