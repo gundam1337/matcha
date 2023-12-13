@@ -29,7 +29,7 @@ const handleValidationErrors = (req, res, next) => {
 
 //NOTE  : check if the user exists in the database using the provided email
 const checkUserExists = async (req, res, next) => {
-  //TODO : check if the email is verified if not we cant reset the password 
+  //TODO : check if the email is verified if not we cant reset the password
   const { email } = req.body;
   try {
     const user = await User.findOne({ email: email });
@@ -42,7 +42,6 @@ const checkUserExists = async (req, res, next) => {
   }
   next();
 };
-
 
 //NOTE  : generate a unique, time-sensitive reset token
 //NOTE  : save the generated token and its expiry time in the database associated with the user's email
@@ -74,7 +73,6 @@ const sendResetEmail = async (req, res) => {
   const token = req.token;
   const { email } = req.body;
 
-
   const createVerificationLink = (tokenToSend) => {
     const baseUrl = "http://localhost:3001/reset-password";
     return `${baseUrl}?token=${encodeURIComponent(tokenToSend)}`;
@@ -94,40 +92,51 @@ const sendResetEmail = async (req, res) => {
     });
 };
 
-//GOAL : this is for the get request 
+//GOAL : this is for the GET request
 
 //NOTE  : verify the token
 const authResetVerification = async (req, res) => {
   try {
-    // Extract token from the query parameter or header
+    // Extract token from the query parameter
     const token = req.query.token;
-    console.log("token is :",token);
     if (!token) {
       return res.status(401).json({ message: "No token provided" });
     }
 
-    // const decoded = jwt.verify(token, process.env.JWT_SECRET);
-    //const decoded = jwt.verify(token, resetTokenSecret);
+    // Verify token format
+    try {
+      jwt.verify(token, resetTokenSecret);
+    } catch (error) {
+      return res.status(400).json({ message: "Invalid token format" });
+    }
 
     // Check if the token exists in the database
-    const tokenDoc = await Token.findOne({token:token });
+    const tokenDoc = await Token.findOne({ token: token });
     if (!tokenDoc || tokenDoc.expiresAt < Date.now()) {
       return res.status(401).json({ message: "Invalid or expired token" });
     }
+
+    // Verify user existence
+    const email = jwt.decode(token).email;
+    const user = await User.findOne({ email: email });
+    if (!user) {
+      return res.status(404).json({ message: "User not found" });
+    }
+
+    //create another token to send it as a cockies
     const tempToken = jwt.sign(
       {
         token,
         isVerified: true,
       },
       resetTokenSecret,
-      { expiresIn: "10m" } // Set a new expiration time
+      { expiresIn: "55m" } // Set a new expiration time
     );
 
-    res.cookie("tempAuthToken", tempToken, { httpOnly: true, maxAge: 600000 }); // 10 minutes
-    res.redirect("http://localhost:3000/?openReset=true#Reset");
-    //res.status(200).json({ message: "Please check cockies" });
+    res.cookie("tempAuthToken", tempToken); // 10 minutes
+    //res.redirect("http://localhost:3000/?openReset=true#Reset");
+    res.send("it end here");
   } catch (error) {
-    console.error("Error verifying email token:", error);
     res.status(500).send("Internal server error.");
   }
 };
@@ -142,33 +151,47 @@ const validateResetPassword = [
     .withMessage("Must contain 8 characters and one number"),
   body("passwordConfirmation")
     .isLength({ min: 8 })
-    .withMessage("Password must be at least 8 characters")
+    .withMessage("Password confirmation must be at least 8 characters")
     .matches(/^(?=.*[a-z])(?=.*[0-9])/)
-    .withMessage("Must contain 8 characters and one number"),
+    .withMessage("Password confirmation must contain 8 characters and one number")
+    .custom((value, { req }) => {
+      if (value !== req.body.password) {
+        throw new Error('Password confirmation does not match password');
+      }
+      // Indicates the success of this synchronous custom validator
+      return true;
+      
+    }),
 ];
 
 const handlevalidateResetPasswordErrors = (req, res, next) => {
   const errors = validationResult(req);
   if (!errors.isEmpty()) {
+    console.log("inputs are not good ")
+    console.log(errors)
     return res.status(400).json({ errors: errors.array() });
   }
+  // res.send ("stop here")
   next();
 };
+
+
 const resetPassword = async (req, res, next) => {
   try {
     const restToken = req.cookies.tempAuthToken;
-    if (!restToken) return res.status(401).send("No token found in cookies");
+    if (!restToken) 
+      return res.status(401).send("No token found in cookies");
 
     const decodedTempToken = jwt.verify(restToken, resetTokenSecret);
     const innerTokenIsVerified = decodedTempToken.isVerified;
 
     if (!innerTokenIsVerified)
-        res.status(401).send("the email is not verified")
+      res.status(401).send("the email is not verified");
 
     const innerToken = decodedTempToken.token;
-    if (!innerToken) {
+    if (!innerToken) 
       return res.status(401).send("Invalid token structure");
-    }
+    
 
     // Decode the inner token to extract the email
     const decodedInnerToken = jwt.verify(innerToken, resetTokenSecret);
