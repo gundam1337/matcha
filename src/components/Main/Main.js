@@ -4,6 +4,7 @@ import Typed from "typed.js";
 import Modal from "react-modal";
 import Registration from "../Registration/Registration";
 import Login from "../Login/Login";
+import ResetPassword from "../ResetPassword/ResetPassword";
 
 Modal.setAppElement("#root");
 
@@ -50,11 +51,15 @@ export default function Main() {
   const [isRegistrationModalOpen, setRegistrationModalOpen] = useState(false);
   const [isLoginModalOpen, setLoginModalOpen] = useState(false);
   const [isVerified,setIsVerified] = useState(false);
+  const [isResetPassword,setIsResetPassword] = useState(false)
   const handleModal = (setter) => () => setter((prev) => !prev);
 
   useEffect(() => {
     if (window.location.hash === "#login") {
       setLoginModalOpen(true);
+    }
+    if (window.location.hash === "#Reset") {
+      setIsResetPassword(true);
     }
     const queryParams = queryString.parse(window.location.search);
      if (queryParams.openLogin) {
@@ -86,8 +91,8 @@ export default function Main() {
             handleClose={handleModal(setRegistrationModalOpen)}
           >
             <Registration onClick={handleModal(setRegistrationModalOpen)} />
-           
           </AppModal>
+
           <br />
 
           <ModalButton
@@ -100,6 +105,15 @@ export default function Main() {
           >
             <Login onClick={handleModal(setLoginModalOpen)} isVerified= {isVerified} />
           </AppModal>
+
+
+          <AppModal
+            isOpen={isResetPassword}
+            handleClose={handleModal(setIsResetPassword)}
+          >
+            <ResetPassword/>
+          </AppModal>
+
         </div>
       </div>
     </main>

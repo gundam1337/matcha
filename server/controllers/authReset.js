@@ -22,23 +22,22 @@ const handleValidationErrors = (req, res, next) => {
   const { email } = req.body;
   console.log(email);
   if (!errors.isEmpty()) {
-    return res.status(400).json({ errors: "the email is not valid" });
+    return res.status(400).json({ errors: "the email is not valid" }); //DONE : has been manged 
   }
   next();
 };
 
 //NOTE  : check if the user exists in the database using the provided email
 const checkUserExists = async (req, res, next) => {
-  //TODO : check if the email is verified if not we cant reset the password
   const { email } = req.body;
   try {
     const user = await User.findOne({ email: email });
     if (!user)
-      return res.status(400).json({ message: "there no user with this email" });
+      return res.status(400).json({ message: "there no user with this email" });//DONE 
   } catch (error) {
     res
       .status(500)
-      .json({ error: "An error occurred while checking the user" });
+      .json({ error: "An error occurred while checking the user" }); //DONE
   }
   next();
 };
@@ -83,11 +82,11 @@ const sendResetEmail = async (req, res) => {
   sendEmail(email, "reset", verificationLink)
     .then(() => {
       console.log("The email has been sent");
-      res.status(200).json({ message: "Please check your email box" });
+      res.status(200).json({ message: "Please check your email box" }); //DONE
     })
     .catch((error) => {
       if (!res.headersSent) {
-        res.status(500).send("Something is wrong with our email services");
+        res.status(500).send("Something is wrong with our email services");//DONE
       }
     });
 };
@@ -99,28 +98,27 @@ const authResetVerification = async (req, res) => {
   try {
     // Extract token from the query parameter
     const token = req.query.token;
-    if (!token) {
-      return res.status(401).json({ message: "No token provided" });
-    }
+    if (!token)
+      return res.redirect(`http://localhost:3000/error?code=401#Reset`);
 
     // Verify token format
     try {
       jwt.verify(token, resetTokenSecret);
     } catch (error) {
-      return res.status(400).json({ message: "Invalid token format" });
+      return res.redirect(`http://localhost:3000/error?code=400#Reset`);
     }
 
     // Check if the token exists in the database
     const tokenDoc = await Token.findOne({ token: token });
     if (!tokenDoc || tokenDoc.expiresAt < Date.now()) {
-      return res.status(401).json({ message: "Invalid or expired token" });
+      return res.redirect(`http://localhost:3000/error?code=401#Reset`);
     }
 
     // Verify user existence
     const email = jwt.decode(token).email;
     const user = await User.findOne({ email: email });
     if (!user) {
-      return res.status(404).json({ message: "User not found" });
+      return res.redirect(`http://localhost:3000/error?code=404#Reset`);
     }
 
     //create another token to send it as a cockies
@@ -133,11 +131,11 @@ const authResetVerification = async (req, res) => {
       { expiresIn: "55m" } // Set a new expiration time
     );
 
-    res.cookie("tempAuthToken", tempToken); // 10 minutes
-    //res.redirect("http://localhost:3000/?openReset=true#Reset");
-    res.send("it end here");
+    // res.cookie("tempAuthToken", tempToken, { httpOnly: true, maxAge: 600000 }); // 10 minutes
+    res.cookie("tempAuthToken", tempToken);
+    res.redirect("http://localhost:3000/?#Reset");
   } catch (error) {
-    res.status(500).send("Internal server error.");
+    return res.redirect(`http://localhost:3000/error?code=500#Reset`);
   }
 };
 
@@ -171,14 +169,14 @@ const handlevalidateResetPasswordErrors = (req, res, next) => {
     console.log(errors)
     return res.status(400).json({ errors: errors.array() });
   }
-  // res.send ("stop here")
   next();
 };
 
-
+//FIXME : this is not been test  
 const resetPassword = async (req, res, next) => {
   try {
     const restToken = req.cookies.tempAuthToken;
+    console.log ("the reset cockies is : ",restToken)
     if (!restToken) 
       return res.status(401).send("No token found in cookies");
 

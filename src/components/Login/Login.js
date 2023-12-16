@@ -5,22 +5,16 @@ import * as Yup from "yup";
 import MyTextInput from "../Registration/MytextInput";
 import EmailSuccessComponent from "../EmailSuccessComponent/EmailSuccessComponent";
 import AnimatedLoader from "../AnimatedLoader/AnimatedLoader";
-import {ForgotPassword, ResetPassword} from "../ResetPassword/ResetPassword"
+import ForgotPassword from "../ResetPassword/ForgotPassword"
 
 import "../../styles/common.css";
 import "../../styles/login.css";
 
-//TODO Password Recovery 
-//NOTE added but not implmeted 
-//TODO User-Friendly Error Messages
-//DONE add a Loading step
-//TODO API Request with Access Token and Refreshing Access Token
 const Login = (props) => {
   const [submitError, setSubmitError] = useState(null);
   const [isLoading, setIsLoading] = useState(false);
   const [isSent, setIsSent] = useState(false)
   const [isFogoten,setIsForgten] = useState(false);
-  //TODO : add a state for the forget password logic
 
   const handleSubmit = (values, { setSubmitting }) => {
     console.log("Sending values:", values);
@@ -97,8 +91,6 @@ const Login = (props) => {
                   {submitError && (
                     <p>Registration failed: {submitError.message}</p>
                   )}
-                  {/* TODO : add forget password buton  */}
-                  {/* TODO : display the  */}
                   <p
                     onClick={()=>{setIsForgten(true)}}>
                     Forget your password ?
