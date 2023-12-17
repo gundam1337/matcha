@@ -99,26 +99,26 @@ const authResetVerification = async (req, res) => {
     // Extract token from the query parameter
     const token = req.query.token;
     if (!token)
-      return res.redirect(`http://localhost:3000/error?code=401#Reset`);
+      return res.redirect(`http://localhost:3000/?code=401#Reset`);
 
     // Verify token format
     try {
       jwt.verify(token, resetTokenSecret);
     } catch (error) {
-      return res.redirect(`http://localhost:3000/error?code=400#Reset`);
+      return res.redirect(`http://localhost:3000/?code=400#Reset`);
     }
 
     // Check if the token exists in the database
     const tokenDoc = await Token.findOne({ token: token });
     if (!tokenDoc || tokenDoc.expiresAt < Date.now()) {
-      return res.redirect(`http://localhost:3000/error?code=401#Reset`);
+      return res.redirect(`http://localhost:3000/?code=401#Reset`);
     }
 
     // Verify user existence
     const email = jwt.decode(token).email;
     const user = await User.findOne({ email: email });
     if (!user) {
-      return res.redirect(`http://localhost:3000/error?code=404#Reset`);
+      return res.redirect(`http://localhost:3000/?code=404#Reset`);
     }
 
     //create another token to send it as a cockies
@@ -135,7 +135,7 @@ const authResetVerification = async (req, res) => {
     res.cookie("tempAuthToken", tempToken);
     res.redirect("http://localhost:3000/?#Reset");
   } catch (error) {
-    return res.redirect(`http://localhost:3000/error?code=500#Reset`);
+    return res.redirect(`http://localhost:3000/?code=500#Reset`);
   }
 };
 

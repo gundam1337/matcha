@@ -58,7 +58,7 @@ export default function Main() {
     if (window.location.hash === "#login") {
       setLoginModalOpen(true);
     }
-    if (window.location.hash === "#Reset") {
+    if (window.location.hash.includes("#Reset")) {
       setIsResetPassword(true);
     }
     const queryParams = queryString.parse(window.location.search);
@@ -81,7 +81,7 @@ export default function Main() {
           <h2>
             <span className="slogan-app"></span>
           </h2>
-
+          {/* NOTE : register */}
           <ModalButton
             label="Create account"
             handleOpen={handleModal(setRegistrationModalOpen)}
@@ -94,7 +94,7 @@ export default function Main() {
           </AppModal>
 
           <br />
-
+          {/* NOTE : login */}
           <ModalButton
             label="login"
             handleOpen={handleModal(setLoginModalOpen)}
@@ -106,7 +106,7 @@ export default function Main() {
             <Login onClick={handleModal(setLoginModalOpen)} isVerified= {isVerified} />
           </AppModal>
 
-
+          {/* NOTE : rest password  */}
           <AppModal
             isOpen={isResetPassword}
             handleClose={handleModal(setIsResetPassword)}
