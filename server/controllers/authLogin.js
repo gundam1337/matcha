@@ -83,7 +83,7 @@ const handleSessionManagement = async (req, res,next) => {
     const accessToken = jwt.sign(
       { username: user.username },
       accessTokenSecret,
-      { expiresIn: "1m" }
+      { expiresIn: "10m" }
     );
 
     // Create Refresh Token
@@ -171,16 +171,4 @@ module.exports = { login, signout };
 // };
 
 //NOTE this is for sending emails 
-// prepareEmailContent(verificationLink)
-// .then((emailContent) => {
-//   return sendEmail(email, emailContent);
-// })
-// .then(() => {
-//   console.log("The email has been sent");
-//   res.status(200).json({ message: "Please check your email box" });
-// })
-// .catch((error) => {
-//   if (!res.headersSent) {
-//     res.status(500).send("Something is wrong with our email services");
-//   }
-// });
+//DONE : already done 

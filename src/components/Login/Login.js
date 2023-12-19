@@ -1,11 +1,12 @@
-import React, { useState } from "react";
+import React, { useState,useContext } from "react";
 import { Formik, Form } from "formik";
 import axios from "axios";
 import * as Yup from "yup";
 import MyTextInput from "../Registration/MytextInput";
 import EmailSuccessComponent from "../EmailSuccessComponent/EmailSuccessComponent";
 import AnimatedLoader from "../AnimatedLoader/AnimatedLoader";
-import ForgotPassword from "../ResetPassword/ForgotPassword"
+import ForgotPassword from "../ResetPassword/ForgotPassword";
+import AuthContext from "../../context/AuthProvider";
 
 import "../../styles/common.css";
 import "../../styles/login.css";
@@ -15,14 +16,19 @@ const Login = (props) => {
   const [isLoading, setIsLoading] = useState(false);
   const [isSent, setIsSent] = useState(false)
   const [isFogoten,setIsForgten] = useState(false);
+  const {setAuth} = useContext(AuthContext)
 
+  //TODO : after a successful response from the server redirect the user to the protected routes
   const handleSubmit = (values, { setSubmitting }) => {
     console.log("Sending values:", values);
+    const {name,password} = values;
+    console.log(name,password)
     setIsLoading(true);
     axios
       .post("http://localhost:3001/signin", values, { withCredentials: true })
       .then((response) => {
-        console.log("the response ", response);
+        const accessToken = response?.data?.accessToken;
+        setAuth({name,password,accessToken})
       })
       .catch((error) => {
         console.log("the error", error.response?.data);

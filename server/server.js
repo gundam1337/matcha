@@ -2,6 +2,7 @@ const mongoose = require('mongoose');
 const config = require('./config/database');
 const app = require('./app');
 const logger = require('./utils/logger'); // hypothetical utility for logging
+//
 
 const startServer = async () => {
   try {
