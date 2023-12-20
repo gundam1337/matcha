@@ -43,7 +43,7 @@ export default function Navbar()
     setIsOpen(false);
   }
 
-
+  //TODO : change the anchor elements to the react router 
     return ( 
     <nav className="navbar">
     <a className="logo" href="index.html">matcha</a>

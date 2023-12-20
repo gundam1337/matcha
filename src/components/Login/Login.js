@@ -1,12 +1,13 @@
-import React, { useState,useContext } from "react";
+import React, { useState, useContext } from "react";
 import { Formik, Form } from "formik";
 import axios from "axios";
 import * as Yup from "yup";
 import MyTextInput from "../Registration/MytextInput";
-import EmailSuccessComponent from "../EmailSuccessComponent/EmailSuccessComponent";
 import AnimatedLoader from "../AnimatedLoader/AnimatedLoader";
 import ForgotPassword from "../ResetPassword/ForgotPassword";
-import AuthContext from "../../context/AuthProvider";
+//TODO : I think I should put the context here 
+import {useAuth} from "../../context/AuthProvider";
+import { useNavigate } from "react-router-dom";
 
 import "../../styles/common.css";
 import "../../styles/login.css";
@@ -14,24 +15,28 @@ import "../../styles/login.css";
 const Login = (props) => {
   const [submitError, setSubmitError] = useState(null);
   const [isLoading, setIsLoading] = useState(false);
-  const [isSent, setIsSent] = useState(false)
-  const [isFogoten,setIsForgten] = useState(false);
-  const {setAuth} = useContext(AuthContext)
+  const [isFogoten, setIsForgten] = useState(false);
+  const { setAuth } = useContext(useAuth);
+  const navigate = useNavigate();
 
-  //TODO : after a successful response from the server redirect the user to the protected routes
   const handleSubmit = (values, { setSubmitting }) => {
-    console.log("Sending values:", values);
-    const {name,password} = values;
-    console.log(name,password)
     setIsLoading(true);
     axios
       .post("http://localhost:3001/signin", values, { withCredentials: true })
       .then((response) => {
+        
         const accessToken = response?.data?.accessToken;
-        setAuth({name,password,accessToken})
+
+        // Store the access token in localStorage or sessionStorage
+        localStorage.setItem("accessToken", accessToken);
+        setAuth({ accessToken :accessToken,isAuthenticated:true });
+        // Use navigate to redirect to the protected route
+        navigate("/home");
       })
       .catch((error) => {
+        //TODO : re-foramt the error 
         console.log("the error", error.response?.data);
+        setSubmitError("server is not working")
       })
       .finally(() => {
         setSubmitting(false);
@@ -39,11 +44,9 @@ const Login = (props) => {
       });
   };
 
-  if (isSent) {
-    return <EmailSuccessComponent />; // This is shown when the email has been sent
-  }
 
-  if (!isLoading && !isSent && !isFogoten)
+
+  if (!isLoading  && !isFogoten)
     return (
       <>
         <Formik
@@ -98,7 +101,10 @@ const Login = (props) => {
                     <p>Registration failed: {submitError.message}</p>
                   )}
                   <p
-                    onClick={()=>{setIsForgten(true)}}>
+                    onClick={() => {
+                      setIsForgten(true);
+                    }}
+                  >
                     Forget your password ?
                   </p>
                 </div>
@@ -112,8 +118,8 @@ const Login = (props) => {
   if (isLoading) {
     return <AnimatedLoader />;
   }
-  if (isFogoten)
-  return <ForgotPassword></ForgotPassword>
+  if (isFogoten) 
+    return <ForgotPassword></ForgotPassword>;
 };
 
 export default Login;

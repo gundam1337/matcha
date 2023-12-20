@@ -6,6 +6,7 @@ const authReset = require("../controllers/authReset");
 const router = express.Router();
 
 //TODO add the isAuth midllware ; this function check the if the usr is legit
+//NOTE : the isAuth is to check every request 
 
 router.route("/signin").post(authLogin.login);
 
@@ -18,5 +19,8 @@ router.route("/register")
   .get(authRegister.verifyEmailToken);
 
 router.route("/signout").get(authLogin.signout);
+
+//TODO : this route is for refreching the access token using the refreshToken
+router.route("/refresh-token").post();
 
 module.exports = router;

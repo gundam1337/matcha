@@ -118,11 +118,8 @@ const handleSessionManagement = async (req, res,next) => {
 };
 
 //NOTE : Two-Factor Authentication Middleware
-//DONE : create the content of the email 'a new login is happend '
 const sendLoginNotifactionEmail = async (req, res) => {
-  //DONE :find the email of the user 
   const email = req.email;
-  //DONE : send the email
 
   sendEmail(email, 'login')
   .then(() => {
