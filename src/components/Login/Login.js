@@ -1,22 +1,22 @@
-import React, { useState, useContext } from "react";
+import React, { useState} from "react";
 import { Formik, Form } from "formik";
 import axios from "axios";
 import * as Yup from "yup";
 import MyTextInput from "../Registration/MytextInput";
 import AnimatedLoader from "../AnimatedLoader/AnimatedLoader";
 import ForgotPassword from "../ResetPassword/ForgotPassword";
-//TODO : I think I should put the context here 
 import {useAuth} from "../../context/AuthProvider";
 import { useNavigate } from "react-router-dom";
 
 import "../../styles/common.css";
 import "../../styles/login.css";
 
+//FIXME : remove the space around the username and the password 
 const Login = (props) => {
   const [submitError, setSubmitError] = useState(null);
   const [isLoading, setIsLoading] = useState(false);
   const [isFogoten, setIsForgten] = useState(false);
-  const { setAuth } = useContext(useAuth);
+  const { login } = useAuth();
   const navigate = useNavigate();
 
   const handleSubmit = (values, { setSubmitting }) => {
@@ -29,7 +29,7 @@ const Login = (props) => {
 
         // Store the access token in localStorage or sessionStorage
         localStorage.setItem("accessToken", accessToken);
-        setAuth({ accessToken :accessToken,isAuthenticated:true });
+        login(accessToken);
         // Use navigate to redirect to the protected route
         navigate("/home");
       })

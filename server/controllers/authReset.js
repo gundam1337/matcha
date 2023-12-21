@@ -6,6 +6,11 @@ const bcrypt = require("bcrypt");
 const { body, validationResult } = require("express-validator");
 const { sendEmail } = require("../utils/sendEmail");
 
+
+
+const accessToken = "yourAccessTokenSecret"; // Replace with your secret key for access token
+const refreshToken = "yourRefreshTokenSecret";
+
 //NOTE: Validation inputs Middleware
 const resetTokenSecret = "myresetTokenSecret";
 
@@ -121,7 +126,8 @@ const authResetVerification = async (req, res) => {
       return res.redirect(`http://localhost:3000/?code=404#Reset`);
     }
 
-    //create another token to send it as a cockies
+   
+    //rename this to send to mach the same as login logic
     const tempToken = jwt.sign(
       {
         token,
@@ -147,7 +153,7 @@ const validateResetPassword = [
     .withMessage("Password must be at least 8 characters")
     .matches(/^(?=.*[a-z])(?=.*[0-9])/)
     .withMessage("Must contain 8 characters and one number"),
-  body("passwordConfirmation")
+  body("confirmPassword")
     .isLength({ min: 8 })
     .withMessage("Password confirmation must be at least 8 characters")
     .matches(/^(?=.*[a-z])(?=.*[0-9])/)
@@ -164,23 +170,24 @@ const validateResetPassword = [
 
 const handlevalidateResetPasswordErrors = (req, res, next) => {
   const errors = validationResult(req);
+  console.log('i am here')
   if (!errors.isEmpty()) {
-    console.log("inputs are not good ")
-    console.log(errors)
+    console.log(req.body.password)
+    //console.log(errors)
     return res.status(400).json({ errors: errors.array() });
   }
   next();
 };
 
-//FIXME : this is not been test  
+
 const resetPassword = async (req, res, next) => {
   try {
-    const restToken = req.cookies.tempAuthToken;
-    console.log ("the reset cockies is : ",restToken)
-    if (!restToken) 
+    const resetToken = req.cookies.tempAuthToken;
+    console.log ("the reset cockies is : ",resetToken)
+    if (!resetToken) 
       return res.status(401).send("No token found in cookies");
 
-    const decodedTempToken = jwt.verify(restToken, resetTokenSecret);
+    const decodedTempToken = jwt.verify(resetToken, resetTokenSecret);
     const innerTokenIsVerified = decodedTempToken.isVerified;
 
     if (!innerTokenIsVerified)
@@ -202,7 +209,7 @@ const resetPassword = async (req, res, next) => {
     const user = await User.findOne({ email: email });
 
     if (!user) {
-      res.status(400).send("User not found");
+      return res.status(400).send("User not found");
     }
 
     const newPassword = req.body.password;
@@ -212,7 +219,15 @@ const resetPassword = async (req, res, next) => {
 
     user.passwordHash = passwordHash;
     await user.save();
-    res.send("Password reset successfully");
+
+    res.cookie("refreshToken", refreshToken, {
+      httpOnly: true,     // Makes the cookie inaccessible to client-side scripts, enhancing security against XSS attacks
+      sameSite: 'strict', // Strictly controls when cookies are sent; use 'lax' for less strict control
+      path: '/',          // Sets the cookie to be accessible for the entire site
+      maxAge: 24 * 60 * 60 * 1000 // Sets the cookie to expire in 24 hours (in milliseconds)
+    });
+    res.json({ accessToken , message : "the user is exist"});
+
   } catch (error) {
     res.status(401).send("Invalid or expired token");
   }

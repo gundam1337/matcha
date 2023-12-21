@@ -3,10 +3,13 @@ const express = require("express");
 const path = require("path");
 const bodyParser = require("body-parser");
 const helmet = require("helmet");
+const cookieParser = require('cookie-parser');
+
 
 const app = express();
 const authRoutes = require("./routes/auth.routes");
 
+app.use(cookieParser());
 app.use(helmet());
 app.use(express.json());
 app.use(bodyParser.json());

@@ -21,7 +21,7 @@ export const AuthProvider = ({ children }) => {
   }, []);
 
   // Function to update authentication state and local storage when the user logs in
-  const login = (accessToken, refreshToken) => {
+  const login = (accessToken) => {
     localStorage.setItem('accessToken', accessToken);
     setAuthState({
       accessToken,

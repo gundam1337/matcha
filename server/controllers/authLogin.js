@@ -106,7 +106,7 @@ const handleSessionManagement = async (req, res,next) => {
 
      // Storing tokens in the request object to be used by subsequent middleware
      req.accessToken = accessToken;
-     req.refreshToken = refreshToken;
+  //   req.refreshToken = refreshToken;
      next();
 
   } catch (err) {

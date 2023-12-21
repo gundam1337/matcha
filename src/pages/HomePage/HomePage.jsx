@@ -1,4 +1,4 @@
-
+//TODO : Add a function keeps me logged 
 function HomePage() {
   return (
     <div className="home-page">

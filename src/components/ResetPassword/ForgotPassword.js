@@ -1,13 +1,13 @@
-import { Formik, Form, useField } from "formik";
+import { Formik, Form} from "formik";
 import { useState, useEffect } from "react";
 import axios from "axios";
 import * as Yup from "yup";
 import MyTextInput from "../Registration/MytextInput";
 import AnimatedLoader from "../AnimatedLoader/AnimatedLoader";
 import EmailSuccessComponent from "../EmailSuccessComponent/EmailSuccessComponent";
+//FIXME : remove the space around the username and the password 
 
 
-//GOAL IS : send a verifcation email
 const ForgotPassword = () => {
   const [submitError, setSubmitError] = useState(null); //this is for the inputs error
   const [isLoading, setIsLoading] = useState(false); //this is for loading

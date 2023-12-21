@@ -1,4 +1,4 @@
-import { Formik, Form, useField } from "formik";
+import { Formik, Form} from "formik";
 import { useState, useEffect } from "react";
 import axios from "axios";
 import * as Yup from "yup";
@@ -6,12 +6,19 @@ import MyTextInput from "../Registration/MytextInput";
 import AnimatedLoader from "../AnimatedLoader/AnimatedLoader";
 import queryString from "query-string";
 import Cookies from "js-cookie";
+import {useAuth} from "../../context/AuthProvider";
+import { useNavigate } from "react-router-dom";
+
+
 //TODO : after the submuit commit a reditrection the home page 
 
 const ResetPassword = () => {
-  const [submitError, setSubmitError] = useState(null);
+  const [submitError, setSubmitError] = useState(null);//this for error 
   const [isLoading, setIsLoading] = useState(false);
   const [isAuthTokenPresent, setIsAuthTokenPresent] = useState(false);
+  const { login } = useAuth();
+  const navigate = useNavigate();
+
 
 
   useEffect(() => {
@@ -46,11 +53,19 @@ const ResetPassword = () => {
   }, []);
 
   const handleSubmit = (values, { setSubmitting }) => {
-    console.log("Sending values:", values);
     setIsLoading(true);
+
     axios
-      .post("http://localhost:3001/reset-password", values)
-      .then()
+      .post("http://localhost:3001/reset-password", values,{ withCredentials: true })
+      .then( response =>{
+        const accessToken = response?.data?.accessToken;
+
+        // Store the access token in localStorage or sessionStorage
+        localStorage.setItem("accessToken", accessToken);
+        login(accessToken);
+        // Use navigate to redirect to the protected route
+        navigate("/home");
+      })
       .catch()
       .finally(() => {
         setSubmitting(false);
