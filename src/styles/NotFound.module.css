@@ -1,7 +1,11 @@
- body {
+@import url('https://fonts.googleapis.com/css2?family=Inconsolata:wght@700&family=Space+Mono:wght@400;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;500&display=swap');
+
+ /* Notfound-body {
      font-family: "Inconsolata";
+     background: white;
  }
- 
+  */
  ul {
      padding-left: 24px;
  }
