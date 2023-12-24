@@ -7,9 +7,8 @@ import Bio from "./Bio";
 import 'react-phone-number-input/style.css'
 import { Image, Info, PhoneNumber, Gender } from './ProfileComponents';
 
-
-
-//TODO Add the fromik form to get all inputs 
+//TODO  : Multiple Image Uploader 
+//TODO  :Add the fromik form to get all inputs 
 
 const Profile = () => {
 

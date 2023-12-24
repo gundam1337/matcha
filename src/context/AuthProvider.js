@@ -1,7 +1,7 @@
 import React, { createContext, useState, useEffect } from 'react';
 
 // Create a context for authentication data
-export const AuthContext = createContext(null);
+export const AuthContext = createContext();
 
 export const AuthProvider = ({ children }) => {
   const [authState, setAuthState] = useState({
@@ -18,7 +18,12 @@ export const AuthProvider = ({ children }) => {
         isAuthenticated: true,
       });
     }
-  }, []);
+  }, [])
+
+  // useEffect(() => {
+  //   localStorage.setItem('authState', JSON.stringify(authState));
+  //   setAuthState(true);
+  // }, [authState]);
 
   // Function to update authentication state and local storage when the user logs in
   const login = (accessToken) => {

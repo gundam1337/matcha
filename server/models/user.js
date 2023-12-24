@@ -6,60 +6,76 @@ var validateEmail = function (email) {
   return re.test(email);
 };
 const userSchema = new Schema({
-  username: { //DONE
+  username: {
+    //DONE
     type: String,
     required: true,
     unique: true,
   },
-  email: {  //DONE
+  email: {
+    //DONE
     type: String,
     required: true,
     validate: [validateEmail, "Please fill a valid email address"],
     unique: true,
   },
-  passwordHash: { //DONE
+  passwordHash: {
+    //DONE
     type: String,
     required: true,
   },
-  emailVerified: { //DONE
+  emailVerified: {
+    //DONE
     type: Boolean,
     default: false,
   },
-  profile: { 
-    profilePicture: { //DONE
+  profile: {
+    isProfileSetup: {
+      type: Boolean,
+      default: false,
+    },
+    profilePicture: {
+      //DONE
       type: String,
       required: false, // Set to true if you want the image to be mandatory
     },
-    firstName: {  //DONE
+    firstName: {
+      //DONE
       type: String,
       //required: true
     },
-    lastName: { //DONE
+    lastName: {
+      //DONE
       type: String,
       //required: true
     },
-    birthdate: {  //DONE
+    birthdate: {
+      //DONE
       type: Date,
       //required: true
     },
-    phoneNumber: {  //DONE
+    phoneNumber: {
+      //DONE
       type: String,
       //required: true
     },
-    gender: { //DONE
+    gender: {
+      //DONE
       type: String,
       //required: true
     },
-    location: { //DONE
+    location: {
+      //DONE
       city: String,
       country: String,
     },
-    bio: String,  //DONE
-    interests: [String],//NOTE hobies 
+    bio: String, //DONE
+    interests: [String], //NOTE hobies
   },
-  preferences: { 
-    gender: String, // DONE in the server 
-    ageRange: { //DONE
+  preferences: {
+    gender: { type: Boolean }, // DONE in the server
+    ageRange: {
+      //DONE
       min: Number,
       max: Number,
     },
@@ -79,18 +95,18 @@ const userSchema = new Schema({
   },
   refreshToken: {
     type: String,
-    required: false
-},
-resetToken : {
-  token: {
-    type: String,
-    // required: true,
+    required: false,
   },
-  expiresAt: {
-    type: Date,
-    // required: true,
-  }
-}
+  resetToken: {
+    token: {
+      type: String,
+      // required: true,
+    },
+    expiresAt: {
+      type: Date,
+      // required: true,
+    },
+  },
 });
 
 const User = mongoose.model("User", userSchema);

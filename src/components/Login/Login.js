@@ -1,17 +1,17 @@
-import React, { useState} from "react";
+import React, { useState } from "react";
 import { Formik, Form } from "formik";
 import axios from "axios";
 import * as Yup from "yup";
 import MyTextInput from "../Registration/MytextInput";
 import AnimatedLoader from "../AnimatedLoader/AnimatedLoader";
 import ForgotPassword from "../ResetPassword/ForgotPassword";
-import {useAuth} from "../../context/AuthProvider";
+import { useAuth } from "../../context/AuthProvider";
 import { useNavigate } from "react-router-dom";
 
 import "../../styles/common.css";
 import "../../styles/login.css";
 
-//FIXME : remove the space around the username and the password 
+//DONE : remove the space around the username and the password
 const Login = (props) => {
   const [submitError, setSubmitError] = useState(null);
   const [isLoading, setIsLoading] = useState(false);
@@ -20,23 +20,30 @@ const Login = (props) => {
   const navigate = useNavigate();
 
   const handleSubmit = (values, { setSubmitting }) => {
+    const trimmedValues = {
+      name: values.name.trim(),
+      password: values.password.trim(),
+    };
     setIsLoading(true);
     axios
-      .post("http://localhost:3001/signin", values, { withCredentials: true })
+      .post("http://localhost:3001/signin", trimmedValues, {
+        withCredentials: true,
+      })
       .then((response) => {
-        
-        const accessToken = response?.data?.accessToken;
-
-        // Store the access token in localStorage or sessionStorage
-        localStorage.setItem("accessToken", accessToken);
-        login(accessToken);
-        // Use navigate to redirect to the protected route
-        navigate("/home");
+        const { accessToken, isProfileSetup } = response?.data || {};
+        if (!accessToken) {
+          throw new Error("Access token not found in the response");
+        }
+        if (accessToken) {
+          localStorage.setItem("accessToken", accessToken);
+          login(accessToken);
+          navigate(isProfileSetup ? "/home" : "/profile");
+        }
       })
       .catch((error) => {
-        //TODO : re-foramt the error 
+        //TODO : re-foramt the error
         console.log("the error", error.response?.data);
-        setSubmitError("server is not working")
+        setSubmitError("server is not working");
       })
       .finally(() => {
         setSubmitting(false);
@@ -44,9 +51,7 @@ const Login = (props) => {
       });
   };
 
-
-
-  if (!isLoading  && !isFogoten)
+  if (!isLoading && !isFogoten)
     return (
       <>
         <Formik
@@ -118,8 +123,7 @@ const Login = (props) => {
   if (isLoading) {
     return <AnimatedLoader />;
   }
-  if (isFogoten) 
-    return <ForgotPassword></ForgotPassword>;
+  if (isFogoten) return <ForgotPassword></ForgotPassword>;
 };
 
 export default Login;

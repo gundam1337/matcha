@@ -75,6 +75,7 @@ const handleSessionManagement = async (req, res,next) => {
 
   try {
     const user = await findUserByName(name);
+    req.isProfileSetup = user.profile.isProfileSetup;
     if (!user) {
       res.status(400).send("User not found");
       return;
@@ -133,7 +134,7 @@ const sendLoginNotifactionEmail = async (req, res) => {
     });
   //DONE : end the chain 
   const accessToken = req.accessToken;
-  res.json({ accessToken , message : "the user is exist"});
+  res.json({ accessToken ,isProfileSetup: req.isProfileSetup});
 }
 
 

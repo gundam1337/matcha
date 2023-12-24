@@ -1,4 +1,4 @@
-import { Formik, Form} from "formik";
+import { Formik, Form } from "formik";
 import { useState } from "react";
 import axios from "axios";
 import * as Yup from "yup";
@@ -7,6 +7,7 @@ import MyTextInput from "./MytextInput";
 import AnimatedLoader from "../AnimatedLoader/AnimatedLoader";
 import EmailSuccessComponent from "../EmailSuccessComponent/EmailSuccessComponent";
 
+//DONE : remove the space around the username and the password
 
 const Registration = (props) => {
   const [submitError, setSubmitError] = useState(null);
@@ -14,10 +15,15 @@ const Registration = (props) => {
   const [isSent, setIsSent] = useState(false);
 
   const handleSubmit = (values, { setSubmitting }) => {
+    const trimmedValues = {
+      name: values.name.trim(),
+      email: values.email.trim(),
+      password: values.password.trim(),
+    };
     console.log("Sending values:", values);
     setIsLoading(true);
     axios
-      .post("http://localhost:3001/register", values)
+      .post("http://localhost:3001/register", trimmedValues)
       .then((response) => {
         const { message } = response.data;
         if (message === "Please check your email box") {
@@ -69,7 +75,7 @@ const Registration = (props) => {
               .matches(
                 /^(?=.*[a-z])(?=.*[0-9])/,
                 "Must contain 8 characters and one number"
-              )
+              ),
           })}
           onSubmit={handleSubmit}
         >
@@ -83,12 +89,12 @@ const Registration = (props) => {
               <p>We need information to help you find your Matcha</p>
               <Form autoComplete="on">
                 <div className="main-informations">
-                    <MyTextInput
-                      name="name"
-                      type="text"
-                      placeholder="Your name"
-                      error={submitError?.message}
-                    />
+                  <MyTextInput
+                    name="name"
+                    type="text"
+                    placeholder="Your name"
+                    error={submitError?.message}
+                  />
                   <MyTextInput
                     name="email"
                     type="text"
