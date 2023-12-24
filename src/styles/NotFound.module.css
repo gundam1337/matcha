@@ -1,16 +1,18 @@
 @import url('https://fonts.googleapis.com/css2?family=Inconsolata:wght@700&family=Space+Mono:wght@400;700&display=swap');
 @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;500&display=swap');
 
- /* Notfound-body {
+ /* body {
      font-family: "Inconsolata";
      background: white;
+ } */
+ .NotFound{
+    
  }
-  */
  ul {
      padding-left: 24px;
  }
  
- .row {
+ .NotFound-row {
      margin: 50px 0px;
      display: flex;
      flex-direction: row;
@@ -19,18 +21,17 @@
      width: 80%;
  }
  
- .main-title {
+ .NotFound-main-title {
      font-family: 'Space Mono';
      font-style: normal;
      font-weight: 700;
      font-size: 64px;
      line-height: 95px;
      letter-spacing: -0.035em;
-     /* Gray 1 */
      color: #333333;
  }
  
- .title {
+ .NotFound-title {
      font-family: 'Inconsolata';
      font-style: normal;
      font-weight: 700;
@@ -41,7 +42,7 @@
      color: #333333;
  }
  
- img {
+ img.NotFound {
      width: 60%;
      max-width: 500px;
      /* min-width: 200px;
@@ -51,7 +52,7 @@
      object-fit: contain;
  }
  
- p {
+ p.NotFound {
      font-family: 'Space Mono';
      font-style: normal;
      font-weight: 400;
@@ -90,7 +91,7 @@
      transition: all 0.4s;
  }
  
- .copyright {
+ .NotFound-copyright {
      margin-bottom: 20px;
      font-size: 15px;
      font-weight: 700;
@@ -100,36 +101,36 @@
  }
  
  @media (max-width:1050px) {
-     .row {
+     .NotFound-row {
          width: 97%;
      }
-     .main-title {
+     .NotFound-main-title {
          font-size: 65px;
          line-height: 75px;
      }
-     p {
+     p.NotFound {
          font-size: 20px;
      }
-     img {
+     img.NotFound {
          width: 50%;
      }
  }
  
  @media (max-width: 700px) {
-     .row {
+     .NotFound-row {
          flex-direction: column;
      }
-     img {
+     img.NotFound {
          width: 90%;
      }
-     .main-title {
+     .NotFound-main-title {
          font-size: 48px;
          line-height: 70px;
      }
-     .title {
+     .NotFound-title {
          font-size: 24px;
      }
-     p {
+     p.NotFound {
          font-size: 18px;
          line-height: 26px;
      }

@@ -3,36 +3,39 @@ import styles from "../../styles/NotFound.module.css"; // Correct import for CSS
 import notFoundImage from "./notFoundPicture.png"; // Import the image
 
 function NotFound() {
+  //that is just a temporary solution
   useEffect(() => {
-    document.body.style.fontFamily = '"Inconsolata", "Space Mono", "Poppins", sans-serif';
     document.body.style.background = "white";
+    document.body.style.fontFamily = '"Readex Pro", sans-serif';
 
     return () => {
-      document.body.style.fontFamily = '';
-      document.body.style.background = '';
+      document.body.classList.remove("body");
     };
   }, []);
 
   return (
-    <div className={styles.NotFound}>
-      <div className={styles.NotFoundTitle}>404 NOT FOUND</div> {/* Updated class name */}
-      <section className={styles.NotFoundRow}> {/* Updated class name */}
-        <img src={notFoundImage} alt="Scarecrow" className={styles.NotFound} />
+    <div>
+      {/* Use the styles object to access class names */}
+      <div className={styles.title}>404 NOT FOUND</div>
+      <section className={styles.row}>
+        <img src={notFoundImage} alt="Scarecrow" />
         <section>
-          <div className={styles.NotFoundMainTitle}>Don't know where you are?</div> {/* Updated class name */}
+          <div className={styles.mainTitle}>Don't know where you are?</div>{" "}
+          {/* Correct class name */}
           <p>we really have no idea either...</p>
           <button className={styles.btn}>BACK TO HOMEPAGE</button>
         </section>
       </section>
-      <div className={styles.footer}>
+      <div className={styles.copyright}>
         created by
         <a
           target="_blank"
           href="https://github.com/Ranimbenkerri"
           rel="noopener noreferrer"
         >
-          <i className={`${styles.githubIcon} fa fa-github`}></i> omar derkaoui
-        </a> - Matcha
+          <i className={`${styles.githubIcon} fa fa-github`}></i> omar derkaoui{" "}
+        </a>{" "}
+        - Matcha
       </div>
     </div>
   );

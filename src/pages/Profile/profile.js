@@ -12,6 +12,7 @@ import { Image, Info, PhoneNumber, Gender } from './ProfileComponents';
 //TODO Add the fromik form to get all inputs 
 
 const Profile = () => {
+
   return (
     <div style={{ textAlign: "center" }}>
       <div className="settings-box">
