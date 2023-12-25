@@ -4,27 +4,33 @@ import React, { createContext, useState, useEffect } from 'react';
 export const AuthContext = createContext();
 
 export const AuthProvider = ({ children }) => {
+  const accessToken = localStorage.getItem('accessToken');
+  const isAuthenticated = accessToken ? true : false;
+
   const [authState, setAuthState] = useState({
-    accessToken: null,
-    isAuthenticated: false,
+    accessToken,
+    isAuthenticated,
   });
-
-  // Load the tokens from local storage or other secure storage when the app starts
-  useEffect(() => {
-    const accessToken = localStorage.getItem('accessToken');
-    if (accessToken ) {
-      setAuthState({
-        accessToken,
-        isAuthenticated: true,
-      });
-    }
-  }, [])
-
+  
+  // const [authState, setAuthState] = useState({
+  //   accessToken: null,
+  //   isAuthenticated: false,
+  //   isLoading: true, // Initialize loading state
+  // });
+  
   // useEffect(() => {
-  //   localStorage.setItem('authState', JSON.stringify(authState));
-  //   setAuthState(true);
-  // }, [authState]);
-
+  //   const accessToken = localStorage.getItem('accessToken');
+  //   if (accessToken) {
+  //     setAuthState({
+  //       accessToken,
+  //       isAuthenticated: true,
+  //       isLoading: false,
+  //     });
+  //   } else {
+  //     setAuthState({ accessToken: null, isAuthenticated: false, isLoading: false });
+  //   }
+  // }, []);
+  
   // Function to update authentication state and local storage when the user logs in
   const login = (accessToken) => {
     localStorage.setItem('accessToken', accessToken);

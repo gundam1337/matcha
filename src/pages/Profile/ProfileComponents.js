@@ -3,28 +3,7 @@ import PhoneInput from 'react-phone-number-input'
 import 'react-phone-number-input/style.css'
 
 
-const Image = () => {
-    return (
-      <>
-        <div className="form-group profile-photo-upload">
-          <label htmlFor="profilePhoto">Profile Photo</label>
-          <img
-            src="https://images.pexels.com/photos/1037995/pexels-photo-1037995.jpeg?auto=compress&cs=tinysrgb&dpr=1&w=500"
-            alt="Person's profile"
-            className="profile-img"
-          ></img>
-          <p className="file-type-info">
-            Accepted file type: .png. Less than 1MB
-          </p>
-  
-          <button type="button" className="btn-upload">
-            Upload
-          </button>
-        </div>
-      </>
-    );
-  };
-  
+
   const Info = () => {
     return (
       <>
@@ -83,4 +62,4 @@ const Image = () => {
     );
   };
 
-  export { Image, Info, PhoneNumber, Gender };
+  export {Info, PhoneNumber, Gender };

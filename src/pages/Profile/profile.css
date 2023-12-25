@@ -124,7 +124,7 @@ input[type="date"] {
 
 .file-type-info {
   color: #666; /* Medium grey for the info text */
-  font-size: 1.5rem; /* Smaller font size for the info text */
+  font-size: 0.5rem; /* Smaller font size for the info text */
   margin-bottom: 20px; /* Space below the info text */
 }
 
