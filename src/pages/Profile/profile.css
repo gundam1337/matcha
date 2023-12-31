@@ -92,59 +92,6 @@ input[type="date"] {
 }
 /* NOTE for the location */
 
-/* //NOTE for image */
-.profile-photo-upload {
-  font-family: Arial, sans-serif; /* Use a common sans-serif font */
-  background-color: #f3f3f3; /* Light grey background */
-  padding: 20px; /* Add some padding around the content */
-  border-radius: 10px; /* Rounded corners */
-  width: 200px; /* Set a fixed width */
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); /* Add a subtle shadow */
-  text-align: center; /* Center-align the text */
-  margin: auto; /* Add margin around the div */
-  display: block;
-  text-align: center; /* Center-align the text */
-}
-.form-group.profile-photo-upload label[for="profilePhoto"] {
-  font-weight: bold; /* Makes the text bold */
-  font-size: 20px; /* Increases the size of the text, you can adjust the value as needed */
-  color: black;
-}
-.profile-img-container {
-  border: 1px solid #ccc; /* Light grey border */
-  padding: 5px; /* Padding around the image */
-  margin-bottom: 20px; /* Space below the image container */
-}
-
-.profile-img {
-  width: 100%; /* Make the image expand to cover the container */
-  height: auto; /* Keep the image aspect ratio */
-  border-radius: 5px; /* Slightly rounded corners for the image */
-}
-
-.file-type-info {
-  color: #666; /* Medium grey for the info text */
-  font-size: 0.5rem; /* Smaller font size for the info text */
-  margin-bottom: 20px; /* Space below the info text */
-}
-
-.btn-upload {
-  background-color: #ff6f63; /* Bootstrap primary color */
-  color: white;
-  font-size: 20px;
-  font-weight: bold;
-  box-shadow: 0px 0px 10px white;
-  border-radius: 30px;
-  border: 2px solid white;
-  margin: 20px 0px 20px 0;
-  transition: 0.5s;
-  padding: 10px 20px;
-  width: 80%;
-}
-
-.btn-upload:hover {
-  background-color: #0056b3; /* Darker blue on hover */
-}
 
 /* //NOTE :  for the radio gender*/
 .radio input[type="radio"] {

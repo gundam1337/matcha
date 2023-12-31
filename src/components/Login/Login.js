@@ -11,7 +11,6 @@ import { useNavigate } from "react-router-dom";
 import "../../styles/common.css";
 import "../../styles/login.css";
 
-//DONE : remove the space around the username and the password
 const Login = (props) => {
   const [submitError, setSubmitError] = useState(null);
   const [isLoading, setIsLoading] = useState(false);

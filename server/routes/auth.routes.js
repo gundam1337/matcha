@@ -1,7 +1,7 @@
 const express = require("express");
-const authRegister = require("../controllers/authRegister"); 
-const authLogin = require("../controllers/authLogin"); 
-const authReset = require("../controllers/authReset");
+const authRegister = require("../controllers/auth/authRegister"); 
+const authLogin = require("../controllers/auth/authLogin"); 
+const authReset = require("../controllers/auth/authReset");
 const router = express.Router();
 
 //TODO : add the isAuth midllware ; this function check the if the usr is legit

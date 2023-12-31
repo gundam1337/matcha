@@ -1,33 +1,29 @@
 import React, { useState } from "react";
-import { Formik } from "formik";
+import { Formik, Form, Field } from "formik";
 import * as Yup from "yup";
 import axios from "axios";
 
-
 import "./profile.css";
-import Image from "./componet/Image";
+import Images from "./componet/Images";
 import Location from "./Location";
 import { SliderComponent, DualRangeSlider } from "./SliderComponent";
 import Hobies from "./Hobies";
 import Bio from "./Bio";
 import "react-phone-number-input/style.css";
-import {Info, PhoneNumber, Gender } from "./ProfileComponents";
-import { useAuth } from "../../context/AuthProvider";
+import { Info, PhoneNumber, Gender } from "./ProfileComponents";
 import { useNavigate } from "react-router-dom";
 
 const Profile = () => {
   const [submitError, setSubmitError] = useState(null);
   const [isLoading, setIsLoading] = useState(false);
-  const [isFogoten, setIsForgten] = useState(false);
-  const { login } = useAuth();
   const navigate = useNavigate();
 
   const handleSubmit = (values) => {
     const formData = new FormData();
     formData.append("image", values.image);
-
+    console.log("value is : ", values.image);
     axios
-      .post("YOUR_ENDPOINT_URL", formData, {
+      .post("http://localhost:3001/profile", formData, {
         headers: {
           "Content-Type": "multipart/form-data",
         },
@@ -47,35 +43,82 @@ const Profile = () => {
       <Formik
         initialValues={{
           image: null,
+          phoneNumber: '',
+          gender: '',
+          location: '',
+          hobbies: [],
         }}
         validationSchema={Yup.object({
           image: Yup.mixed().required("An image is required"),
         })}
         onSubmit={handleSubmit}
       >
-        <div style={{ textAlign: "center" }}>
-          <div className="settings-box">
-            <Image></Image>
-            <br />
-            <Info></Info>
-            <br />
-            <PhoneNumber></PhoneNumber>
-            <br />
-            <Gender></Gender>
-            <br />
-            <Location></Location>
-            <br />
-            <Hobies />
-            <br />
-            <SliderComponent></SliderComponent>
-            <br />
-            <DualRangeSlider></DualRangeSlider>
-            <br />
-            <Bio></Bio>
-            <input className="btn-login" type="submit" value="Submit" />
-            <input className="btn-login" type="submit" value="skip" />
-          </div>
-        </div>
+        {({ setFieldValue, handleSubmit }) => (
+          <form onSubmit={handleSubmit}>
+            <div style={{ textAlign: "center" }}>
+              <div className="settings-box">
+                <Field
+                  name="image"
+                  component={Images}
+                  setFieldValue={setFieldValue}
+                />
+                {/* <Images setFieldValue={setFieldValue} /> */}
+                <br />
+                <Field
+                  name="Info"
+                  component={Info}
+                  setFieldValue={setFieldValue}
+                />
+                <br />
+                <Field
+                  name="PhoneNumber"
+                  component={PhoneNumber}
+                  setFieldValue={setFieldValue}
+                />
+                <br />
+                <Field
+                  name="Gender"
+                  component={Gender}
+                  setFieldValue={setFieldValue}
+                />
+                <br />
+                <Field
+                  name="Location"
+                  component={Location}
+                  setFieldValue={setFieldValue}
+                />
+                <br />
+                <Field
+                  name="Hobies"
+                  component={Hobies}
+                  setFieldValue={setFieldValue}
+                />
+                <br />
+                <Field
+                  name="SliderComponent"
+                  component={SliderComponent}
+                  setFieldValue={setFieldValue}
+                />
+                <br />
+                <Field
+                  name="DualRangeSlider"
+                  component={DualRangeSlider}
+                  setFieldValue={setFieldValue}
+                />
+                <br />
+                <Field
+                  name="Bio"
+                  component={Bio}
+                  setFieldValue={setFieldValue}
+                />
+                <div>
+                  <input className="btn-login" type="submit" value="Submit" />
+                  <input className="btn-login" type="submit" value="skip" />
+                </div>
+              </div>
+            </div>
+          </form>
+        )}
       </Formik>
     </>
   );

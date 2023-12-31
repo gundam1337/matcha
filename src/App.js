@@ -9,11 +9,6 @@ import ContactUs from "./pages/ContactUs/ContactUs";
 
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 
-//DONE : add the route for the About and  ContactUs ... this routes is public
-//DONE : route for "seting up the profile" user after the first loging ...this route is protected
-//DONE : if the user will log for the fist time send him to the profile page
-
-
 function App() {
   return (
     <Router>

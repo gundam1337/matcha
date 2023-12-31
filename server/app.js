@@ -8,6 +8,7 @@ const cookieParser = require('cookie-parser');
 
 const app = express();
 const authRoutes = require("./routes/auth.routes");
+const profileRoute = require("./routes/profile.routes")
 
 app.use(cookieParser());
 app.use(helmet());
@@ -44,7 +45,11 @@ app.use(function(req, res, next) {
 // });
 
 app.use(express.static(path.join(__dirname, "..", "build")));
+
 app.use("/", authRoutes);
+
+app.use("/",profileRoute)
+
 app.get("*", (req, res) => {
   res.sendFile(path.join(__dirname, "..", "build", "index.html"));
 });
