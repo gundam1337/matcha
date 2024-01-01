@@ -1,9 +1,10 @@
-//NOTE 0 : check the auth of the user first
+//DONE 0 : check the auth of the user first
 
 //NOTE  1: Validate the Image ->File Type Check/File Size Limit/Security Scanning
 
 //NOTE 2 :Store the Image in Google Cloud Storage
 
+//NOTE 3 : send the user to the home page after finshing the profile setting up 
 const multer = require("multer");
 const path = require("path");
 

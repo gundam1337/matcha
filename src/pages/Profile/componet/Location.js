@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import Modal from "react-modal";
 import { MapContainer, TileLayer, Marker, useMapEvents } from "react-leaflet";
-import "./location.css";
+import "../style/location.css";
 
 Modal.setAppElement("#root");
 

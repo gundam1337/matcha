@@ -1,16 +1,13 @@
 import React, { useState } from "react";
 import "../style/Images.css";
 
-const Images = ({ setFieldValue,field }) => {
+const Images = ({ setFieldValue, field }) => {
   const [selectedImage, setSelectedImage] = useState(null);
   const [imagePreview, setImagePreview] = useState([]);
 
   const handleImageChange = (e) => {
     //TODO : select 3 images and then display them in a smal boxes
-    if (imagePreview.length >= 1) {
-      // Prevent adding more than 3 images
-      return;
-    }
+    if (imagePreview.length >= 3) return;
 
     const file = e.target.files[0];
     if (file) {
@@ -20,7 +17,6 @@ const Images = ({ setFieldValue,field }) => {
       setFieldValue("image", file);
       //setFieldValue(field.name, file);
 
-
       // Create a preview
       const reader = new FileReader();
       reader.onloadend = () => {
@@ -29,7 +25,7 @@ const Images = ({ setFieldValue,field }) => {
       reader.readAsDataURL(file);
     }
   };
-  //TODO :add a button that can delet a photo 
+  //TODO :add a button that can delet a photo
 
   return (
     <>
@@ -63,7 +59,7 @@ const Images = ({ setFieldValue,field }) => {
             ))}
           </div>
         )}
-
+        {/* TODO how to check in front end the size of the uploaded images */}
         <p className="file-type-info">
           Accepted file type: .png. Less than 1MB
         </p>

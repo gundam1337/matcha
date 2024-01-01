@@ -5,10 +5,10 @@ import axios from "axios";
 
 import "./profile.css";
 import Images from "./componet/Images";
-import Location from "./Location";
-import { SliderComponent, DualRangeSlider } from "./SliderComponent";
+import Location from "./componet/Location";
+import { SliderComponent, DualRangeSlider } from "./componet/SliderComponent";
 import Hobies from "./Hobies";
-import Bio from "./Bio";
+import Bio from "./componet/Bio";
 import "react-phone-number-input/style.css";
 import { Info, PhoneNumber, Gender } from "./ProfileComponents";
 import { useNavigate } from "react-router-dom";
@@ -24,16 +24,17 @@ const Profile = () => {
     console.log("value is : ", values.image);
     axios
       .post("http://localhost:3001/profile", formData, {
+        withCredentials: true,
         headers: {
           "Content-Type": "multipart/form-data",
+          "x-access-token": localStorage.getItem("accessToken"),
         },
       })
+
       .then((response) => {
-        // Handle response here
         console.log(response);
       })
       .catch((error) => {
-        // Handle error here
         console.error(error);
       });
   };
@@ -42,10 +43,11 @@ const Profile = () => {
     <>
       <Formik
         initialValues={{
-          image: null,
-          phoneNumber: '',
-          gender: '',
-          location: '',
+          image: null, //3 images
+          info: [], // name
+          phoneNumber: "",
+          gender: "",
+          location: "",
           hobbies: [],
         }}
         validationSchema={Yup.object({
@@ -62,7 +64,6 @@ const Profile = () => {
                   component={Images}
                   setFieldValue={setFieldValue}
                 />
-                {/* <Images setFieldValue={setFieldValue} /> */}
                 <br />
                 <Field
                   name="Info"

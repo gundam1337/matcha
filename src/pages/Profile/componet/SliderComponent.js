@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import "./SliderComponent.css"
+import "../style/SliderComponent.css"
 
 export const SliderComponent = () => {
   const [distance, setDistance] = useState(30);
