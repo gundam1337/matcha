@@ -67,8 +67,6 @@ const authentication = async (req, res, next) => {
 };
 
 //NOTE  : Session Management Middleware
-//DONE  : Create Refresh- and Accesstoken AND Store Refreshtoken with user in database
-//DONE  : Send token. Refreshtoken as a cookie and accesstoken as a regular response
 
 const handleSessionManagement = async (req, res,next) => {
   const { name } = req.body;
@@ -103,11 +101,9 @@ const handleSessionManagement = async (req, res,next) => {
       path: '/',          // Sets the cookie to be accessible for the entire site
       maxAge: 24 * 60 * 60 * 1000 // Sets the cookie to expire in 24 hours (in milliseconds)
     });
-    // res.json({ accessToken , message : "the user is exist"});
 
      // Storing tokens in the request object to be used by subsequent middleware
      req.accessToken = accessToken;
-  //   req.refreshToken = refreshToken;
      next();
 
   } catch (err) {
@@ -132,7 +128,6 @@ const sendLoginNotifactionEmail = async (req, res) => {
         res.status(500).send("Something is wrong with our email services");
       }
     });
-  //DONE : end the chain 
   const accessToken = req.accessToken;
   res.json({ accessToken ,isProfileSetup: req.isProfileSetup});
 }
@@ -153,20 +148,3 @@ const signout = (req, res, next) => {
 };
 
 module.exports = { login, signout };
-
-//NOTE : add this middlware at the top of evry route
-// const isAuth = req => {
-//   const authorization = req.headers['authorization'];
-//   if (!authorization) throw new Error('You need to login.');
-//   // Based on 'Bearer ksfljrewori384328289398432'
-//   const token = authorization.split(' ')[1];
-//   const { userId } = verify(token, process.env.ACCESS_TOKEN_SECRET);
-//   return userId;
-// };
-
-// module.exports = {
-//   isAuth,
-// };
-
-//NOTE this is for sending emails 
-//DONE : already done 

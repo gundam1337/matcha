@@ -17,12 +17,9 @@ app.use(bodyParser.json());
 app.use(express.urlencoded({ extended: false }));
 
 app.use(function (req, res, next) {
-  // Allow all origins or be specific if needed
-  //res.header("Access-Control-Allow-Origin", "http://localhost:3000");
   var allowedOrigins = [
     "http://localhost:3000",
     "http://localhost:3001",
-    "http://someotherdomain.com",
   ];
   var origin = req.headers.origin;
   if (allowedOrigins.includes(origin)) {
@@ -49,16 +46,11 @@ app.use(function (req, res, next) {
   }
 });
 
-// app.use((req, res, next) => {
-//   res.set('Cache-Control', 'no-store');
-//   next();
-// });
 
 app.use(express.static(path.join(__dirname, "..", "build")));
 
 app.use("/", authRoutes);
 
-// DONE: this is a protected route : you can access to it without the access token and refrech token
 app.use("/", profileRoute);
 
 app.get("*", (req, res) => {

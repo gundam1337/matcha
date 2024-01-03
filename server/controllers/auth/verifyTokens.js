@@ -1,5 +1,9 @@
+const jwt = require('jsonwebtoken');
+//TODO read this two from the .env 
+const accessTokenSecret = 'yourAccessTokenSecret'; // Replace with your actual secret
+const refreshTokenSecret = 'yourRefreshTokenSecret'; // Replace with your actual secret
+
 function verifyTokens(req, res, next) {
-    // Assuming the access token is sent in the header as 'x-access-token'
     const accessToken = req.headers['x-access-token'];
     const refreshToken = req.cookies.refreshToken;
 
@@ -11,15 +15,35 @@ function verifyTokens(req, res, next) {
         return res.status(403).send({ message: 'Refresh Token is required' });
     }
 
-    console.log("accessToken : ",accessToken)
-    console.log("refreshToken : ",refreshToken)
+    // Verify Access Token
+    jwt.verify(accessToken, accessTokenSecret, (err, user) => {
+        if (err) {
+            // Access Token is invalid or expired, verify Refresh Token
+            jwt.verify(refreshToken, refreshTokenSecret, (err, user) => {
+                if (err) {
+                    // Refresh Token is invalid
+                    return res.status(403).send({ message: 'Invalid Refresh Token' });
+                }
 
-    // Here you would add your logic to validate the tokens.
-    // If valid, call next() to proceed to the setProfile middleware
-    // If not valid, redirect to the login page or send an error response
+                // Refresh Token is valid, generate new Access Token
+                const newAccessToken = jwt.sign(
+                    { username: user.username },
+                    accessTokenSecret,
+                    { expiresIn: '10m' }
+                );
 
-    // For this example, let's assume the tokens are valid
-    next();
+                // Attach new Access Token to the request, but don't send it yet
+                req.newAccessToken = newAccessToken;
+                next();
+            });
+        } else {
+            // Access Token is valid, proceed
+            req.user = user;
+            next();
+        }
+    });
 }
+
+
 
 module.exports = verifyTokens;
