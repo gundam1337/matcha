@@ -38,7 +38,7 @@ function verifyTokens(req, res, next) {
             });
         } else {
             // Access Token is valid, proceed
-            req.user = user;
+            //req.user = user;
             next();
         }
     });

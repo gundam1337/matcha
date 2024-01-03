@@ -1,30 +1,33 @@
 import React, { useState } from "react";
 import "../style/Images.css";
 
-const Images = ({ setFieldValue, field }) => {
-  const [selectedImage, setSelectedImage] = useState(null);
+const Images = ({ setFieldValue}) => {
+  const [selectedImage, setSelectedImage] = useState([]);
   const [imagePreview, setImagePreview] = useState([]);
 
   const handleImageChange = (e) => {
-    //TODO : select 3 images and then display them in a smal boxes
+    // Assuming imagePreview and selectedImage are part of your component's state
     if (imagePreview.length >= 3) return;
 
-    const file = e.target.files[0];
-    if (file) {
-      setSelectedImage(file);
+    const files = [...e.target.files];
+    if (files.length > 0) {
+      // Update the state with the new files, adding to any previously selected files
+      setSelectedImage((prevImages) => [...prevImages, ...files]);
 
       // Update Formik state
-      setFieldValue("image", file);
-      //setFieldValue(field.name, file);
+      setFieldValue("image", [...selectedImage, ...files]);
 
-      // Create a preview
-      const reader = new FileReader();
-      reader.onloadend = () => {
-        setImagePreview((oldArray) => [...oldArray, reader.result]);
-      };
-      reader.readAsDataURL(file);
+      // Create a preview for each file
+      files.forEach(file => {
+        const reader = new FileReader();
+        reader.onloadend = () => {
+          setImagePreview((oldArray) => [...oldArray, reader.result]);
+        };
+        reader.readAsDataURL(file);
+      });
     }
-  };
+};
+
   //TODO :add a button that can delet a photo
 
   return (

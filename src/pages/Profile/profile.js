@@ -19,8 +19,14 @@ const Profile = () => {
   const navigate = useNavigate();
 
   const handleSubmit = (values) => {
+    // const formData = new FormData();
+    //  values.image.forEach(file => {
+    //   formData.append('image', file);
+    // });
     const formData = new FormData();
-    formData.append("image", values.image);
+    values.image.forEach((file) => {
+      formData.append("image", file);
+    });
     console.log("value is : ", values.image);
     axios
       .post("http://localhost:3001/profile", formData, {
