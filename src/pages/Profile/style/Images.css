@@ -7,8 +7,6 @@
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); /* Add a subtle shadow */
     text-align: center; /* Center-align the text */
     margin: auto; /* Add margin around the div */
-    //display: block;
-    //text-align: center; /* Center-align the text */
   }
   .form-group.profile-photo-upload label[for="profilePhoto"] {
     font-weight: bold; /* Makes the text bold */
@@ -64,3 +62,20 @@
   .btn-upload:hover {
     background-color: #0056b3; /* Darker blue on hover */
   }
+
+  .errorImage-messages {
+    margin-top: 10px;
+    padding: 10px;
+    border: 1px solid #ff0000; /* Red border to indicate errors */
+    background-color: #ffe6e6; /* Light red background for visibility */
+    border-radius: 5px; /* Rounded corners */
+    height : auto;
+    width : auto;
+  }
+  
+  .errorImage {
+    color: #ff0000; /* Red text for errors */
+    font-size: 14px; /* Adjust the font size as needed */
+    margin-bottom: 5px; /* Space between error messages */
+  }
+  

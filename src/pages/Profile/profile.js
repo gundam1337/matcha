@@ -19,10 +19,6 @@ const Profile = () => {
   const navigate = useNavigate();
 
   const handleSubmit = (values) => {
-    // const formData = new FormData();
-    //  values.image.forEach(file => {
-    //   formData.append('image', file);
-    // });
     const formData = new FormData();
     values.image.forEach((file) => {
       formData.append("image", file);
