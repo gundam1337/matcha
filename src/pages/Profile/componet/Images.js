@@ -10,7 +10,7 @@ const Images = ({ setFieldValue }) => {
     //const validExtensions = ["jpg", "jpeg", "gif"]; // Allowed extensions
     const validExtensions = ["jpg", "jpeg", "png"]; // Allowed extensions
 
-    const maxSize = 1024 * 1024; // Max size in bytes (e.g., 5MB)
+    const maxSize = 2*1024 * 1024; // Max size in bytes (e.g., 5MB)
 
     let errors = [];
 
@@ -31,6 +31,7 @@ const Images = ({ setFieldValue }) => {
     if (imagePreview.length >= 3) return;
 
     const files = [...e.target.files];
+    console.log(files)
     const errorImage = validateImages(files);
     //console.log("is there error ", errorImage);
     if (files.length > 0) {
@@ -38,7 +39,7 @@ const Images = ({ setFieldValue }) => {
       setSelectedImage((prevImages) => [...prevImages, ...files]);
 
       // Update Formik state
-      if (errorImage.length === 0)
+      if (!errorImage)
         setFieldValue("image", [...selectedImage, ...files]);
 
       // Create a preview for each file
@@ -74,7 +75,7 @@ const Images = ({ setFieldValue }) => {
           Upload
         </button>
 
-        {(imagePreview.length > 0) & error && (
+        {(imagePreview.length > 0) & error.length ===0 && (
           <div className="image-preview-container">
             {imagePreview.map((imgSrc, index) => (
               <img
@@ -86,9 +87,8 @@ const Images = ({ setFieldValue }) => {
             ))}
           </div>
         )}
-        {/* TODO how to check in front end the size of the uploaded images */}
         <p className="file-type-info">
-          Accepted file type: .png. Less than 1MB
+          Accepted file type: .png. Less than 2MB
         </p>
 
         {error && error.length > 0 && (

@@ -20,7 +20,6 @@ const Registration = (props) => {
       email: values.email.trim(),
       password: values.password.trim(),
     };
-    console.log("Sending values:", values);
     setIsLoading(true);
     axios
       .post("http://localhost:3001/register", trimmedValues)
