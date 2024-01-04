@@ -14,6 +14,8 @@ function MyMapComponent({ onDataFetch }) {
     useMapEvents({
       async click(e) {
         setPosition(e.latlng);
+        console.log(e.latlng)
+        //TODO : change the API to something give the closest place to the coordination 
         const response = await fetch(
           `https://nominatim.openstreetmap.org/reverse?format=json&lat=${e.latlng.lat}&lon=${e.latlng.lng}`
         );
@@ -49,14 +51,14 @@ function MyMapComponent({ onDataFetch }) {
 }
 
 //NOTE ****************************************************************
-const Location = () => {
+const Location = ({ setFieldValue }) => {
+  const [error ,setError] = useState(false);
   const [modalIsOpen, setModalIsOpen] = useState(false);
   const [dataFromChild, setDataFromChild] = useState({});
 
   const handleData = (data) => {
     setDataFromChild(data);
   };
-  //const data = JSON.stringify(dataFromChild, null, 2);
   return (
     <>
       <div className="form-group profile-photo-upload">
@@ -88,11 +90,14 @@ const Location = () => {
         >
           <MyMapComponent onDataFetch={handleData} />
           <br />
+          {/* TODO: add the error message , How ?*/}
+          {/* TODO : set the field with country and city  */}
           <div className="location-box">
             <p className="file-type-info">
               city: {dataFromChild.city} <br />
               country: {dataFromChild.country}
             </p>
+
           </div>
 
           <button

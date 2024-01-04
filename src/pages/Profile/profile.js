@@ -67,6 +67,10 @@ const Profile = () => {
             phoneNumber: "", //DONE
             gender: "",
             location: {
+              latitude : "",
+              longitude : "",
+              city : "",
+              country : "",
               
             },
             hobbies: [],
