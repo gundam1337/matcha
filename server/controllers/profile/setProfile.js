@@ -8,30 +8,21 @@
 //NOTE 2 :Store the Image in Google Cloud Storage
 
 //NOTE 3 : send the user to the home page after finshing the profile setting up 
-const multer = require("multer");
 
 
 
 // Initialize upload
-const upload = multer().array("image", 3); // Adjust the number '3' as per your requirement
 
 const setProfile = (req, res, next) => {
-  upload(req, res, (err) => {
-    if (err) {
-      res.status(400).json({ message: err });
-    } else {
-      if (req.files === undefined || req.files.length === 0) {
-        res.status(400).json({ message: "No files selected!" });
-      } else {
-        // req.files is an array of `images` files
-        console.log()
+  
+  console.log('Text Fields:', req.body);
+
+    if (req.files) {
         req.files.forEach(file => {
-          console.log("File type:", file.mimetype); // Prints the file type of each file
+            console.log('Received file:', file.originalname);
         });
-        res.json({ message: "Files received and types logged" }); // Send a response back to the client
-      }
     }
-  });
-  //console.log(req.files)
+
+    res.send('FormData received');
 };
 module.exports = setProfile;

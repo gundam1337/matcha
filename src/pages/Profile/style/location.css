@@ -29,3 +29,27 @@
     padding: 10px 20px;
     width: 80%;
   }
+.locationInfo{
+  color : black;
+  font-size: 20px;
+
+}
+
+.modal-container {
+  padding: 20px;
+  background-color: #f9f9f9; /* Light grey background */
+  border-radius: 5px; /* Rounded corners */
+  box-shadow: 0 2px 5px rgba(0,0,0,0.2); /* subtle shadow for depth */
+  max-width: 400px; /* Max width with some space from screen edges */
+  margin: auto; /* Center the modal on the screen */
+}
+
+
+.location-info {
+  color: #333; /* Dark grey color for text */
+  font-size: 1em; /* Standard font size */
+  line-height: 1.5; /* More readable line spacing */
+  font-weight: bold; /* Bold font for emphasis */
+  text-align: left; /* Align text to the left */
+  margin-bottom: 15px; /* Space below the paragraph */
+}

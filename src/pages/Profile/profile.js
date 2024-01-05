@@ -28,12 +28,17 @@ const Profile = () => {
     values.image.forEach((file) => {
       formData.append("image", file);
     });
-    formData.append("info", JSON.stringify(values.info)); // Assuming 'info' is an array or object
+    formData.append("info", JSON.stringify(values.info)); 
     formData.append("phoneNumber", values.phoneNumber);
     formData.append("gender", values.gender);
-    formData.append("location", values.location);
-    formData.append("hobbies", JSON.stringify(values.hobbies)); //
-    console.log("Formik value ",values)
+    formData.append("location",JSON.stringify(values.location));
+    formData.append("hobbies", JSON.stringify(values.hobbies)); 
+    formData.append("distance",values.distance)
+    formData.append("targetAge",values.targetAge)
+    formData.append("bio",values.bio)
+
+    console.log("form data : ",formData);
+    console.log("Formik value : ", values);
     axios
       .post("http://localhost:3001/profile", formData, {
         withCredentials: true,
@@ -58,29 +63,38 @@ const Profile = () => {
       <>
         <Formik
           initialValues={{
-            image: null, //DONE
-            info: {       //DONE
+            image: {}, //DONE
+            info: {
+              //DONE
               firstName: "",
               lastName: "",
               birthday: "",
             },
             phoneNumber: "", //DONE
-            gender: "",
+            gender: "", //DONE
             location: {
-              latitude : "",
-              longitude : "",
-              city : "",
-              country : "",
-              
+              //DONE
+              latitude: "",
+              longitude: "",
+              city: "",
+              country: "",
             },
-            hobbies: [],
+            hobbies: [], //DONE
+            bio: "", //DONE
+            distance: "", //DONE
+            targetAge: {
+              //DONE
+              maxAge: "",
+              minAge: "",
+            },
           }}
+          //TODO make the country required
           validationSchema={Yup.object({
             image: Yup.mixed().required("An image is required"),
           })}
           onSubmit={handleSubmit}
         >
-          {({ setFieldValue, handleSubmit }) => (
+          {({ setFieldValue, handleSubmit, values }) => (
             <form onSubmit={handleSubmit}>
               <div style={{ textAlign: "center" }}>
                 <div className="settings-box">
@@ -114,20 +128,16 @@ const Profile = () => {
                     setFieldValue={setFieldValue}
                   />
                   <br />
-                  <Field
-                    name="Hobies"
-                    component={Hobies}
-                    setFieldValue={setFieldValue}
-                  />
+                  <Hobies setFieldValue={setFieldValue} values={values} />
                   <br />
                   <Field
-                    name="SliderComponent"
+                    name="distance"
                     component={SliderComponent}
                     setFieldValue={setFieldValue}
                   />
                   <br />
                   <Field
-                    name="DualRangeSlider"
+                    name="targetAge"
                     component={DualRangeSlider}
                     setFieldValue={setFieldValue}
                   />

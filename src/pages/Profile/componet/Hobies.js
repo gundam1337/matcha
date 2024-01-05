@@ -1,101 +1,44 @@
-const Hobies = () => {
-    return (
-      <div>
-        <h4>Your Hobbies :</h4>
-        <div className="hobbies radio">
-          <div>
-            <label>
-              <input type="checkbox" name="user-hobbies" value="cooking" />
-              <span>Cooking</span>
-            </label>
-          </div>
-  
-          <div>
-            <label>
-              <input type="checkbox" name="user-hobbies" value="sport" />
-              <span>Sport</span>
-            </label>
-          </div>
-  
-          <div>
-            <label>
-              <input type="checkbox" name="user-hobbies" value="reading" />
-              <span>Reading</span>
-            </label>
-          </div>
-  
-          <div>
-            <label>
-              <input type="checkbox" name="user-hobbies" value="music" />
-              <span>Music</span>
-            </label>
-          </div>
-  
-          <div>
-            <label>
-              <input type="checkbox" name="user-hobbies" value="dance" />
-              <span>Dance</span>
-            </label>
-          </div>
-  
-          <div>
-            <label>
-              <input type="checkbox" name="user-hobbies" value="astronomy" />
-              <span>Astronomy</span>
-            </label>
-          </div>
-  
-          <div>
-            <label>
-              <input type="checkbox" name="user-hobibes" value="gardening" />
-              <span>Gardening</span>
-            </label>
-          </div>
-  
-          <div>
-            <label>
-              <input type="checkbox" name="user-hobbies" value="photography" />
-              <span>Photography</span>
-            </label>
-          </div>
-  
-          <div>
-            <label>
-              <input type="checkbox" name="user-hobbies" value="travel" />
-              <span>Travel</span>
-            </label>
-          </div>
-  
-          <div>
-            <label>
-              <input type="checkbox" name="user-hobbies" value="cinema" />
-              <span>Cinema</span>
-            </label>
-          </div>
-  
-          <div>
-            <label>
-              <input type="checkbox" name="user-hobbies" value="videos-games" />
-              <span>Video-Games</span>
-            </label>
-          </div>
-  
-          <div>
-            <label>
-              <input type="checkbox" name="user-hobbies" value="drawing" />
-              <span>Drawing</span>
-            </label>
-          </div>
-  
-          <div>
-            <label>
-              <input type="checkbox" name="user-hobbies" value="animals" />
-              <span>Animals</span>
-            </label>
-          </div>
-        </div>
-      </div>
-    );
+import React from 'react';
+
+const Hobbies = ({ setFieldValue, values }) => {
+  const handleCheckboxChange = (hobby) => {
+    // Check if the hobby is already in the array
+    if (values.hobbies.includes(hobby)) {
+      // Remove the hobby from the array
+      setFieldValue('hobbies', values.hobbies.filter((h) => h !== hobby));
+    } else {
+      // Add the hobby to the array
+      setFieldValue('hobbies', [...values.hobbies, hobby]);
+    }
   };
 
-  export default Hobies
+  const hobbiesList = [
+    "cooking", "sport", "reading", "music", "dance",
+    "astronomy", "gardening", "photography", "travel",
+    "cinema", "video-games", "drawing", "animals"
+  ];
+
+  return (
+    <div>
+      <h4>Your Hobbies :</h4>
+      <div className="hobbies radio">
+        {hobbiesList.map(hobby => (
+          <div key={hobby}>
+            <label>
+              <input
+                type="checkbox"
+                name="user-hobbies"
+                value={hobby}
+                checked={values.hobbies.includes(hobby)}
+                onChange={() => handleCheckboxChange(hobby)}
+              />
+              <span>{hobby.charAt(0).toUpperCase() + hobby.slice(1)}</span>
+            </label>
+          </div>
+        ))}
+      </div>
+    </div>
+  );
+};
+
+export default Hobbies;

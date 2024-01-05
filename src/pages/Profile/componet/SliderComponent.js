@@ -1,11 +1,13 @@
 import React, { useState } from 'react';
 import "../style/SliderComponent.css"
 
-export const SliderComponent = () => {
+export const SliderComponent = ({ setFieldValue }) => {
   const [distance, setDistance] = useState(30);
 
   const handleDistanceChange = (e) => {
-    setDistance(e.target.value);
+    const newDistance = e.target.value;
+    setDistance(newDistance);
+    setFieldValue("distance", newDistance); // Update the Formik state
   };
 
   return (
@@ -26,26 +28,30 @@ export const SliderComponent = () => {
 };
 
 //NOTE ***************************************************************************************
-export const DualRangeSlider = () => {
+
+export const DualRangeSlider = ({ setFieldValue }) => {
   const [ageRange, setAgeRange] = useState({ min: 18, max: 60 });
 
   const handleMinAgeChange = (e) => {
-    const minValue = Math.min(Number(e.target.value), ageRange.max );
+    const minValue = Math.min(Number(e.target.value), ageRange.max);
     setAgeRange((prev) => ({ ...prev, min: minValue }));
+    setFieldValue("targetAge.minAge", minValue); // Update the Formik state for minAge
   };
 
   const handleMaxAgeChange = (e) => {
-    const maxValue = Math.max(Number(e.target.value), ageRange.min );
+    const maxValue = Math.max(Number(e.target.value), ageRange.min);
     setAgeRange((prev) => ({ ...prev, max: maxValue }));
+    setFieldValue("targetAge.maxAge", maxValue); // Update the Formik state for maxAge
   };
+
   return (
     <div className='dual-slider-container'>
         <label htmlFor="ageRange">Age Range: {ageRange.min} - {ageRange.max}</label>
         <input
           type="range"
           id="minAge"
-          min = "18"
-          max= "60"
+          min="18"
+          max="60"
           value={ageRange.min}
           onChange={handleMinAgeChange}
         />
@@ -53,7 +59,7 @@ export const DualRangeSlider = () => {
         <input
           type="range"
           id="maxAge"
-          min = "18"
+          min="18"
           max="60"
           value={ageRange.max}
           onChange={handleMaxAgeChange}

@@ -1,14 +1,15 @@
 import React, { useState } from "react";
 import "../style/bio.css";
 
-const Bio = () => {
+const Bio = ({ setFieldValue }) => {
   const [bio, setBio] = useState("");
-  const maxLength = 300;
+  const maxLength = 100;
 
-  // Update the bio state and ensure it doesn't exceed maxLength
   const handleChange = (event) => {
-    if (event.target.value.length <= maxLength) {
-      setBio(event.target.value);
+    const newBio = event.target.value;
+    if (newBio.length <= maxLength) {
+      setBio(newBio);
+      setFieldValue('bio', newBio); // Update the Formik state
     }
   };
 

@@ -7,26 +7,32 @@ Modal.setAppElement("#root");
 
 const center = [34.020882, -6.84165];
 
-function MyMapComponent({ onDataFetch }) {
+function MyMapComponent({ onDataFetch,setFieldValue }) {
   const [position, setPosition] = useState(center);
 
   function LocationMarker() {
     useMapEvents({
       async click(e) {
+
         setPosition(e.latlng);
-        console.log(e.latlng)
-        //TODO : change the API to something give the closest place to the coordination 
         const response = await fetch(
           `https://nominatim.openstreetmap.org/reverse?format=json&lat=${e.latlng.lat}&lon=${e.latlng.lng}`
         );
+        
         const data = await response.json();
         if (data.address) {
           onDataFetch({
             city: data.address.city || data.address.town || "",
             country: data.address.country || "",
           });
+          const city = data.address.city || data.address.town || "";
+          const country = data.address.country || "";
+          onDataFetch({ city, country });
+          setFieldValue("location.latitude", e.latlng.lat);
+          setFieldValue("location.longitude", e.latlng.lng);
+          setFieldValue("location.city", city);
+          setFieldValue("location.country", country);
         } else {
-          // Handle cases where 'address' is not available
           onDataFetch({
             city: "",
             country: "",
@@ -52,7 +58,7 @@ function MyMapComponent({ onDataFetch }) {
 
 //NOTE ****************************************************************
 const Location = ({ setFieldValue }) => {
-  const [error ,setError] = useState(false);
+  const [error, setError] = useState(false);
   const [modalIsOpen, setModalIsOpen] = useState(false);
   const [dataFromChild, setDataFromChild] = useState({});
 
@@ -88,16 +94,13 @@ const Location = ({ setFieldValue }) => {
           onRequestClose={() => setModalIsOpen(false)}
           contentLabel="Location Picker"
         >
-          <MyMapComponent onDataFetch={handleData} />
+          <MyMapComponent onDataFetch={handleData} setFieldValue={setFieldValue} />
           <br />
-          {/* TODO: add the error message , How ?*/}
-          {/* TODO : set the field with country and city  */}
-          <div className="location-box">
-            <p className="file-type-info">
+          <div className="modal-container">
+            <p className="location-info">
               city: {dataFromChild.city} <br />
               country: {dataFromChild.country}
             </p>
-
           </div>
 
           <button
