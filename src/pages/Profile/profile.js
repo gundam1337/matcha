@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { Formik, Form, Field } from "formik";
+import { Formik, Field } from "formik";
 import * as Yup from "yup";
 import axios from "axios";
 
@@ -18,6 +18,66 @@ import Bio from "./componet/Bio";
 import { useNavigate } from "react-router-dom";
 import AnimatedLoader from "../../components/AnimatedLoader/AnimatedLoader";
 
+function calculateAge(birthday) {
+  const today = new Date();
+  const birthDate = new Date(birthday);
+  let age = today.getFullYear() - birthDate.getFullYear();
+  const m = today.getMonth() - birthDate.getMonth();
+  if (m < 0 || (m === 0 && today.getDate() < birthDate.getDate())) {
+    age--;
+  }
+  return age;
+}
+
+const nameValidationSchema = Yup.string()
+  .matches(
+    /^[A-Za-zÀ-ÖØ-öø-ÿ' -]+$/,
+    "Name must contain only letters, apostrophes, hyphens, and spaces"
+  )
+  .min(2, "Name must be at least 2 characters")
+  .max(40, "Name must be less than 40 characters")
+  .required(" is required");
+
+  //FIXME : the validation schame of the imahge 
+
+const validationSchema = Yup.object({
+  image: Yup.array()
+    .of(Yup.mixed().required("Each image is required"))
+    .min(2, "You must select at least 2 images")
+    ,
+  info: Yup.object({
+    firstName: nameValidationSchema,
+    lastName: nameValidationSchema,
+    birthday: Yup.date()
+      .required("Birthday is required")
+      .test(
+        "age",
+        "You must be at least 18 years old",
+        (value) => calculateAge(value) >= 18
+      ),
+  }),
+  phoneNumber: Yup.string()
+    .matches(/^[0-9]+$/, "Phone number must be only digits")
+    .min(10, "Phone number must be at least 10 digits")
+    ,
+  gender: Yup.string().required("Gender is required"),
+  location: Yup.object({
+    latitude: Yup.number(),
+    longitude: Yup.number(),
+    city: Yup.string(),
+    country: Yup.string(),
+  }),
+ 
+  bio: Yup.string().max(200, "Bio cannot be more than 200 characters"),
+  distance: Yup.number(),
+  targetAge: Yup.object({
+    maxAge: Yup.number()
+      .moreThan(Yup.ref("minAge"), "Max age must be greater than min age"),
+    minAge: Yup.number(),
+  }),
+});
+
+//TODO : verifcation the validationSchema
 const Profile = () => {
   const [submitError, setSubmitError] = useState(null);
   const [isLoading, setIsLoading] = useState(false);
@@ -25,20 +85,21 @@ const Profile = () => {
 
   const handleSubmit = (values) => {
     const formData = new FormData();
+    
     values.image.forEach((file) => {
       formData.append("image", file);
     });
-    formData.append("info", JSON.stringify(values.info)); 
+    formData.append("info", JSON.stringify(values.info));
     formData.append("phoneNumber", values.phoneNumber);
     formData.append("gender", values.gender);
-    formData.append("location",JSON.stringify(values.location));
-    formData.append("hobbies", JSON.stringify(values.hobbies)); 
-    formData.append("distance",values.distance)
-    formData.append("targetAge",values.targetAge)
-    formData.append("bio",values.bio)
+    formData.append("location", JSON.stringify(values.location));
+    formData.append("hobbies", JSON.stringify(values.hobbies));
+    formData.append("distance", values.distance);
+    formData.append("targetAge", values.targetAge);
+    formData.append("bio", values.bio);
 
-    console.log("form data : ",formData);
-    console.log("Formik value : ", values);
+    console.log(values.image)
+    console.log(formData)
     axios
       .post("http://localhost:3001/profile", formData, {
         withCredentials: true,
@@ -63,38 +124,33 @@ const Profile = () => {
       <>
         <Formik
           initialValues={{
-            image: {}, //DONE
+            image: {},
             info: {
-              //DONE
               firstName: "",
               lastName: "",
               birthday: "",
             },
-            phoneNumber: "", //DONE
-            gender: "", //DONE
+            phoneNumber: "",
+            gender: "",
             location: {
-              //DONE
               latitude: "",
               longitude: "",
               city: "",
               country: "",
             },
-            hobbies: [], //DONE
-            bio: "", //DONE
-            distance: "", //DONE
+            hobbies: [],
+            bio: "",
+            distance: "",
             targetAge: {
-              //DONE
               maxAge: "",
               minAge: "",
             },
           }}
           //TODO make the country required
-          validationSchema={Yup.object({
-            image: Yup.mixed().required("An image is required"),
-          })}
+          validationSchema={validationSchema}
           onSubmit={handleSubmit}
         >
-          {({ setFieldValue, handleSubmit, values }) => (
+          {({ setFieldValue, handleSubmit, values, errors, touched }) => (
             <form onSubmit={handleSubmit}>
               <div style={{ textAlign: "center" }}>
                 <div className="settings-box">
@@ -102,12 +158,16 @@ const Profile = () => {
                     name="image"
                     component={Images}
                     setFieldValue={setFieldValue}
+                    errors={errors}
+                    touched={touched}
                   />
                   <br />
                   <Field
                     name="Info"
                     component={Info}
                     setFieldValue={setFieldValue}
+                    errors={errors}
+                    touched={touched}
                   />
                   <br />
                   <Field
@@ -147,10 +207,10 @@ const Profile = () => {
                     component={Bio}
                     setFieldValue={setFieldValue}
                   />
-                  <div>
+                 
                     <input className="btn-login" type="submit" value="Submit" />
-                    <input className="btn-login" type="submit" value="skip" />
-                  </div>
+                    {/* <input className="btn-login" value="skip" /> */}
+                 
                 </div>
               </div>
             </form>

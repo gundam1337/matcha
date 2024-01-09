@@ -1,16 +1,18 @@
 import React, { useState } from "react";
 import "../style/Images.css";
 
-const Images = ({ setFieldValue }) => {
+//DONE : style the buton, make a the bottom of the picture
+//TODO : access to the error box and put error message in it
+
+const Images = ({ setFieldValue, errors, touched }) => {
   const [selectedImage, setSelectedImage] = useState([]);
   const [imagePreview, setImagePreview] = useState([]);
   const [error, setError] = useState([]);
 
   const validateImages = (files) => {
-    //const validExtensions = ["jpg", "jpeg", "gif"]; // Allowed extensions
     const validExtensions = ["jpg", "jpeg", "png"]; // Allowed extensions
 
-    const maxSize = 2*1024 * 1024; // Max size in bytes (e.g., 5MB)
+    const maxSize = 2 * 1024 * 1024;
 
     let errors = [];
 
@@ -22,25 +24,21 @@ const Images = ({ setFieldValue }) => {
         errors.push(`${file.name} is too large.`);
       }
     });
+
     setError(errors);
     return errors.length ? errors : null;
   };
 
   const handleImageChange = (e) => {
-    // Assuming imagePreview and selectedImage are part of your component's state
-    if (imagePreview.length >= 3) return;
-
+    if (imagePreview.length >= 2) return;
     const files = [...e.target.files];
-    console.log(files)
     const errorImage = validateImages(files);
-    //console.log("is there error ", errorImage);
     if (files.length > 0) {
       // Update the state with the new files, adding to any previously selected files
       setSelectedImage((prevImages) => [...prevImages, ...files]);
 
       // Update Formik state
-      if (!errorImage)
-        setFieldValue("image", [...selectedImage, ...files]);
+      if (!errorImage) setFieldValue("image", [...selectedImage, ...files]);
 
       // Create a preview for each file
       files.forEach((file) => {
@@ -51,6 +49,19 @@ const Images = ({ setFieldValue }) => {
         reader.readAsDataURL(file);
       });
     }
+  };
+
+  const handleDeleteImage = (imageIndex) => {
+    // Filter out the image to be deleted from both selectedImage and imagePreview
+    const newSelectedImages = selectedImage.filter(
+      (_, index) => index !== imageIndex
+    );
+    const newImagePreviews = imagePreview.filter(
+      (_, index) => index !== imageIndex
+    );
+
+    setSelectedImage(newSelectedImages);
+    setImagePreview(newImagePreviews);
   };
 
   //TODO :add a button that can delet a photo
@@ -75,15 +86,23 @@ const Images = ({ setFieldValue }) => {
           Upload
         </button>
 
-        {(imagePreview.length > 0) & error.length ===0 && (
+        {(imagePreview.length > 0) & (error.length === 0) && (
           <div className="image-preview-container">
             {imagePreview.map((imgSrc, index) => (
-              <img
-                key={index}
-                src={imgSrc}
-                alt={`Selected profile ${index + 1}`}
-                className="profile-img-preview"
-              />
+              <div key={index} className="image-container">
+                <img
+                  src={imgSrc}
+                  alt={`Selected item ${index + 1}`}
+                  className="profile-img-preview"
+                />
+                <button
+                  onClick={() => handleDeleteImage(index)}
+                  className="delete-button"
+                  type="button"
+                >
+                  X
+                </button>
+              </div>
             ))}
           </div>
         )}
@@ -99,6 +118,10 @@ const Images = ({ setFieldValue }) => {
               </p>
             ))}
           </div>
+        )}
+
+        {touched.image && errors.image && (
+          <div className="errorImage-messages">{errors.image}</div>
         )}
       </div>
     </>

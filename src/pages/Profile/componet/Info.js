@@ -1,9 +1,7 @@
-const Info = ({ setFieldValue }) => {
+const Info = ({ setFieldValue, errors, touched }) => {
   const handleInputChange = (e) => {
-    console.log(e); // Log the entire event object
-    const { name, value, type } = e.target;
-
-    setFieldValue(name, value); // Set the field value regardless of the type
+    const { name, value } = e.target;
+    setFieldValue(name, value);
   };
 
   return (
@@ -17,6 +15,14 @@ const Info = ({ setFieldValue }) => {
             name="info.firstName"
             onChange={handleInputChange}
           />
+          {errors.info && touched.info && (
+            <>
+              <p className="infoError">
+                {errors.info.firstName && "⚠️ "}
+                {errors.info.firstName}
+              </p>
+            </>
+          )}
         </div>
         <div>
           <label htmlFor="info.lastName">Last Name</label>
@@ -26,17 +32,33 @@ const Info = ({ setFieldValue }) => {
             name="info.lastName"
             onChange={handleInputChange}
           />
+          {errors.info && touched.info && (
+            <>
+              <p className="infoError">
+                {errors.info.lastName && "⚠️ "}
+                {errors.info.lastName}
+              </p>
+            </>
+          )}
         </div>
       </div>
-        <div>
-          <label htmlFor="info.birthday">Birthday</label>
-          <input
-            type="date"
-            id="info.birthday"
-            name="info.birthday"
-            onChange={handleInputChange}
-          />
-        </div>
+      <div>
+        <label htmlFor="info.birthday">Birthday</label>
+        <input
+          type="date"
+          id="info.birthday"
+          name="info.birthday"
+          onChange={handleInputChange}
+        />
+        {errors.info && touched.info && (
+            <>
+              <p className="infoError">
+                {errors.info.birthday && "⚠️ "}
+                {errors.info.birthday}
+              </p>
+            </>
+          )}
+      </div>
     </>
   );
 };

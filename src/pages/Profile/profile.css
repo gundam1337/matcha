@@ -48,7 +48,7 @@ input[type="email"],
 input[type="tel"] {
   color: white;
   font-weight: bold;
-  width: 80%;
+  width: 70%;
   border-radius: 20px;
   padding: 10px 20px;
   margin: 10px 0 0;
@@ -133,7 +133,16 @@ input[type="date"] {
 }
 /* NOTE : message box for what the use choose  */
 
-
+.infoError{
+  color: #fff; /* White text for contrast */
+  background-color: #ff66a3; /* A lighter shade of the pink background for visibility */
+  font-weight: bold;
+  padding: 4px 8px;
+  border-radius: 4px; /* Rounded corners for the background */
+  display: inline-block; /* To wrap the background closely around the text */
+  margin-top: 4px; /* Spacing between the input field and the error message */
+  font-size: 0.8em;
+}
 
 /* //NOTE for the resposive */
 @media (max-width: 576px) {
