@@ -40,9 +40,11 @@ const nameValidationSchema = Yup.string()
 
 
 const validationSchema = Yup.object({
-  image: Yup.array()
-    .of(Yup.mixed().required("Each image is required"))
-    .min(2, "You must select at least 2 images"),
+  // image: Yup.array()
+  //   .of(Yup.mixed().required("Each image is required"))
+  //   .min(2, "You must select at least 2 images")
+  //   .max(3,"the max is 3"),
+    
   info: Yup.object({
     firstName: nameValidationSchema,
     lastName: nameValidationSchema,
@@ -77,8 +79,6 @@ const Profile = () => {
     formData.append("targetAge", values.targetAge);
     formData.append("bio", values.bio);
 
-    console.log(values);
-    console.log(formData);
     axios
       .post("http://localhost:3001/profile", formData, {
         withCredentials: true,
