@@ -38,13 +38,11 @@ const nameValidationSchema = Yup.string()
   .max(40, "Name must be less than 40 characters")
   .required(" is required");
 
-  //FIXME : the validation schame of the imahge 
 
 const validationSchema = Yup.object({
   image: Yup.array()
     .of(Yup.mixed().required("Each image is required"))
-    .min(2, "You must select at least 2 images")
-    ,
+    .min(2, "You must select at least 2 images"),
   info: Yup.object({
     firstName: nameValidationSchema,
     lastName: nameValidationSchema,
@@ -56,25 +54,6 @@ const validationSchema = Yup.object({
         (value) => calculateAge(value) >= 18
       ),
   }),
-  phoneNumber: Yup.string()
-    .matches(/^[0-9]+$/, "Phone number must be only digits")
-    .min(10, "Phone number must be at least 10 digits")
-    ,
-  gender: Yup.string().required("Gender is required"),
-  location: Yup.object({
-    latitude: Yup.number(),
-    longitude: Yup.number(),
-    city: Yup.string(),
-    country: Yup.string(),
-  }),
- 
-  bio: Yup.string().max(200, "Bio cannot be more than 200 characters"),
-  distance: Yup.number(),
-  targetAge: Yup.object({
-    maxAge: Yup.number()
-      .moreThan(Yup.ref("minAge"), "Max age must be greater than min age"),
-    minAge: Yup.number(),
-  }),
 });
 
 //TODO : verifcation the validationSchema
@@ -85,7 +64,7 @@ const Profile = () => {
 
   const handleSubmit = (values) => {
     const formData = new FormData();
-    
+
     values.image.forEach((file) => {
       formData.append("image", file);
     });
@@ -98,8 +77,8 @@ const Profile = () => {
     formData.append("targetAge", values.targetAge);
     formData.append("bio", values.bio);
 
-    console.log(values.image)
-    console.log(formData)
+    console.log(values);
+    console.log(formData);
     axios
       .post("http://localhost:3001/profile", formData, {
         withCredentials: true,
@@ -207,10 +186,9 @@ const Profile = () => {
                     component={Bio}
                     setFieldValue={setFieldValue}
                   />
-                 
-                    <input className="btn-login" type="submit" value="Submit" />
-                    {/* <input className="btn-login" value="skip" /> */}
-                 
+
+                  <input className="btn-login" type="submit" value="Submit" />
+                  {/* <input className="btn-login" value="skip" /> */}
                 </div>
               </div>
             </form>

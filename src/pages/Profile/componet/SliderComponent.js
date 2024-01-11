@@ -33,13 +33,13 @@ export const DualRangeSlider = ({ setFieldValue }) => {
   const [ageRange, setAgeRange] = useState({ min: 18, max: 60 });
 
   const handleMinAgeChange = (e) => {
-    const minValue = Math.min(Number(e.target.value), ageRange.max);
+    const minValue = e.target.value ? Math.min(Number(e.target.value), ageRange.max) : 18;
     setAgeRange((prev) => ({ ...prev, min: minValue }));
     setFieldValue("targetAge.minAge", minValue); // Update the Formik state for minAge
   };
 
   const handleMaxAgeChange = (e) => {
-    const maxValue = Math.max(Number(e.target.value), ageRange.min);
+    const maxValue = e.target.value ? Math.max(Number(e.target.value), ageRange.min) : 60;
     setAgeRange((prev) => ({ ...prev, max: maxValue }));
     setFieldValue("targetAge.maxAge", maxValue); // Update the Formik state for maxAge
   };

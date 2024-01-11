@@ -3,6 +3,8 @@ import "../style/Images.css";
 
 //DONE : style the buton, make a the bottom of the picture
 //TODO : access to the error box and put error message in it
+//TODO : make this code clean 
+
 
 const Images = ({ setFieldValue, errors, touched }) => {
   const [selectedImage, setSelectedImage] = useState([]);
@@ -30,8 +32,10 @@ const Images = ({ setFieldValue, errors, touched }) => {
   };
 
   const handleImageChange = (e) => {
-    if (imagePreview.length >= 2) return;
+    if (imagePreview.length >= 2) {
+    }
     const files = [...e.target.files];
+
     const errorImage = validateImages(files);
     if (files.length > 0) {
       // Update the state with the new files, adding to any previously selected files
@@ -62,6 +66,7 @@ const Images = ({ setFieldValue, errors, touched }) => {
 
     setSelectedImage(newSelectedImages);
     setImagePreview(newImagePreviews);
+    document.getElementById("profilePhoto").value = '';
   };
 
   //TODO :add a button that can delet a photo
@@ -85,8 +90,7 @@ const Images = ({ setFieldValue, errors, touched }) => {
         >
           Upload
         </button>
-
-        {(imagePreview.length > 0) & (error.length === 0) && (
+        {(imagePreview.length >= 0) & (error.length === 0) && (
           <div className="image-preview-container">
             {imagePreview.map((imgSrc, index) => (
               <div key={index} className="image-container">
