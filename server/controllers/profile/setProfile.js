@@ -16,6 +16,7 @@
 const setProfile = (req, res, next) => {
   
   console.log('Text Fields:', req.body);
+  //console.log('images are :',req.files)
 
     if (req.files) {
         req.files.forEach(file => {

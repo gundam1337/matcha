@@ -38,24 +38,24 @@ const nameValidationSchema = Yup.string()
   .max(40, "Name must be less than 40 characters")
   .required(" is required");
 
+//TODO make the country required
 
 const validationSchema = Yup.object({
   // image: Yup.array()
   //   .of(Yup.mixed().required("Each image is required"))
   //   .min(2, "You must select at least 2 images")
   //   .max(3,"the max is 3"),
-    
-  info: Yup.object({
-    firstName: nameValidationSchema,
-    lastName: nameValidationSchema,
-    birthday: Yup.date()
-      .required("Birthday is required")
-      .test(
-        "age",
-        "You must be at least 18 years old",
-        (value) => calculateAge(value) >= 18
-      ),
-  }),
+  // info: Yup.object({
+  //   firstName: nameValidationSchema,
+  //   lastName: nameValidationSchema,
+  //   birthday: Yup.date()
+  //     .required("Birthday is required")
+  //     .test(
+  //       "age",
+  //       "You must be at least 18 years old",
+  //       (value) => calculateAge(value) >= 18
+  //     ),
+  // }),
 });
 
 //TODO : verifcation the validationSchema
@@ -78,6 +78,8 @@ const Profile = () => {
     formData.append("distance", values.distance);
     formData.append("targetAge", values.targetAge);
     formData.append("bio", values.bio);
+
+    console.log("value images", values.image);
 
     axios
       .post("http://localhost:3001/profile", formData, {
@@ -103,7 +105,7 @@ const Profile = () => {
       <>
         <Formik
           initialValues={{
-            image: {},
+            image: [],
             info: {
               firstName: "",
               lastName: "",
@@ -125,7 +127,6 @@ const Profile = () => {
               minAge: "",
             },
           }}
-          //TODO make the country required
           validationSchema={validationSchema}
           onSubmit={handleSubmit}
         >
