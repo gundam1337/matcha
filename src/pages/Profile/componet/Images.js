@@ -1,67 +1,69 @@
-import React, { useState , useRef } from "react";
+import React, { useState, useEffect } from "react";
 import "../style/Images.css";
 
-//DONE : style the buton, make a the bottom of the picture
-//TODO : access to the error box and put error message in it
-
-const Images = ({ setFieldValue }) => {
-  const [selectedImage, setSelectedImage] = useState([]);
+const Images = ({ setFieldValue, touched, errors }) => {
+  const [selectedImage, setSelectedImage] = useState([]); // this is for displaying
   const [error, setError] = useState([]);
-  const fileInputRef = useRef();
+  const [images, setImages] = useState([]); // this is for the sending
 
-
-  const validateImages = (files) => {
-    let errors = [];
-    const totalImages = selectedImage.length + files.length;
-
-    if (totalImages > 2) {
-      errors.push("You can only upload up to 2 images.");
-    }
-
-    files.forEach((file) => {
-      if (!file.type.includes("image/png")) {
-        errors.push("Only PNG images are accepted.");
-      }
-      if (file.size > 2000000) {
-        // 2MB in bytes
-        errors.push("File size must be less than 2MB.");
-      }
-    });
-
-    setError(errors);
-    return errors.length === 0;
-  };
+  //NOTE : this is working
+  useEffect(() => {
+    setFieldValue("image", images);
+  }, [images]);
 
   const handleImageChange = (e) => {
-    const filesFromInput = Array.from(e.target.files);
+    const files = Array.from(e.target.files);
 
+    setImages((prevImages) => [...prevImages, ...files]);
 
-    // const valid = validateImages(filesFromInput);
-    //  if (!valid) 
-    // //   return;
-
-    setFieldValue('image', filesFromInput);
-    
-    console.log("files from inputs are ",filesFromInput)    
-
-    filesFromInput.forEach((file) => {
+    files.forEach((file) => {
       if (selectedImage.length < 2) {
-        // Ensure we don't exceed 2 images
-        const reader = new FileReader();
-        reader.onloadend = () => {
-          setSelectedImage((oldArray) => [...oldArray, reader.result]);
-          
-        };
-        reader.readAsDataURL(file);
+        const blobUrl = URL.createObjectURL(file);
+        setSelectedImage((oldArray) => [...oldArray, blobUrl]);
       }
     });
   };
 
+  // function validateFile(file) {
+  //   const validFileTypes = ["image/png", "image/jpeg"];
+  //   const maxFileSize = 2 * 1024 * 1024; // 5 megabytes in bytes
+
+  //   if (!validFileTypes.includes(file.type)) {
+  //     alert(`Invalid file type: ${file.name}. Only PNG and JPEG are allowed.`);
+  //     return false;
+  //   }
+
+  //   if (file.size > maxFileSize) {
+  //     alert(`File too large: ${file.name}. Size limit is 5MB.`);
+  //     return false;
+  //   }
+
+  //   return true;
+  // }
+
+  // const handleImageChange = (e) => {
+  //   const files = Array.from(e.target.files);
+
+  //   const validFiles = files.filter((file) => validateFile(file));
+
+  //   setImages((prevImages) => [...prevImages, ...validFiles]);
+
+  //   validFiles.forEach((file) => {
+  //     if (selectedImage.length < 2) {
+  //       const blobUrl = URL.createObjectURL(file);
+  //       setSelectedImage((oldArray) => [...oldArray, blobUrl]);
+  //     }
+  //   });
+  // };
+
   const handleDeleteImage = (imageIndex) => {
-    const updatedImages = selectedImage.filter(
+    const updatedselectedImage = selectedImage.filter(
       (_, index) => index !== imageIndex
     );
-    setSelectedImage(updatedImages);
+
+    const updatedImages = images.filter((_, index) => index !== imageIndex);
+    setSelectedImage(updatedselectedImage);
+    setImages(updatedImages);
     setFieldValue("image", updatedImages);
     const files = selectedImage.map((img) => {
       return new File([img], "filename.png", { type: "image/png" });
@@ -73,12 +75,11 @@ const Images = ({ setFieldValue }) => {
     );
   };
 
-  //DONE :add a button that can delet a photo
-
   return (
     <>
       <div className="form-group profile-photo-upload">
-        <label htmlFor="profilePhoto">Profile Photo</label>
+        <p className="file-type-info">upload two image only</p>
+
         <input
           type="file"
           multiple
@@ -87,10 +88,7 @@ const Images = ({ setFieldValue }) => {
           style={{ display: "none" }}
           disabled={selectedImage.length >= 2}
           id="profilePhoto"
-      
-
         />
-        {/* DONE add a conditionnal rendring here if the user upload more then 2 disply message insted of the uplod button */}
         <button
           type="button"
           className="btn-upload"
@@ -98,27 +96,28 @@ const Images = ({ setFieldValue }) => {
         >
           Upload
         </button>
-
-        {(selectedImage.length >= 0) & (error.length === 0) && (
-          <div className="image-preview-container">
-            {selectedImage.map((imgSrc, index) => (
-              <div key={index} className="image-container">
-                <img
-                  src={imgSrc}
-                  alt={`Selected item ${index + 1}`}
-                  className="profile-img-preview"
-                />
-                <button
-                  onClick={() => handleDeleteImage(index)}
-                  className="delete-button"
-                  type="button"
-                >
-                  X
-                </button>
-              </div>
-            ))}
-          </div>
-        )}
+        <div>
+          {(selectedImage.length >= 0) & (error.length === 0) && (
+            <div className="image-preview-container">
+              {selectedImage.map((imgSrc, index) => (
+                <div key={index} className="image-container">
+                  <img
+                    src={imgSrc}
+                    alt={`Selected item ${index + 1}`}
+                    className="profile-img-preview"
+                  />
+                  <button
+                    onClick={() => handleDeleteImage(index)}
+                    className="delete-button"
+                    type="button"
+                  >
+                    X
+                  </button>
+                </div>
+              ))}
+            </div>
+          )}
+        </div>
         <p className="file-type-info">
           Accepted file type: .png. Less than 2MB
         </p>
@@ -133,9 +132,9 @@ const Images = ({ setFieldValue }) => {
           </div>
         )}
 
-        {/* {touched.image && errors.image && (
+        {touched.image && errors.image && (
           <div className="errorImage-messages">{errors.image}</div>
-        )} */}
+        )}
       </div>
     </>
   );
