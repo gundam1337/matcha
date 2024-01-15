@@ -7,54 +7,62 @@ const Images = ({ setFieldValue, touched, errors }) => {
   const [images, setImages] = useState([]); // this is for the sending
 
   //NOTE : this is working
-  useEffect(() => {
-    setFieldValue("image", images);
-  }, [images]);
+  // useEffect(() => {
+  //   setFieldValue("image", images);
 
-  const handleImageChange = (e) => {
-    const files = Array.from(e.target.files);
-
-    setImages((prevImages) => [...prevImages, ...files]);
-
-    files.forEach((file) => {
-      if (selectedImage.length < 2) {
-        const blobUrl = URL.createObjectURL(file);
-        setSelectedImage((oldArray) => [...oldArray, blobUrl]);
-      }
-    });
-  };
-
-  // function validateFile(file) {
-  //   const validFileTypes = ["image/png", "image/jpeg"];
-  //   const maxFileSize = 2 * 1024 * 1024; // 5 megabytes in bytes
-
-  //   if (!validFileTypes.includes(file.type)) {
-  //     alert(`Invalid file type: ${file.name}. Only PNG and JPEG are allowed.`);
-  //     return false;
-  //   }
-
-  //   if (file.size > maxFileSize) {
-  //     alert(`File too large: ${file.name}. Size limit is 5MB.`);
-  //     return false;
-  //   }
-
-  //   return true;
-  // }
+  //   console.log(images)
+    
+  // }, [images]);
 
   // const handleImageChange = (e) => {
   //   const files = Array.from(e.target.files);
 
-  //   const validFiles = files.filter((file) => validateFile(file));
+  //   setImages((prevImages) => [...prevImages, ...files]);
 
-  //   setImages((prevImages) => [...prevImages, ...validFiles]);
-
-  //   validFiles.forEach((file) => {
+  //   files.forEach((file) => {
   //     if (selectedImage.length < 2) {
   //       const blobUrl = URL.createObjectURL(file);
   //       setSelectedImage((oldArray) => [...oldArray, blobUrl]);
   //     }
   //   });
   // };
+
+  const validateImage = (file) => {
+    //const validTypes = ['image/jpeg'];
+     const validTypes = ['image/jpeg', 'image/png'];
+
+    const maxSize = 2 * 1024 * 1024; // 5MB
+
+    if (!validTypes.includes(file.type)) {
+      return 'Invalid file type';
+    }
+    if (file.size > maxSize) {
+      return 'File is too large';
+    }
+    return null;
+  };
+
+  useEffect(() => {
+    // Only update field value with valid images
+    setFieldValue("image", images);
+  }, [images]);
+
+  const handleImageChange = (e) => {
+    const files = Array.from(e.target.files);
+
+    files.forEach((file) => {
+      const error = validateImage(file);
+      if (error) {
+        setError((prevErrors) => [...prevErrors, error]);
+      } else {
+        if (selectedImage.length < 2) {
+          const blobUrl = URL.createObjectURL(file);
+          setSelectedImage((oldArray) => [...oldArray, blobUrl]);
+          setImages((prevImages) => [...prevImages, file]);
+        }
+      }
+    });
+  };
 
   const handleDeleteImage = (imageIndex) => {
     const updatedselectedImage = selectedImage.filter(
