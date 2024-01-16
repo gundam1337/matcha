@@ -1,6 +1,6 @@
 import React from 'react';
 
-const Gender = ({ setFieldValue }) => {
+const Gender = ({ setFieldValue ,errors, touched }) => {
   const handleGenderChange = (e) => {
     setFieldValue('gender', e.target.value);
   };
@@ -31,6 +31,15 @@ const Gender = ({ setFieldValue }) => {
           <span>Woman</span>
         </label>
       </div>
+
+      {errors.info && touched.info && (
+        <>
+          <p className="infoError">
+            {errors.gender && "⚠️ "}
+            {errors.gender}
+          </p>
+        </>
+      )}
     </div>
   );
 };

@@ -11,7 +11,7 @@ import PhoneNumber from "./componet/phoneNumber";
 import Gender from "./componet/Gender";
 import Location from "./componet/Location";
 import Hobies from "./componet/Hobies";
-import { SliderComponent, DualRangeSlider } from "./componet/SliderComponent";
+import { Distance, DualRangeSlider } from "./componet/SliderComponent";
 
 import Bio from "./componet/Bio";
 
@@ -41,21 +41,26 @@ const nameValidationSchema = Yup.string()
 //TODO make the country required
 
 const validationSchema = Yup.object({
-  // image: Yup.array()
-  //   .of(Yup.mixed().required("Each image is required"))
-  //   .min(2, "You must select at least 2 images")
-  //   .max(3,"the max is 3"),
-  // info: Yup.object({
-  //   firstName: nameValidationSchema,
-  //   lastName: nameValidationSchema,
-  //   birthday: Yup.date()
-  //     .required("Birthday is required")
-  //     .test(
-  //       "age",
-  //       "You must be at least 18 years old",
-  //       (value) => calculateAge(value) >= 18
-  //     ),
-  // }),
+  image: Yup.array()
+    .of(Yup.mixed().required("Each image is required"))
+    .min(2, "You must select at least 2 images"),
+  info: Yup.object({
+    firstName: nameValidationSchema,
+    lastName: nameValidationSchema,
+    birthday: Yup.date()
+      .required("Birthday is required")
+      .test(
+        "age",
+        "You must be at least 18 years old",
+        (value) => calculateAge(value) >= 18
+      ),
+  }),
+  phoneNumber: Yup.string().required("Phone number is required"),
+  gender: Yup.string().required("Gender is required"),
+  location: Yup.object().shape({
+    city: Yup.string().required("City is required"),
+    country: Yup.string().required("Country is required"),
+  }),
 });
 
 //TODO : verifcation the validationSchema
@@ -76,7 +81,7 @@ const Profile = () => {
     formData.append("location", JSON.stringify(values.location));
     formData.append("hobbies", JSON.stringify(values.hobbies));
     formData.append("distance", values.distance);
-    formData.append("targetAge", values.targetAge);
+    formData.append("targetAge", JSON.stringify(values.targetAge));
     formData.append("bio", values.bio);
 
     console.log("value images", values.image);
@@ -154,25 +159,31 @@ const Profile = () => {
                     name="PhoneNumber"
                     component={PhoneNumber}
                     setFieldValue={setFieldValue}
+                    errors={errors}
+                    touched={touched}
                   />
                   <br />
                   <Field
                     name="Gender"
                     component={Gender}
                     setFieldValue={setFieldValue}
+                    errors={errors}
+                    touched={touched}
                   />
                   <br />
                   <Field
                     name="Location"
                     component={Location}
                     setFieldValue={setFieldValue}
+                    errors={errors}
+                    touched={touched}
                   />
                   <br />
                   <Hobies setFieldValue={setFieldValue} values={values} />
                   <br />
                   <Field
                     name="distance"
-                    component={SliderComponent}
+                    component={Distance}
                     setFieldValue={setFieldValue}
                   />
                   <br />

@@ -9,7 +9,7 @@
 
 //NOTE 3 : send the user to the home page after finshing the profile setting up 
 
-
+//
 
 // Initialize upload
 

@@ -7,18 +7,17 @@ Modal.setAppElement("#root");
 
 const center = [34.020882, -6.84165];
 
-function MyMapComponent({ onDataFetch,setFieldValue }) {
+function MyMapComponent({ onDataFetch, setFieldValue }) {
   const [position, setPosition] = useState(center);
 
   function LocationMarker() {
     useMapEvents({
       async click(e) {
-
         setPosition(e.latlng);
         const response = await fetch(
           `https://nominatim.openstreetmap.org/reverse?format=json&lat=${e.latlng.lat}&lon=${e.latlng.lng}`
         );
-        
+
         const data = await response.json();
         if (data.address) {
           onDataFetch({
@@ -56,9 +55,7 @@ function MyMapComponent({ onDataFetch,setFieldValue }) {
   );
 }
 
-//NOTE ****************************************************************
-const Location = ({ setFieldValue }) => {
-  const [error, setError] = useState(false);
+const Location = ({ setFieldValue, errors, touched }) => {
   const [modalIsOpen, setModalIsOpen] = useState(false);
   const [dataFromChild, setDataFromChild] = useState({});
 
@@ -81,6 +78,30 @@ const Location = ({ setFieldValue }) => {
         >
           find me
         </button>
+
+        
+          {/* Display city and country data if there are no errors */}
+          {!errors.location && (
+            <p className="location-info">
+              city: {dataFromChild.city} <br />
+              country: {dataFromChild.country}
+            </p>
+          )}
+
+          {/* Display error message if there are errors */}
+          {errors.location && touched.location && (
+            <>
+            <p className="infoError">
+              {errors.location.city}
+            </p>
+            <br></br>
+            <p className="infoError">
+              {errors.location.country}
+            </p>
+            </>
+          )}
+        
+
         <Modal
           style={{
             content: {
@@ -94,7 +115,10 @@ const Location = ({ setFieldValue }) => {
           onRequestClose={() => setModalIsOpen(false)}
           contentLabel="Location Picker"
         >
-          <MyMapComponent onDataFetch={handleData} setFieldValue={setFieldValue} />
+          <MyMapComponent
+            onDataFetch={handleData}
+            setFieldValue={setFieldValue}
+          />
           <br />
           <div className="modal-container">
             <p className="location-info">

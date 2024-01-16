@@ -28,7 +28,6 @@ const Images = ({ setFieldValue, touched, errors }) => {
   // };
 
   const validateImage = (file) => {
-    //const validTypes = ['image/jpeg'];
      const validTypes = ['image/jpeg', 'image/png'];
 
     const maxSize = 2 * 1024 * 1024; // 5MB
