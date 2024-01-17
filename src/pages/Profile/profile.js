@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import { Formik, Field } from "formik";
 import * as Yup from "yup";
 import axios from "axios";
+import { useNavigate } from "react-router-dom";
 
 import "./profile.css";
 
@@ -12,11 +13,9 @@ import Gender from "./componet/Gender";
 import Location from "./componet/Location";
 import Hobies from "./componet/Hobies";
 import { Distance, DualRangeSlider } from "./componet/SliderComponent";
-
 import Bio from "./componet/Bio";
-
-import { useNavigate } from "react-router-dom";
 import AnimatedLoader from "../../components/AnimatedLoader/AnimatedLoader";
+
 
 function calculateAge(birthday) {
   const today = new Date();
@@ -105,6 +104,7 @@ const Profile = () => {
         //setIsLoading(true);
       });
   };
+
   if (!isLoading)
     return (
       <>
