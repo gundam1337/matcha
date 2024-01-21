@@ -32,7 +32,7 @@ const Gender = ({ setFieldValue ,errors, touched }) => {
         </label>
       </div>
 
-      {errors.info && touched.info && (
+      {errors.gender && touched.gender && (
         <>
           <p className="infoError">
             {errors.gender && "⚠️ "}
