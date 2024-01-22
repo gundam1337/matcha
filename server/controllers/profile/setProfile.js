@@ -5,16 +5,21 @@
 //DONE  1: Validate the Image ->File Type Check/File Size Limit/Security Scanning
 //DONE  : verify how many images
 
-//TODO : Generate unique filenames for uploaded images to prevent overwriting existing files
+//DONE : Generate unique filenames for uploaded images to prevent overwriting existing files
 
-//NOTE 2 :Store the Image in Google Cloud Storage
+//NOTE  : store the images temporary in the local storage 
 
-//NOTE 3 : send the user to the home page after finshing the profile setting up
+//NOTE  :Store the Image in Imgur
+
+//NOTE  : store the reference in MongoDB Save the URL/reference of the image in your MongoDB database, not the image itself.
+
+// NOTE : after a succssufl upload dele image from the local storage 
+
+//NOTE  : send the user to the home page after finshing the profile setting up
 
 const Yup = require("yup");
 const multer = require('multer');
 const { v4: uuidv4 } = require('uuid');
-const path = require('path')
 const SUPPORTED_FORMATS = ["image/jpg", "image/jpeg", "image/png"];
 const MAX_FILE_SIZE = 5 * 1024 * 1024; // Max file size in bytes (e.g., 5MB)
 
@@ -38,7 +43,6 @@ const nameValidationSchema = Yup.string()
   .max(40, "Name must be less than 40 characters")
   .required(" is required");
 
-  //FIXME 
 const validationSchema = Yup.object({
   image: Yup.array().of(
     Yup.mixed()
@@ -81,14 +85,13 @@ const storage = multer.diskStorage({
   // },
   filename: function(req, file, cb) {
       // Generate a unique filename with the original file extension
-      const uniqueFilename = uuidv4() + path.extname(file.originalname);
+      const uniqueFilename = uuidv4() + file.originalname;
       cb(null, uniqueFilename);
   }
 });
 
 //Initialize multer with the custom storage engine
 const upload = multer({ storage: storage });
-// const upload = multer()
 
 const validate = async (req, res, next) => {
   try {
@@ -107,8 +110,7 @@ const validate = async (req, res, next) => {
     // Validate the structured data
     await validationSchema.validate(dataToValidate);
 
-    //rename the images 
-
+   
     // Continue with your logic if validation is successful
     next();
   } catch (err) {
@@ -123,12 +125,8 @@ const setProfile = async (req, res, next) => {
 
 
   console.log("Text Fields:", req.body);
+  console.log("Files ",req.files); 
 
-  if (req.files) {
-    req.files.forEach((file) => {
-      console.log("Received file:", file.originalname);
-    });
-  }
 
   res.send("FormData received");
 };
