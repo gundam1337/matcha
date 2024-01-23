@@ -119,8 +119,6 @@ const validate = async (req, res, next) => {
   }
 };
 
-
-
 const setProfile = async (req, res, next) => {
 
 

@@ -10,7 +10,6 @@
   "author": "omar derkaoui",
   "license": "ISC",
   "dependencies": {
-    "@google-cloud/storage": "^7.7.0",
     "bcrypt": "^5.1.1",
     "bcryptjs": "^2.4.3",
     "cookie-parser": "^1.4.6",
@@ -18,6 +17,7 @@
     "dotenv": "^16.3.1",
     "express": "^4.18.2",
     "express-validator": "^7.0.1",
+    "firebase-admin": "^12.0.0",
     "helmet": "^7.0.0",
     "http-proxy-middleware": "^2.0.6",
     "jsonwebtoken": "^9.0.2",
