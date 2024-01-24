@@ -22,6 +22,9 @@ const multer = require('multer');
 const { v4: uuidv4 } = require('uuid');
 const SUPPORTED_FORMATS = ["image/jpg", "image/jpeg", "image/png"];
 const MAX_FILE_SIZE = 5 * 1024 * 1024; // Max file size in bytes (e.g., 5MB)
+const admin = require('firebase-admin');
+const serviceAccount = require('../../storage/matcha-406014-firebase-adminsdk-fnp82-8517b73387.json');
+
 
 function calculateAge(birthday) {
   const today = new Date();
@@ -80,9 +83,6 @@ const validationSchema = Yup.object({
 });
 
 const storage = multer.diskStorage({
-  // destination: function(req, file, cb) {
-  //     cb(null, '../../storage'); // Replace 'uploads/' with your desired upload directory
-  // },
   filename: function(req, file, cb) {
       // Generate a unique filename with the original file extension
       const uniqueFilename = uuidv4() + file.originalname;
@@ -119,6 +119,58 @@ const validate = async (req, res, next) => {
   }
 };
 
+//NOTE *****************************************************************************
+
+admin.initializeApp({
+  credential: admin.credential.cert(serviceAccount),
+  storageBucket: 'matcha-406014.appspot.com' // replace with your Firebase Storage bucket name
+});
+
+const bucket = admin.storage().bucket();
+
+const uploadToFirebaseStorage = (req, res, next) => {
+  if (!req.files) {
+    res.status(500).json({ error: "No files to upload." });
+    return;
+  }
+
+  const files = req.files;
+  //TODO  : change the name of the image here 
+  let fileUploads = files.map(file => {
+    const blob = bucket.file(file.originalname);
+    const blobStream = blob.createWriteStream({
+      metadata: {
+        contentType: file.mimetype,
+      },
+    });
+
+    return new Promise((resolve, reject) => {
+      blobStream.on('error', error => reject(error));
+
+      blobStream.on('finish', () => {
+        // The public URL can be used to directly access the file via HTTP.
+        const publicUrl = `https://storage.googleapis.com/${bucket.name}/${blob.name}`;
+        resolve(publicUrl);
+      });
+
+      blobStream.end(file.buffer);
+    });
+  });
+
+  Promise.all(fileUploads)
+    .then(publicUrls => {
+      // Add the URLs to the request so they can be used in subsequent middleware or response
+      req.files.firebaseUrls = publicUrls;
+      next();
+    })
+    .catch(error => {
+      next(error);
+    });
+};
+
+
+
+//NOTE ****************************************************************************
 const setProfile = async (req, res, next) => {
 
 
@@ -129,6 +181,6 @@ const setProfile = async (req, res, next) => {
   res.send("FormData received");
 };
 
-const profileSetup = [upload.any(),validate, setProfile];
+const profileSetup = [upload.any(),validate, uploadToFirebaseStorage,setProfile];
 
 module.exports = profileSetup;
