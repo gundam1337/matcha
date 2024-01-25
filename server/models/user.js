@@ -66,8 +66,17 @@ const userSchema = new Schema({
     },
     location: {
       //DONE
+      latitude: {
+        type: Number,
+        required: true
+      },
+      longitude: {
+        type: Number,
+        required: true
+      },
       city: String,
       country: String,
+      
     },
     bio: String, //DONE
     interests: [String], //NOTE hobies

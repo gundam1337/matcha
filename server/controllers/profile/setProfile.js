@@ -1,13 +1,13 @@
 //NOTE  : send the user to the home page after finshing the profile setting up
+//NOTE  : at the end of the cycle send token
 const User = require("../../models/user");
 const Yup = require("yup");
-const multer = require('multer');
-const { v4: uuidv4 } = require('uuid');
+const multer = require("multer");
+const { v4: uuidv4 } = require("uuid");
 const SUPPORTED_FORMATS = ["image/jpg", "image/jpeg", "image/png"];
 const MAX_FILE_SIZE = 5 * 1024 * 1024; // Max file size in bytes (e.g., 5MB)
-const admin = require('firebase-admin');
-const serviceAccount = require('../../storage/matcha-406014-firebase-adminsdk-fnp82-8517b73387.json');
-
+const admin = require("firebase-admin");
+const serviceAccount = require("../../storage/matcha-406014-firebase-adminsdk-fnp82-8517b73387.json");
 
 function calculateAge(birthday) {
   const today = new Date();
@@ -32,14 +32,10 @@ const nameValidationSchema = Yup.string()
 const validationSchema = Yup.object({
   image: Yup.array().of(
     Yup.mixed()
-      .test(
-        "fileSize",
-        "File too large",
-        (value) => {
-          //console.log("Received file MIME type:", value);
-          return value && value.size <= MAX_FILE_SIZE
-        }
-      )
+      .test("fileSize", "File too large", (value) => {
+        //console.log("Received file MIME type:", value);
+        return value && value.size <= MAX_FILE_SIZE;
+      })
       .test(
         "fileType",
         "Unsupported file format",
@@ -93,7 +89,6 @@ const validate = async (req, res, next) => {
     // Validate the structured data
     await validationSchema.validate(dataToValidate);
 
-   
     // Continue with your logic if validation is successful
     next();
   } catch (err) {
@@ -102,10 +97,10 @@ const validate = async (req, res, next) => {
   }
 };
 
-//NOTE : UPLOAD the files into fire base 
+//NOTE : UPLOAD the files into fire base
 admin.initializeApp({
   credential: admin.credential.cert(serviceAccount),
-  storageBucket: 'matcha-406014.appspot.com' // replace with your Firebase Storage bucket name
+  storageBucket: "matcha-406014.appspot.com", // replace with your Firebase Storage bucket name
 });
 
 const bucket = admin.storage().bucket();
@@ -117,9 +112,8 @@ const uploadToFirebaseStorage = (req, res, next) => {
   }
 
   const files = req.files;
-  //DONE  : change the name of the image here 
-  let fileUploads = files.map(file => {
-
+  //DONE  : change the name of the image here
+  let fileUploads = files.map((file) => {
     const blob = bucket.file(uuidv4() + file.originalname);
     const blobStream = blob.createWriteStream({
       metadata: {
@@ -128,9 +122,9 @@ const uploadToFirebaseStorage = (req, res, next) => {
     });
 
     return new Promise((resolve, reject) => {
-      blobStream.on('error', error => reject(error));
+      blobStream.on("error", (error) => reject(error));
 
-      blobStream.on('finish', () => {
+      blobStream.on("finish", () => {
         // The public URL can be used to directly access the file via HTTP.
         const publicUrl = `https://storage.googleapis.com/${bucket.name}/${blob.name}`;
         resolve(publicUrl);
@@ -141,32 +135,59 @@ const uploadToFirebaseStorage = (req, res, next) => {
   });
 
   Promise.all(fileUploads)
-    .then(publicUrls => {
+    .then((publicUrls) => {
       // Add the URLs to the request so they can be used in subsequent middleware or response
       req.files.firebaseUrls = publicUrls;
       next();
     })
-    .catch(error => {
+    .catch((error) => {
       next(error);
     });
 };
 
-//FIXME : the image are "seen" in the firbase   
-
+//FIXME : the image are "seen" in the firbase
 
 //NOTE  : store the reference in MongoDB Save the URL/reference of the image in your MongoDB database, not the image itself.
-
-
+//TODO : add the the field the the profile is set up
 const setProfile = async (req, res, next) => {
-
+  try {
+    var userInfo = req.body;
+    var newUser = new User({
+      firstName: userInfo.info.firstName,
+      lastName: userInfo.info.lastName,
+      birthdate: userInfo.info.birthdate,
+      phoneNumber: userInfo.phoneNumber,
+      gender: userInfo.gender,
+      location: {
+        latitude: userInfo.location.latitude,
+        longitude: userInfo.location.longitude,
+        city: userInfo.location.city,
+        country: userInfo.location.country,
+      },
+      interests: userInfo.hobbies,
+      distance: userInfo.distance,
+      targetAge: {
+        maxAge: userInfo.targetAge.maxAge,
+        minAge: userInfo.targetAge.minAge,
+      },
+      bio: userInfo.bio,
+    });
+    await newUser.save();
+    res.status(200).send("User added successfully");
+  } catch (e) {}
 
   console.log("Text Fields:", req.body);
-  console.log("Files ",req.files); 
-
+  console.log("Files ", req.files);
+  console.log("user name ", req.user);
 
   res.send("FormData received");
 };
 
-const profileSetup = [upload.any(),validate, uploadToFirebaseStorage,setProfile];
+const profileSetup = [
+  upload.any(),
+  validate,
+  uploadToFirebaseStorage,
+  setProfile,
+];
 
 module.exports = profileSetup;
