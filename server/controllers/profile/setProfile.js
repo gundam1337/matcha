@@ -1,22 +1,5 @@
-//DONE 0 : check the auth of the user first
-
-//DONE : send the new access token at the end of the cycle
-
-//DONE  1: Validate the Image ->File Type Check/File Size Limit/Security Scanning
-//DONE  : verify how many images
-
-//DONE : Generate unique filenames for uploaded images to prevent overwriting existing files
-
-//NOTE  : store the images temporary in the local storage 
-
-//NOTE  :Store the Image in Imgur
-
-//NOTE  : store the reference in MongoDB Save the URL/reference of the image in your MongoDB database, not the image itself.
-
-// NOTE : after a succssufl upload dele image from the local storage 
-
 //NOTE  : send the user to the home page after finshing the profile setting up
-
+const User = require("../../models/user");
 const Yup = require("yup");
 const multer = require('multer');
 const { v4: uuidv4 } = require('uuid');
@@ -83,11 +66,11 @@ const validationSchema = Yup.object({
 });
 
 const storage = multer.diskStorage({
-  filename: function(req, file, cb) {
-      // Generate a unique filename with the original file extension
-      const uniqueFilename = uuidv4() + file.originalname;
-      cb(null, uniqueFilename);
-  }
+  // filename: function(req, file, cb) {
+  //     // Generate a unique filename with the original file extension
+  //     const uniqueFilename = uuidv4() + file.originalname;
+  //     cb(null, uniqueFilename);
+  // }
 });
 
 //Initialize multer with the custom storage engine
@@ -119,8 +102,7 @@ const validate = async (req, res, next) => {
   }
 };
 
-//NOTE *****************************************************************************
-
+//NOTE : UPLOAD the files into fire base 
 admin.initializeApp({
   credential: admin.credential.cert(serviceAccount),
   storageBucket: 'matcha-406014.appspot.com' // replace with your Firebase Storage bucket name
@@ -135,9 +117,10 @@ const uploadToFirebaseStorage = (req, res, next) => {
   }
 
   const files = req.files;
-  //TODO  : change the name of the image here 
+  //DONE  : change the name of the image here 
   let fileUploads = files.map(file => {
-    const blob = bucket.file(file.originalname);
+
+    const blob = bucket.file(uuidv4() + file.originalname);
     const blobStream = blob.createWriteStream({
       metadata: {
         contentType: file.mimetype,
@@ -168,9 +151,12 @@ const uploadToFirebaseStorage = (req, res, next) => {
     });
 };
 
+//FIXME : the image are "seen" in the firbase   
 
 
-//NOTE ****************************************************************************
+//NOTE  : store the reference in MongoDB Save the URL/reference of the image in your MongoDB database, not the image itself.
+
+
 const setProfile = async (req, res, next) => {
 
 

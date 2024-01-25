@@ -1,13 +1,14 @@
-require("dotenv").config({ path: "../config.env" });//FIXME I am not using the .env variables
+require("dotenv").config({ path: "../config.env" }); //FIXME I am not using the .env variables
 const jwt = require("jsonwebtoken");
 const User = require("../../models/user");
 const bcrypt = require("bcrypt");
 const { body, validationResult } = require("express-validator");
-const {sendEmail } = require("../../utils/sendEmail");
+const { sendEmail } = require("../../utils/sendEmail");
 
 const accessTokenSecret = "yourAccessTokenSecret"; // Replace with your secret key for access token
 const refreshTokenSecret = "yourRefreshTokenSecret";
 
+//FIXME : prvent login if the user is not have a verified email accout
 //NOTE: Validation inputs Middleware:
 const validate = [
   body("name")
@@ -51,14 +52,14 @@ const authentication = async (req, res, next) => {
       res.status(400).send("User not found");
       return;
     }
-    //adding the email to req object for later use  
+    //adding the email to req object for later use
     req.email = user.email;
 
     const isMatch = await bcrypt.compare(password, user.passwordHash); // Assuming the field is passwordHash
     if (!isMatch) {
       return res.status(400).send("Invalid credentials");
     }
-    
+
     next(); // Proceed only if authentication is successful
   } catch (error) {
     console.error("Authentication error:", error);
@@ -68,7 +69,7 @@ const authentication = async (req, res, next) => {
 
 //NOTE  : Session Management Middleware
 
-const handleSessionManagement = async (req, res,next) => {
+const handleSessionManagement = async (req, res, next) => {
   const { name } = req.body;
 
   try {
@@ -80,14 +81,14 @@ const handleSessionManagement = async (req, res,next) => {
     }
 
     const accessToken = jwt.sign(
-      { username: user.username },
+      { username: user.username, email: user.email },
       accessTokenSecret,
       { expiresIn: "10m" }
     );
 
     // Create Refresh Token
     const refreshToken = jwt.sign(
-      { username: user.username },
+      { username: user.username, email: user.email },
       refreshTokenSecret
     );
 
@@ -96,16 +97,15 @@ const handleSessionManagement = async (req, res,next) => {
     await user.save();
 
     res.cookie("refreshToken", refreshToken, {
-      httpOnly: true,     // Makes the cookie inaccessible to client-side scripts, enhancing security against XSS attacks
-      sameSite: 'strict', // Strictly controls when cookies are sent; use 'lax' for less strict control
-      path: '/',          // Sets the cookie to be accessible for the entire site
-      maxAge: 24 * 60 * 60 * 1000 // Sets the cookie to expire in 24 hours (in milliseconds)
+      httpOnly: true, // Makes the cookie inaccessible to client-side scripts, enhancing security against XSS attacks
+      sameSite: "strict", // Strictly controls when cookies are sent; use 'lax' for less strict control
+      path: "/", // Sets the cookie to be accessible for the entire site
+      maxAge: 24 * 60 * 60 * 1000, // Sets the cookie to expire in 24 hours (in milliseconds)
     });
 
-     // Storing tokens in the request object to be used by subsequent middleware
-     req.accessToken = accessToken;
-     next();
-
+    // Storing tokens in the request object to be used by subsequent middleware
+    req.accessToken = accessToken;
+    next();
   } catch (err) {
     console.error("Session Management Error:", err);
     res.status(500).send({
@@ -118,8 +118,8 @@ const handleSessionManagement = async (req, res,next) => {
 const sendLoginNotifactionEmail = async (req, res) => {
   const email = req.email;
 
-  sendEmail(email, 'login')
-  .then(() => {
+  sendEmail(email, "login")
+    .then(() => {
       console.log("The email has been sent");
       //res.status(200).json({ message: "Please check your email box" });
     })
@@ -129,16 +129,15 @@ const sendLoginNotifactionEmail = async (req, res) => {
       }
     });
   const accessToken = req.accessToken;
-  res.json({ accessToken ,isProfileSetup: req.isProfileSetup});
-}
-
+  res.json({ accessToken, isProfileSetup: req.isProfileSetup });
+};
 
 const login = [
   validate,
   handleValidationErrors,
   authentication,
   handleSessionManagement,
-  sendLoginNotifactionEmail
+  sendLoginNotifactionEmail,
 ];
 
 const signout = (req, res, next) => {
