@@ -1,4 +1,5 @@
 var mongoose = require("mongoose");
+const { string } = require("yup");
 var Schema = mongoose.Schema;
 
 var validateEmail = function (email) {
@@ -7,25 +8,21 @@ var validateEmail = function (email) {
 };
 const userSchema = new Schema({
   username: {
-    //DONE
     type: String,
     required: true,
     unique: true,
   },
   email: {
-    //DONE
     type: String,
     required: true,
     validate: [validateEmail, "Please fill a valid email address"],
     unique: true,
   },
   passwordHash: {
-    //DONE
     type: String,
     required: true,
   },
   emailVerified: {
-    //DONE
     type: Boolean,
     default: false,
   },
@@ -35,60 +32,52 @@ const userSchema = new Schema({
       default: false,
     },
     profilePicture: {
-      //DONE
-      type: String,
+      type: [String],
       required: false, // Set to true if you want the image to be mandatory
     },
     firstName: {
-      //DONE
-      type: String,
+        type: String,
       //required: true
     },
     lastName: {
-      //DONE
-      type: String,
+        type: String,
       //required: true
     },
     birthdate: {
-      //DONE
-      type: Date,
+        type: String,
       //required: true
     },
     phoneNumber: {
-      //DONE
       type: String,
       //required: true
     },
     gender: {
-      //DONE
       type: String,
       //required: true
     },
     location: {
-      //DONE
       latitude: {
         type: Number,
-        required: true
+        //required: true
       },
       longitude: {
         type: Number,
-        required: true
+        //required: true
       },
       city: String,
       country: String,
       
     },
-    bio: String, //DONE
-    interests: [String], //NOTE hobies
+    bio: String, 
+    interests: [String], 
   },
   preferences: {
-    gender: { type: Boolean }, // DONE in the server
+    gender: { type: String,}, // DONE in the server
     ageRange: {
-      //DONE
       min: Number,
       max: Number,
     },
-    distance: Number, //DONE
+    distance: Number,
   },
   matches: [
     {
@@ -104,16 +93,13 @@ const userSchema = new Schema({
   },
   refreshToken: {
     type: String,
-    required: false,
   },
   resetToken: {
     token: {
       type: String,
-      // required: true,
     },
     expiresAt: {
       type: Date,
-      // required: true,
     },
   },
 });

@@ -1,5 +1,7 @@
 const jwt = require("jsonwebtoken");
 //FIXME read this two from the .env
+//FIXME : add another layer of securty ,by checking the DB is the user is aleardy exist 
+//FIXME : verify if the refrech tokon is the same in the database 
 const accessTokenSecret = "yourAccessTokenSecret"; // Replace with your actual secret
 const refreshTokenSecret = "yourRefreshTokenSecret"; // Replace with your actual secret
 
@@ -34,19 +36,13 @@ function verifyTokens(req, res, next) {
         );
         // Attach new Access Token to the request, but don't send it yet
         req.newAccessToken = newAccessToken;
-        //NOTE : get the name and email then put them in the req object
+       
+        req.user = user;
         next();
       });
     } else {
-        //TODO : add another layer of securty ,by checking the DB is the user is aleardy exist 
-      // Access Token is valid, proceed
-      //   User.findById(tokenData.userId, (err, user) => {
-      //     if (err || !user) {
-      //       return res.status(403).send({ message: "Invalid User" });
-      //     }
 
-      // User is valid, attach to request and proceed
-     
+      console.log("req.user in the virfy 2:",req.user)
       req.user = user;
       next();
     }

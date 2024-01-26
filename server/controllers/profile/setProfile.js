@@ -1,5 +1,6 @@
 //NOTE  : send the user to the home page after finshing the profile setting up
 //NOTE  : at the end of the cycle send token
+//FIXME : the mulituple image upload of the user 
 const User = require("../../models/user");
 const Yup = require("yup");
 const multer = require("multer");
@@ -147,12 +148,40 @@ const uploadToFirebaseStorage = (req, res, next) => {
 
 //FIXME : the image are "seen" in the firbase
 
-//NOTE  : store the reference in MongoDB Save the URL/reference of the image in your MongoDB database, not the image itself.
+//NOTE  : store the information in MongoDB and Save the URL/reference of the image in your MongoDB database, not the image itself.
 //TODO : add the the field the the profile is set up
 const setProfile = async (req, res, next) => {
+  console.log("Text Fields:", req.body);
+  console.log("image url ", req.files.firebaseUrls);
+  console.log("user", req.user);
+
   try {
-    var userInfo = req.body;
-    var newUser = new User({
+    if (!req.user || !req.user.username || !req.user.email) {
+      return res
+        .status(400)
+        .send({ error: "User information not provided in request" });
+    }
+
+    // Retrieve username and email from req.user
+    const { username, email } = req.user;
+
+    // Look up the user in the database based on username and email
+    const user = await User.findOne({
+      username: username,
+      email: email,
+    });
+    console.log("the user that I found in the database :", user);
+    if (!user) {
+      return res.status(404).send({ error: "User not found" });
+    }
+    const userInfo = req.body;
+    const targetGender = req.body.gender === "man" ? "woman" : "man";
+    //const birthDate = new Date(userInfo.info.birthdate);
+    // Update the user's profile
+    user.profile = {
+      ...user.profile, // Keep existing profile fields
+      isProfileSetup: true,
+      profilePicture: req.files.firebaseUrls, // Assuming req.files.firebaseUrls is the correct path
       firstName: userInfo.info.firstName,
       lastName: userInfo.info.lastName,
       birthdate: userInfo.info.birthdate,
@@ -164,23 +193,28 @@ const setProfile = async (req, res, next) => {
         city: userInfo.location.city,
         country: userInfo.location.country,
       },
-      interests: userInfo.hobbies,
-      distance: userInfo.distance,
-      targetAge: {
-        maxAge: userInfo.targetAge.maxAge,
-        minAge: userInfo.targetAge.minAge,
-      },
       bio: userInfo.bio,
-    });
-    await newUser.save();
+      interests: userInfo.hobbies,
+    };
+
+    // Update the user's preferences
+    user.preferences = {
+      gender: targetGender,
+      ageRange: {
+        min: userInfo.targetAge.minAge,
+        max: userInfo.targetAge.maxAge,
+        distance: userInfo.distance,
+      },
+    };
+
+    // Save the updated user
+    await user.save();
     res.status(200).send("User added successfully");
-  } catch (e) {}
+  } catch (error) {
+    res.status(500).send({ error: error.message });
+  }
 
-  console.log("Text Fields:", req.body);
-  console.log("Files ", req.files);
-  console.log("user name ", req.user);
-
-  res.send("FormData received");
+  // res.send("FormData received");
 };
 
 const profileSetup = [
