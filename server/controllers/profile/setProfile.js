@@ -1,6 +1,6 @@
 //NOTE  : send the user to the home page after finshing the profile setting up
 //NOTE  : at the end of the cycle send token
-//FIXME : the mulituple image upload of the user 
+//FIXME : the mulituple image upload of the user
 const User = require("../../models/user");
 const Yup = require("yup");
 const multer = require("multer");
@@ -62,13 +62,15 @@ const validationSchema = Yup.object({
   }),
 });
 
-const storage = multer.diskStorage({
-  // filename: function(req, file, cb) {
-  //     // Generate a unique filename with the original file extension
-  //     const uniqueFilename = uuidv4() + file.originalname;
-  //     cb(null, uniqueFilename);
-  // }
-});
+// const storage = multer.diskStorage({
+//   // filename: function(req, file, cb) {
+//   //     // Generate a unique filename with the original file extension
+//   //     const uniqueFilename = uuidv4() + file.originalname;
+//   //     cb(null, uniqueFilename);
+//   // }
+// });
+const storage = multer.memoryStorage();
+
 
 //Initialize multer with the custom storage engine
 const upload = multer({ storage: storage });
@@ -99,6 +101,7 @@ const validate = async (req, res, next) => {
 };
 
 //NOTE : UPLOAD the files into fire base
+//FIXME : the user can't have more then two images
 admin.initializeApp({
   credential: admin.credential.cert(serviceAccount),
   storageBucket: "matcha-406014.appspot.com", // replace with your Firebase Storage bucket name
@@ -113,7 +116,7 @@ const uploadToFirebaseStorage = (req, res, next) => {
   }
 
   const files = req.files;
-  //DONE  : change the name of the image here
+  console.log("req files",req.files);
   let fileUploads = files.map((file) => {
     const blob = bucket.file(uuidv4() + file.originalname);
     const blobStream = blob.createWriteStream({
@@ -130,7 +133,7 @@ const uploadToFirebaseStorage = (req, res, next) => {
         const publicUrl = `https://storage.googleapis.com/${bucket.name}/${blob.name}`;
         resolve(publicUrl);
       });
-
+      console.log("the file buffer ",file.buffer)
       blobStream.end(file.buffer);
     });
   });
@@ -170,12 +173,19 @@ const setProfile = async (req, res, next) => {
       username: username,
       email: email,
     });
-    console.log("the user that I found in the database :", user);
+    //console.log("the user that I found in the database :", user);
     if (!user) {
       return res.status(404).send({ error: "User not found" });
     }
     const userInfo = req.body;
     const targetGender = req.body.gender === "man" ? "woman" : "man";
+    const targetAgeMin = !req.body.targetAge.minAge
+      ? 18
+      : parseInt(req.body.targetAge.minAge, 10);
+    const targetAgeMAX = !req.body.targetAge.maxAge
+      ? 18
+      : parseInt(req.body.targetAge.maxAge, 10);
+
     //const birthDate = new Date(userInfo.info.birthdate);
     // Update the user's profile
     user.profile = {
@@ -201,8 +211,8 @@ const setProfile = async (req, res, next) => {
     user.preferences = {
       gender: targetGender,
       ageRange: {
-        min: userInfo.targetAge.minAge,
-        max: userInfo.targetAge.maxAge,
+        min: targetAgeMin,
+        max: targetAgeMAX,
         distance: userInfo.distance,
       },
     };

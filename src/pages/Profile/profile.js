@@ -16,7 +16,10 @@ import Bio from "./componet/Bio";
 import AnimatedLoader from "../../components/AnimatedLoader/AnimatedLoader";
 import { validationSchema } from "./AssistantFunctions/formValidationSchemas"
 
-
+//DONE
+//FIXME : the target age is not update to what the user selct 
+//DONE
+//FIXME : the contry and city are slow in the display 
 
 //TODO : verifcation the validationSchema
 const Profile = () => {
