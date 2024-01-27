@@ -2,10 +2,12 @@ import React, { useState, useEffect } from "react";
 import "../style/Images.css";
 
 const Images = ({ setFieldValue, touched, errors }) => {
+  //I download them from the server then put them in this state 
   const [selectedImage, setSelectedImage] = useState([]); // this is for displaying
   const [error, setError] = useState([]);
   const [images, setImages] = useState([]); // this is for the sending
 
+  //FIXME : the delet operation should be in the database also  
   //NOTE : this is working
   // useEffect(() => {
   //   setFieldValue("image", images);

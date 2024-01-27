@@ -9,7 +9,7 @@ const center = [34.020882, -6.84165];
 
 function MyMapComponent({ onDataFetch, setFieldValue }) {
   const [position, setPosition] = useState(center);
-
+  const [place, setPlace] = useState({city: "",country: ""})
   function LocationMarker() {
     useMapEvents({
       async click(e) {

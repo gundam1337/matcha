@@ -101,7 +101,7 @@ const validate = async (req, res, next) => {
 };
 
 //NOTE : UPLOAD the files into fire base
-//FIXME : the user can't have more then two images
+//DONE : the user can't have more then two images
 admin.initializeApp({
   credential: admin.credential.cert(serviceAccount),
   storageBucket: "matcha-406014.appspot.com", // replace with your Firebase Storage bucket name
@@ -190,7 +190,7 @@ const setProfile = async (req, res, next) => {
     // Update the user's profile
     user.profile = {
       ...user.profile, // Keep existing profile fields
-      isProfileSetup: true,
+      // isProfileSetup: true,
       profilePicture: req.files.firebaseUrls, // Assuming req.files.firebaseUrls is the correct path
       firstName: userInfo.info.firstName,
       lastName: userInfo.info.lastName,
@@ -227,6 +227,28 @@ const setProfile = async (req, res, next) => {
   // res.send("FormData received");
 };
 
+const getProfile = async (req, res) => {
+  try {
+    // Assuming the user's ID is stored in req.user after token verification
+    const { username, email } = req.user;
+
+    // Find the user by ID and select the fields you want to retrieve
+    const user = await User.findOne({
+      username: username,
+      email: email,
+    });
+
+    if (!user) {
+      return res.status(404).json({ message: 'User not found' });
+    }
+
+    // Respond with the user's profile data
+    res.json(user);
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
+};
+
 const profileSetup = [
   upload.any(),
   validate,
@@ -234,4 +256,4 @@ const profileSetup = [
   setProfile,
 ];
 
-module.exports = profileSetup;
+module.exports = {profileSetup,getProfile};

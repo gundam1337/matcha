@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState,useEffect } from "react";
 import { Formik, Field } from "formik";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
@@ -16,17 +16,59 @@ import Bio from "./componet/Bio";
 import AnimatedLoader from "../../components/AnimatedLoader/AnimatedLoader";
 import { validationSchema } from "./AssistantFunctions/formValidationSchemas"
 
-//DONE
-//FIXME : the target age is not update to what the user selct 
-//DONE
-//FIXME : the contry and city are slow in the display 
 
-//TODO : verifcation the validationSchema
+
+//TODO : Download all the informations form the user database then display them 
+//FIXME : the backgorund CSS
+
+const useGETUserProfile = () => {
+  const [profileData, setProfileData] = useState(null);
+  const [error, setError] = useState(null);
+
+  useEffect(() => {
+    const fetchProfileData = async () => {
+      try {
+        // Retrieve accessToken from local storage
+        const accessToken = localStorage.getItem('accessToken');
+        
+        // Retrieve refreshToken from cookies
+        const refreshToken = document.cookie
+          .split('; ')
+          .find(row => row.startsWith('refreshToken='))
+          ?.split('=')[1];
+
+        // Check if both tokens are available
+        if (!accessToken || !refreshToken) {
+          throw new Error('Authentication tokens are missing');
+        }
+
+        const response = await axios.get('/profile', {
+          headers: {
+            'Authorization': `Bearer ${accessToken}`,
+            'X-Refresh-Token': refreshToken
+          }
+        });
+
+        setProfileData(response.data);
+      } catch (err) {
+        setError(err.message);
+      }
+    };
+
+    fetchProfileData();
+  }, []);
+
+  return { profileData, error };
+}
+
+
 const Profile = () => {
   const [submitError, setSubmitError] = useState(null);
   const [isLoading, setIsLoading] = useState(false);
   const navigate = useNavigate();
-
+  //use the useGETUserProfile to set the information to every comp
+  
+ 
   const handleSubmit = (values) => {
     const formData = new FormData();
 
@@ -41,8 +83,6 @@ const Profile = () => {
     formData.append("distance", values.distance);
     formData.append("targetAge", JSON.stringify(values.targetAge));
     formData.append("bio", values.bio);
-
-    console.log("value images", values.image);
 
     axios
       .post("http://localhost:3001/profile", formData, {
@@ -104,6 +144,7 @@ const Profile = () => {
                     setFieldValue={setFieldValue}
                     errors={errors}
                     touched={touched}
+                    //to add intial values  
                   />
                   <br />
                   <Field
