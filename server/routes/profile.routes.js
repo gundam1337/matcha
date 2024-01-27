@@ -10,7 +10,7 @@ const verifyTokens = require("../controllers/auth/verifyTokens");
 router
   .route("/profile")
   .post(verifyTokens, profileSetup)
-  .get(verifyTokens, getProfile);
+  .get(verifyTokens,getProfile)
 
 // getProfile is a new controller to handle fetching profile data
 

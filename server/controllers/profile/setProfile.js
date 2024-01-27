@@ -227,11 +227,14 @@ const setProfile = async (req, res, next) => {
   // res.send("FormData received");
 };
 
+
+//TODO : dont send the password !
 const getProfile = async (req, res) => {
   try {
     // Assuming the user's ID is stored in req.user after token verification
+    console.log("req.user",req.user)
     const { username, email } = req.user;
-
+    console.log(username,email);
     // Find the user by ID and select the fields you want to retrieve
     const user = await User.findOne({
       username: username,

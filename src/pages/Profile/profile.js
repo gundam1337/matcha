@@ -1,4 +1,4 @@
-import React, { useState,useEffect } from "react";
+import React, { useState, useEffect } from "react";
 import { Formik, Field } from "formik";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
@@ -14,11 +14,9 @@ import Hobies from "./componet/Hobies";
 import { Distance, DualRangeSlider } from "./componet/SliderComponent";
 import Bio from "./componet/Bio";
 import AnimatedLoader from "../../components/AnimatedLoader/AnimatedLoader";
-import { validationSchema } from "./AssistantFunctions/formValidationSchemas"
+import { validationSchema } from "./AssistantFunctions/formValidationSchemas";
 
-
-
-//TODO : Download all the informations form the user database then display them 
+//TODO : Download all the informations form the user database then display them
 //FIXME : the backgorund CSS
 
 const useGETUserProfile = () => {
@@ -28,27 +26,13 @@ const useGETUserProfile = () => {
   useEffect(() => {
     const fetchProfileData = async () => {
       try {
-        // Retrieve accessToken from local storage
-        const accessToken = localStorage.getItem('accessToken');
-        
-        // Retrieve refreshToken from cookies
-        const refreshToken = document.cookie
-          .split('; ')
-          .find(row => row.startsWith('refreshToken='))
-          ?.split('=')[1];
-
-        // Check if both tokens are available
-        if (!accessToken || !refreshToken) {
-          throw new Error('Authentication tokens are missing');
-        }
-
-        const response = await axios.get('/profile', {
+        const response = await axios.get("http://localhost:3001/profile", {
+          withCredentials: true,
           headers: {
-            'Authorization': `Bearer ${accessToken}`,
-            'X-Refresh-Token': refreshToken
-          }
+            "x-access-token": localStorage.getItem("accessToken"),
+          },
         });
-
+        console.log("response data", response.data);
         setProfileData(response.data);
       } catch (err) {
         setError(err.message);
@@ -59,16 +43,16 @@ const useGETUserProfile = () => {
   }, []);
 
   return { profileData, error };
-}
-
+};
 
 const Profile = () => {
   const [submitError, setSubmitError] = useState(null);
   const [isLoading, setIsLoading] = useState(false);
   const navigate = useNavigate();
   //use the useGETUserProfile to set the information to every comp
-  
- 
+  const { profileData, error } = useGETUserProfile();
+  //console.log(profileData,error)
+
   const handleSubmit = (values) => {
     const formData = new FormData();
 
@@ -144,7 +128,7 @@ const Profile = () => {
                     setFieldValue={setFieldValue}
                     errors={errors}
                     touched={touched}
-                    //to add intial values  
+                    //to add intial values
                   />
                   <br />
                   <Field
