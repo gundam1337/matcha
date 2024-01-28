@@ -102,7 +102,7 @@ const Login = (props) => {
                     value="login"
                   ></input>
                   {submitError && (
-                    <p>Registration failed: {submitError.message}</p>
+                    <p>Login failed {submitError.message}</p>
                   )}
                   <p
                     onClick={() => {

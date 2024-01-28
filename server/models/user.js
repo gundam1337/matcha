@@ -72,7 +72,7 @@ const userSchema = new Schema({
     interests: [String], 
   },
   preferences: {
-    gender: { type: String,}, // DONE in the server
+    gender: { type: String,}, 
     ageRange: {
       min: Number,
       max: Number,

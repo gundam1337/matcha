@@ -1,4 +1,3 @@
-//NOTE  : send the user to the home page after finshing the profile setting up
 //NOTE  : at the end of the cycle send token
 //FIXME : the mulituple image upload of the user
 const User = require("../../models/user");
@@ -104,7 +103,7 @@ const validate = async (req, res, next) => {
 //DONE : the user can't have more then two images
 admin.initializeApp({
   credential: admin.credential.cert(serviceAccount),
-  storageBucket: "matcha-406014.appspot.com", // replace with your Firebase Storage bucket name
+  storageBucket: "matcha-406014.appspot.com", // Replace with your Firebase Storage bucket name
 });
 
 const bucket = admin.storage().bucket();
@@ -116,7 +115,8 @@ const uploadToFirebaseStorage = (req, res, next) => {
   }
 
   const files = req.files;
-  console.log("req files",req.files);
+  console.log("req files", req.files);
+
   let fileUploads = files.map((file) => {
     const blob = bucket.file(uuidv4() + file.originalname);
     const blobStream = blob.createWriteStream({
@@ -128,12 +128,16 @@ const uploadToFirebaseStorage = (req, res, next) => {
     return new Promise((resolve, reject) => {
       blobStream.on("error", (error) => reject(error));
 
-      blobStream.on("finish", () => {
+      blobStream.on("finish", async () => {
+        // Make the file publicly readable
+        await blob.makePublic();
+
         // The public URL can be used to directly access the file via HTTP.
         const publicUrl = `https://storage.googleapis.com/${bucket.name}/${blob.name}`;
         resolve(publicUrl);
       });
-      console.log("the file buffer ",file.buffer)
+
+      console.log("the file buffer", file.buffer);
       blobStream.end(file.buffer);
     });
   });
@@ -149,9 +153,6 @@ const uploadToFirebaseStorage = (req, res, next) => {
     });
 };
 
-//FIXME : the image are "seen" in the firbase
-
-//NOTE  : store the information in MongoDB and Save the URL/reference of the image in your MongoDB database, not the image itself.
 //TODO : add the the field the the profile is set up
 const setProfile = async (req, res, next) => {
   console.log("Text Fields:", req.body);
@@ -231,22 +232,34 @@ const setProfile = async (req, res, next) => {
 //TODO : dont send the password !
 const getProfile = async (req, res) => {
   try {
-    // Assuming the user's ID is stored in req.user after token verification
-    console.log("req.user",req.user)
     const { username, email } = req.user;
-    console.log(username,email);
-    // Find the user by ID and select the fields you want to retrieve
-    const user = await User.findOne({
-      username: username,
-      email: email,
-    });
+
+    const user = await User.findOne({ username, email }).lean();
 
     if (!user) {
       return res.status(404).json({ message: 'User not found' });
     }
 
-    // Respond with the user's profile data
-    res.json(user);
+    // Assuming that the user schema has a 'profile' field with nested properties
+    const { profile } = user;
+    const profileData = {
+      profilePicture: profile.profilePicture,
+      firstName: profile.firstName,
+      lastName: profile.lastName,
+      birthdate: profile.birthdate,
+      phoneNumber: profile.phoneNumber,
+      gender: profile.gender,
+      location: profile.location ? {
+        latitude: profile.location.latitude,
+        longitude: profile.location.longitude,
+        city: profile.location.city,
+        country: profile.location.country
+      } : undefined,
+      bio: profile.bio,
+      interests: profile.hobbies // Assuming hobbies is the correct field name
+    };
+
+    res.json(profileData);
   } catch (error) {
     res.status(500).json({ message: error.message });
   }

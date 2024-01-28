@@ -14,12 +14,15 @@ import Hobies from "./componet/Hobies";
 import { Distance, DualRangeSlider } from "./componet/SliderComponent";
 import Bio from "./componet/Bio";
 import AnimatedLoader from "../../components/AnimatedLoader/AnimatedLoader";
+
+
 import { validationSchema } from "./AssistantFunctions/formValidationSchemas";
 
-//TODO : Download all the informations form the user database then display them
-//FIXME : the backgorund CSS
 
-const useGETUserProfile = () => {
+const Profile = () => {
+  const [submitError, setSubmitError] = useState(null);
+  const [isLoading, setIsLoading] = useState(false);
+  const navigate = useNavigate();
   const [profileData, setProfileData] = useState(null);
   const [error, setError] = useState(null);
 
@@ -32,7 +35,7 @@ const useGETUserProfile = () => {
             "x-access-token": localStorage.getItem("accessToken"),
           },
         });
-        console.log("response data", response.data);
+        //console.log(response.data)
         setProfileData(response.data);
       } catch (err) {
         setError(err.message);
@@ -41,18 +44,11 @@ const useGETUserProfile = () => {
 
     fetchProfileData();
   }, []);
-
-  return { profileData, error };
-};
-
-const Profile = () => {
-  const [submitError, setSubmitError] = useState(null);
-  const [isLoading, setIsLoading] = useState(false);
-  const navigate = useNavigate();
-  //use the useGETUserProfile to set the information to every comp
-  const { profileData, error } = useGETUserProfile();
-  //console.log(profileData,error)
-
+  
+  if (!profileData) {
+    return <div>Loading...</div>;
+  }
+  console.log("here is the state",profileData)
   const handleSubmit = (values) => {
     const formData = new FormData();
 
