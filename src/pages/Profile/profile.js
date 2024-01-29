@@ -18,13 +18,17 @@ import AnimatedLoader from "../../components/AnimatedLoader/AnimatedLoader";
 
 import { validationSchema } from "./AssistantFunctions/formValidationSchemas";
 
+//TODO 1 : display the already existed data 
+//TODO 2 : set a limite size to the uploaded images 
+
 
 const Profile = () => {
-  const [submitError, setSubmitError] = useState(null);
+  //const [submitError, setSubmitError] = useState(null);
+  //use this to push errors 
   const [isLoading, setIsLoading] = useState(false);
   const navigate = useNavigate();
   const [profileData, setProfileData] = useState(null);
-  const [error, setError] = useState(null);
+  //const [error, setError] = useState(null);
 
   useEffect(() => {
     const fetchProfileData = async () => {
@@ -35,20 +39,20 @@ const Profile = () => {
             "x-access-token": localStorage.getItem("accessToken"),
           },
         });
-        //console.log(response.data)
         setProfileData(response.data);
       } catch (err) {
-        setError(err.message);
+       //setError(err.message);
       }
     };
 
     fetchProfileData();
   }, []);
   
-  if (!profileData) {
-    return <div>Loading...</div>;
-  }
+  if (!profileData)
+    return <AnimatedLoader/>
+  
   console.log("here is the state",profileData)
+
   const handleSubmit = (values) => {
     const formData = new FormData();
 
