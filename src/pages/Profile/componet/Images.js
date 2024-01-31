@@ -1,29 +1,38 @@
 import React, { useState, useEffect } from "react";
 import "../style/Images.css";
-import { useField } from "formik";
 
-const Images = ({setFieldValue, errors ,touched ,...props}) => {
-  //I download them from the server then put them in this state 
+//TODO : study the state to see if you can use one state in the hole app 
+const Images = ({
+  setFieldValue,
+  errors,
+  touched,
+  initialValues,
+}) => {
+
   const [selectedImage, setSelectedImage] = useState([]); // this is for displaying
   const [error, setError] = useState([]);
   const [images, setImages] = useState([]); // this is for the sending
-  const [field, meta, helpers] = useField(props.field.name);
-  const { value } = meta;
 
-  
-  console.log("the value from the Image",value);
-  //FIXME : the delet operation should be in the database also  
+  //FIXME : the delet operation should be in the database also
+
+  useEffect(() => {
+    if (initialValues && initialValues.length > 0) {
+       console.log("initial values",initialValues)
+      //  setSelectedImage(initialValues)
+      //  setImages(initialValues);
+    }
+  }, [initialValues]);
 
   const validateImage = (file) => {
-     const validTypes = ['image/jpeg', 'image/png'];
+    const validTypes = ["image/jpeg", "image/png"];
 
     const maxSize = 2 * 1024 * 1024; // 5MB
 
     if (!validTypes.includes(file.type)) {
-      return 'Invalid file type';
+      return "Invalid file type";
     }
     if (file.size > maxSize) {
-      return 'File is too large';
+      return "File is too large";
     }
     return null;
   };

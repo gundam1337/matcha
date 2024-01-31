@@ -6,6 +6,8 @@ import Registration from "../Registration/Registration";
 import Login from "../Login/Login";
 import ResetPassword from "../ResetPassword/ResetPassword";
 
+//TODO 1:if there is no conxion ,display an error message 
+
 Modal.setAppElement("#root");
 
 const customStyles = {

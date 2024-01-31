@@ -24,12 +24,12 @@ import { validationSchema } from "./AssistantFunctions/formValidationSchemas";
 //TODO 5 : make the style of the loading in the center
 //TODO 6 : the data in front end is not matched with the back end ,profileData and response sould be matched
 
-
 const Profile = () => {
   const [submitError, setSubmitError] = useState(null);
   //use this to push errors
   const [isLoading, setIsLoading] = useState(false);
   const navigate = useNavigate();
+
   const [profileData, setProfileData] = useState({
     image: [],
     info: {
@@ -82,9 +82,33 @@ const Profile = () => {
 
           // Use Promise.race to race between the fetchPromise and the timeoutPromise
           const response = await Promise.race([fetchPromise, timeoutPromise]);
+          console.log("the response data", response.data);
 
           // Since we are here, it means fetchPromise resolved before timeoutPromise
-          setProfileData(response.data);
+          //setProfileData(response.data);
+          setProfileData({
+            image: response.data.profilePicture || [], // Assuming this is the correct mapping
+            info: {
+              firstName: response.data.firstName || "",
+              lastName: response.data.lastName || "",
+              birthday: response.data.birthday || "", // Add birthday to the response data if it's available
+            },
+            phoneNumber: response.data.phoneNumber || "",
+            gender: response.data.gender || "",
+            location: {
+              latitude: response.data.location.latitude || "",
+              longitude: response.data.location.longitude || "",
+              city: response.data.city || "", // Make sure 'city' is provided in the response
+              country: response.data.country || "", // Make sure 'country' is provided in the response
+            },
+            hobbies: response.data.hobbies || [], // Add hobbies to the response data if it's available
+            bio: response.data.bio || "",
+            distance: response.data.distance || "", // Add distance to the response data if it's available
+            targetAge: {
+              maxAge: response.data.targetAge?.maxAge || "",
+              minAge: response.data.targetAge?.minAge || "",
+            },
+          });
         } else {
           // Handle the case where there is no token
           setError("No access token available.");
@@ -100,9 +124,7 @@ const Profile = () => {
   }, []);
 
   if (error) return <div> there is an error</div>;
-  if (!profileData) return <AnimatedLoader />;
-
-  console.log("here is the state",profileData)
+  //if (!profileData) return <AnimatedLoader />;
 
   const handleSubmit = (values) => {
     const formData = new FormData();
@@ -139,35 +161,13 @@ const Profile = () => {
       });
   };
 
-  if (!isLoading)
+  if (!isLoading )
     return (
       <>
         <Formik
-          // initialValues={{
-          //   image: [],
-          //   info: {
-          //     firstName: "",
-          //     lastName: "",
-          //     birthday: "",
-          //   },
-          //   phoneNumber: "",
-          //   gender: "",
-          //   location: {
-          //     latitude: "",
-          //     longitude: "",
-          //     city: "",
-          //     country: "",
-          //   },
-          //   hobbies: [],
-          //   bio: "",
-          //   distance: "",
-          //   targetAge: {
-          //     maxAge: "",
-          //     minAge: "",
-          //   },
-          // }}
           initialValues={profileData}
           validationSchema={validationSchema}
+          enableReinitialize={true}
           onSubmit={handleSubmit}
         >
           {({ setFieldValue, handleSubmit, values, errors, touched }) => (
@@ -180,6 +180,7 @@ const Profile = () => {
                     setFieldValue={setFieldValue}
                     errors={errors}
                     touched={touched}
+                    initialValues={values.image}
                   />
                   <br />
                   <Field

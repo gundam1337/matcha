@@ -4,11 +4,15 @@ const app = require('./app');
 const logger = require('./utils/logger'); // hypothetical utility for logging
 //
 
+//TODO : if the connection get lost , send a message to frontend
+//TODO : reload the server after 20 seconde to check if the connection get back 
+//
 const startServer = async () => {
   try {
     await mongoose.connect(config.uri, {
       useNewUrlParser: true,
       useUnifiedTopology: true,
+     
     });
     logger.info('Connected to MongoDB');
 
