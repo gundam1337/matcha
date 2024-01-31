@@ -2,36 +2,17 @@ import React, { useState, useEffect } from "react";
 import "../style/Images.css";
 import { useField } from "formik";
 
-const Images = ({ name,setFieldValue, errors ,touched}) => {
+const Images = ({setFieldValue, errors ,touched ,...props}) => {
   //I download them from the server then put them in this state 
   const [selectedImage, setSelectedImage] = useState([]); // this is for displaying
   const [error, setError] = useState([]);
   const [images, setImages] = useState([]); // this is for the sending
-  const [field, meta, helpers] = useField(name);
-
+  const [field, meta, helpers] = useField(props.field.name);
   const { value } = meta;
+
+  
   console.log("the value from the Image",value);
   //FIXME : the delet operation should be in the database also  
-  //NOTE : this is working
-  // useEffect(() => {
-  //   setFieldValue("image", images);
-
-  //   console.log(images)
-    
-  // }, [images]);
-
-  // const handleImageChange = (e) => {
-  //   const files = Array.from(e.target.files);
-
-  //   setImages((prevImages) => [...prevImages, ...files]);
-
-  //   files.forEach((file) => {
-  //     if (selectedImage.length < 2) {
-  //       const blobUrl = URL.createObjectURL(file);
-  //       setSelectedImage((oldArray) => [...oldArray, blobUrl]);
-  //     }
-  //   });
-  // };
 
   const validateImage = (file) => {
      const validTypes = ['image/jpeg', 'image/png'];

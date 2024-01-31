@@ -20,15 +20,40 @@ import { validationSchema } from "./AssistantFunctions/formValidationSchemas";
 //TODO 1 : display the already existed data
 //TODO 2 : set a limite size to the uploaded images
 //DONE 3 : if the connection get cut display a message
-//TODO 4 : make the error message more styled 
-//TODO 5 : make the style of the loading in the center 
+//TODO 4 : make the error message more styled
+//TODO 5 : make the style of the loading in the center
+//TODO 6 : the data in front end is not matched with the back end ,profileData and response sould be matched
+
 
 const Profile = () => {
   const [submitError, setSubmitError] = useState(null);
   //use this to push errors
   const [isLoading, setIsLoading] = useState(false);
   const navigate = useNavigate();
-  const [profileData, setProfileData] = useState(null);
+  const [profileData, setProfileData] = useState({
+    image: [],
+    info: {
+      firstName: "",
+      lastName: "",
+      birthday: "",
+    },
+    phoneNumber: "",
+    gender: "",
+    location: {
+      latitude: "",
+      longitude: "",
+      city: "",
+      country: "",
+    },
+    hobbies: [],
+    bio: "",
+    distance: "",
+    targetAge: {
+      maxAge: "",
+      minAge: "",
+    },
+  });
+
   const [error, setError] = useState(null);
 
   useEffect(() => {
@@ -36,17 +61,17 @@ const Profile = () => {
       try {
         // Retrieve the token from localStorage
         const token = localStorage.getItem("accessToken");
-  
+
         // Only proceed if the token exists
         if (token) {
           // Set a timeout duration (e.g., 5000 milliseconds)
           const TIMEOUT = 5000;
-  
+
           // Create a promise that rejects after the timeout duration
           const timeoutPromise = new Promise((_, reject) =>
             setTimeout(() => reject(new Error("Request timed out")), TIMEOUT)
           );
-  
+
           // Fetch the profile data
           const fetchPromise = axios.get("http://localhost:3001/profile", {
             withCredentials: true,
@@ -54,10 +79,10 @@ const Profile = () => {
               "x-access-token": token,
             },
           });
-  
+
           // Use Promise.race to race between the fetchPromise and the timeoutPromise
           const response = await Promise.race([fetchPromise, timeoutPromise]);
-  
+
           // Since we are here, it means fetchPromise resolved before timeoutPromise
           setProfileData(response.data);
         } else {
@@ -70,15 +95,14 @@ const Profile = () => {
         setError(err.message);
       }
     };
-  
+
     fetchProfileData();
   }, []);
-  
 
   if (error) return <div> there is an error</div>;
   if (!profileData) return <AnimatedLoader />;
 
-  //console.log("here is the state",profileData)
+  console.log("here is the state",profileData)
 
   const handleSubmit = (values) => {
     const formData = new FormData();
@@ -119,29 +143,30 @@ const Profile = () => {
     return (
       <>
         <Formik
-          initialValues={{
-            image: [],
-            info: {
-              firstName: "",
-              lastName: "",
-              birthday: "",
-            },
-            phoneNumber: "",
-            gender: "",
-            location: {
-              latitude: "",
-              longitude: "",
-              city: "",
-              country: "",
-            },
-            hobbies: [],
-            bio: "",
-            distance: "",
-            targetAge: {
-              maxAge: "",
-              minAge: "",
-            },
-          }}
+          // initialValues={{
+          //   image: [],
+          //   info: {
+          //     firstName: "",
+          //     lastName: "",
+          //     birthday: "",
+          //   },
+          //   phoneNumber: "",
+          //   gender: "",
+          //   location: {
+          //     latitude: "",
+          //     longitude: "",
+          //     city: "",
+          //     country: "",
+          //   },
+          //   hobbies: [],
+          //   bio: "",
+          //   distance: "",
+          //   targetAge: {
+          //     maxAge: "",
+          //     minAge: "",
+          //   },
+          // }}
+          initialValues={profileData}
           validationSchema={validationSchema}
           onSubmit={handleSubmit}
         >
