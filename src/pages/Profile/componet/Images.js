@@ -1,27 +1,35 @@
 import React, { useState, useEffect } from "react";
 import "../style/Images.css";
 
-//TODO : study the state to see if you can use one state in the hole app 
-const Images = ({
-  setFieldValue,
-  errors,
-  touched,
-  initialValues,
-}) => {
-
+//TODO : study the state to see if you can use one state in the hole app
+const Images = ({ setFieldValue, errors, touched, initialValues }) => {
+  const [images, setImages] = useState([]); // this is for the sending
   const [selectedImage, setSelectedImage] = useState([]); // this is for displaying
   const [error, setError] = useState([]);
-  const [images, setImages] = useState([]); // this is for the sending
-
-  //FIXME : the delet operation should be in the database also
 
   useEffect(() => {
     if (initialValues && initialValues.length > 0) {
-       console.log("initial values",initialValues)
+      console.log("initial values", initialValues);
       //  setSelectedImage(initialValues)
       //  setImages(initialValues);
+
+        //setSelectedImage(initialValues); // Limit to 2 images
+        const imageUrls = initialValues.map((image) =>
+      typeof image === 'string' ? image : URL.createObjectURL(image)
+    ).slice(0, 2); // Ensure we only take two images
+    
+    setSelectedImage(imageUrls);
+        setImages(initialValues);
+      // // Set the images state
+      // // If your backend can handle URLs:
+     
     }
   }, [initialValues]);
+
+  useEffect(() => {
+    // Only update field value with valid images
+    setFieldValue("image", images);
+  }, [images]);
 
   const validateImage = (file) => {
     const validTypes = ["image/jpeg", "image/png"];
@@ -37,14 +45,8 @@ const Images = ({
     return null;
   };
 
-  useEffect(() => {
-    // Only update field value with valid images
-    setFieldValue("image", images);
-  }, [images]);
-
   const handleImageChange = (e) => {
     const files = Array.from(e.target.files);
-
     files.forEach((file) => {
       const error = validateImage(file);
       if (error) {

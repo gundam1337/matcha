@@ -86,8 +86,9 @@ const Profile = () => {
 
           // Since we are here, it means fetchPromise resolved before timeoutPromise
           //setProfileData(response.data);
-          setProfileData({
-            image: response.data.profilePicture || [], // Assuming this is the correct mapping
+          setProfileData(prev => ({
+            ...prev,
+            image: response.data.profilePicture || [],
             info: {
               firstName: response.data.firstName || "",
               lastName: response.data.lastName || "",
@@ -96,8 +97,8 @@ const Profile = () => {
             phoneNumber: response.data.phoneNumber || "",
             gender: response.data.gender || "",
             location: {
-              latitude: response.data.location.latitude || "",
-              longitude: response.data.location.longitude || "",
+              latitude: response.data.location?.latitude || "",
+              longitude: response.data.location?.longitude || "",
               city: response.data.city || "", // Make sure 'city' is provided in the response
               country: response.data.country || "", // Make sure 'country' is provided in the response
             },
@@ -107,8 +108,9 @@ const Profile = () => {
             targetAge: {
               maxAge: response.data.targetAge?.maxAge || "",
               minAge: response.data.targetAge?.minAge || "",
-            },
-          });
+            }
+          }));
+          
         } else {
           // Handle the case where there is no token
           setError("No access token available.");
@@ -140,6 +142,8 @@ const Profile = () => {
     formData.append("distance", values.distance);
     formData.append("targetAge", JSON.stringify(values.targetAge));
     formData.append("bio", values.bio);
+
+    console.log("the request ",values)
 
     axios
       .post("http://localhost:3001/profile", formData, {

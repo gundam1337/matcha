@@ -1,11 +1,11 @@
-//NOTE  : at the end of the cycle send token
 //FIXME : the mulituple image upload of the user
 const User = require("../../models/user");
 const Yup = require("yup");
 const multer = require("multer");
 const { v4: uuidv4 } = require("uuid");
-const SUPPORTED_FORMATS = ["image/jpg", "image/jpeg", "image/png"];
 const MAX_FILE_SIZE = 5 * 1024 * 1024; // Max file size in bytes (e.g., 5MB)
+const urlPattern = /^https:\/\/storage\.googleapis\.com\/matcha-406014\.appspot\.com\/[a-f0-9\-]{36}.*\.(jpg|jpeg|png|gif)$/;
+
 const admin = require("firebase-admin");
 const serviceAccount = require("../../storage/matcha-406014-firebase-adminsdk-fnp82-8517b73387.json");
 
@@ -29,19 +29,30 @@ const nameValidationSchema = Yup.string()
   .max(40, "Name must be less than 40 characters")
   .required(" is required");
 
+
+  const fileSchema = Yup.mixed()
+  .test("fileSize", "File size must be less than 2 megabits", (value) => {
+    return !value || (value && value.size <= MAX_FILE_SIZE);
+  })
+  .test("fileType", "Unsupported file format", (value) => {
+    if (!value || !value.name) return true;
+    const extension = value.name.split('.').pop();
+    return extension === 'png' || extension === 'jpeg';
+  });
+
+
+const urlSchema = Yup.string().matches(
+  urlPattern,
+  'URL must follow the specified pattern'
+);
+
+const elementSchema = Yup.lazy((value) =>
+  typeof value === 'string' ? urlSchema : fileSchema
+);
+
+  //FIXME : the validation is not correct 
 const validationSchema = Yup.object({
-  image: Yup.array().of(
-    Yup.mixed()
-      .test("fileSize", "File too large", (value) => {
-        //console.log("Received file MIME type:", value);
-        return value && value.size <= MAX_FILE_SIZE;
-      })
-      .test(
-        "fileType",
-        "Unsupported file format",
-        (value) => value && SUPPORTED_FORMATS.includes(value.mimetype)
-      )
-  ),
+  image: Yup.array().of(elementSchema).length(2, 'Array must contain exactly 2 elements'),
   info: Yup.object({
     firstName: nameValidationSchema,
     lastName: nameValidationSchema,
@@ -61,13 +72,7 @@ const validationSchema = Yup.object({
   }),
 });
 
-// const storage = multer.diskStorage({
-//   // filename: function(req, file, cb) {
-//   //     // Generate a unique filename with the original file extension
-//   //     const uniqueFilename = uuidv4() + file.originalname;
-//   //     cb(null, uniqueFilename);
-//   // }
-// });
+
 const storage = multer.memoryStorage();
 
 
@@ -83,10 +88,12 @@ const validate = async (req, res, next) => {
     if (req.body.targetAge) req.body.targetAge = JSON.parse(req.body.targetAge);
 
     // Structure the data as expected by the validation schema
+    
     const dataToValidate = {
       image: req.files,
       ...req.body,
     };
+    console.log(req.files)
 
     // Validate the structured data
     await validationSchema.validate(dataToValidate);
@@ -101,6 +108,8 @@ const validate = async (req, res, next) => {
 
 //NOTE : UPLOAD the files into fire base
 //DONE : the user can't have more then two images
+//TODO : create for every user a bucket and this bucket only can caontain 2 images 
+//TODO : only upload the file with the file 
 admin.initializeApp({
   credential: admin.credential.cert(serviceAccount),
   storageBucket: "matcha-406014.appspot.com", // Replace with your Firebase Storage bucket name
@@ -152,6 +161,7 @@ const uploadToFirebaseStorage = (req, res, next) => {
       next(error);
     });
 };
+
 
 //TODO : add the the field the the profile is set up
 const setProfile = async (req, res, next) => {
@@ -228,7 +238,7 @@ const setProfile = async (req, res, next) => {
   // res.send("FormData received");
 };
 
-
+//NOTE  : at the end of the cycle send token
 //TODO : dont send the password !
 const getProfile = async (req, res) => {
   try {
