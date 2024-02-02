@@ -1,4 +1,3 @@
-//FIXME : the mulituple image upload of the user
 const User = require("../../models/user");
 const Yup = require("yup");
 const multer = require("multer");
@@ -20,6 +19,7 @@ function calculateAge(birthday) {
   return age;
 }
 
+//this is for the name
 const nameValidationSchema = Yup.string()
   .matches(
     /^[A-Za-zÀ-ÖØ-öø-ÿ' -]+$/,
@@ -89,11 +89,23 @@ const validate = async (req, res, next) => {
 
     // Structure the data as expected by the validation schema
     
+    const files = req.files || [];
+    // console.log("the request",req)
+    //console.log("files",files)
+
+    const imageUrls = Array.isArray(req.body.image) ? req.body.image : [req.body.image];
+    //console.log("image url",imageUrls)
+
+    const comboArray = [...files, ...imageUrls]
+
+    const { image, ...restOfBody } = req.body;
+
+    //console.log("the combination ",comboArray)
     const dataToValidate = {
-      image: req.files,
-      ...req.body,
+      image: comboArray,
+      ...restOfBody,
     };
-    console.log(req.files)
+    console.log("request files are",dataToValidate)
 
     // Validate the structured data
     await validationSchema.validate(dataToValidate);
@@ -101,7 +113,7 @@ const validate = async (req, res, next) => {
     // Continue with your logic if validation is successful
     next();
   } catch (err) {
-    console.error("Validation error:", err);
+    //console.log("Validation error:", err);
     res.status(400).send(err.errors);
   }
 };
@@ -110,6 +122,7 @@ const validate = async (req, res, next) => {
 //DONE : the user can't have more then two images
 //TODO : create for every user a bucket and this bucket only can caontain 2 images 
 //TODO : only upload the file with the file 
+
 admin.initializeApp({
   credential: admin.credential.cert(serviceAccount),
   storageBucket: "matcha-406014.appspot.com", // Replace with your Firebase Storage bucket name

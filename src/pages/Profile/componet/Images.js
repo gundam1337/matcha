@@ -10,24 +10,22 @@ const Images = ({ setFieldValue, errors, touched, initialValues }) => {
   useEffect(() => {
     if (initialValues && initialValues.length > 0) {
       console.log("initial values", initialValues);
-      //  setSelectedImage(initialValues)
-      //  setImages(initialValues);
-
-        //setSelectedImage(initialValues); // Limit to 2 images
-        const imageUrls = initialValues.map((image) =>
-      typeof image === 'string' ? image : URL.createObjectURL(image)
-    ).slice(0, 2); // Ensure we only take two images
-    
-    setSelectedImage(imageUrls);
-        setImages(initialValues);
-      // // Set the images state
-      // // If your backend can handle URLs:
-     
+      const imageUrls = initialValues
+        .map((image) =>
+          typeof image === "string" ? image : URL.createObjectURL(image)
+        )
+        .slice(0, 2); // Ensure we only take two images
+      setSelectedImage(imageUrls);
+      setImages(initialValues);
     }
   }, [initialValues]);
 
   useEffect(() => {
-    // Only update field value with valid images
+    if (images.length > 0) {
+      //console.log("here is the image", images);
+      const newFiles = images.filter(item => item instanceof File);
+      //console.log(newFiles)
+    }
     setFieldValue("image", images);
   }, [images]);
 
