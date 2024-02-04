@@ -121,7 +121,6 @@ const Location = ({ setFieldValue, errors, touched }) => {
           />
           <br />
           <div className="modal-container">
-            //this not display until the somthing get change 
             <p className="location-info">
               city: {dataFromChild.city} <br />
               country: {dataFromChild.country}

@@ -5,6 +5,8 @@ const generateVerificationToken = require("../../utils/generateVerificationToken
 const {sendEmail } = require("../../utils/sendEmail");
 
 const { body, validationResult } = require("express-validator");
+const { v4: uuidv4 } = require('uuid');
+
 
 const validate = [
   body("name")
@@ -68,6 +70,7 @@ const sendVerificationEmail = async (req, res, next) => {
       username: name,
       email: email,
       passwordHash: passwordHach,
+      userID : uuidv4(),
     });
     const savedUser = await newUser.save();
     const token = generateVerificationToken();
@@ -109,7 +112,7 @@ const verifyEmailToken = async (req, res, next) => {
     const tokenDoc = await VerificationToken.findOne({ token: token }).exec();
     const oneDay = 24 * 60 * 60 * 1000; // 24 hours in milliseconds
     const now = new Date();
-    //DONE : to add the date verification
+
     if (!tokenDoc || now - tokenDoc.createdAt.getTime() > oneDay) {
       return res.status(400).json({
         message: "This verification token is invalid or has expired.",

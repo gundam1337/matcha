@@ -7,6 +7,9 @@ var validateEmail = function (email) {
   return re.test(email);
 };
 const userSchema = new Schema({
+  userID : {
+    type: String,
+  },
   username: {
     type: String,
     required: true,
@@ -65,8 +68,7 @@ const userSchema = new Schema({
         //required: true
       },
       city: String,
-      country: String,
-      
+      country: String,      
     },
     bio: String, 
     interests: [String], 
@@ -85,12 +87,6 @@ const userSchema = new Schema({
       ref: "User",
     },
   ],
-  lastLogin: Date,
-  accountStatus: {
-    type: String,
-    enum: ["active", "inactive", "banned"],
-    default: "active",
-  },
   refreshToken: {
     type: String,
   },

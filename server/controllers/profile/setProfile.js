@@ -126,12 +126,21 @@ const validate = async (req, res, next) => {
 //TODO : create for every user a bucket and this bucket only can caontain 2 images
 //TODO : only upload the file with the file
 
+
+//based on the format of the req.body.image I will do an action 
+//if the array only contain the urls then I should jump this middlware
+//if the array contain files and url , remove the url
+//sorte them by the new one 
+//List the files in the user's folder make them arranged 
+
+
 admin.initializeApp({
   credential: admin.credential.cert(serviceAccount),
-  storageBucket: "matcha-406014.appspot.com", // Replace with your Firebase Storage bucket name
+  storageBucket: "matcha-406014.appspot.com", 
 });
 
 const bucket = admin.storage().bucket();
+//create a folder with userID field 
 
 const uploadToFirebaseStorage = (req, res, next) => {
   
@@ -141,9 +150,12 @@ const uploadToFirebaseStorage = (req, res, next) => {
   }
 
   const files = req.files;
+  const userId = req.params.userId; // Assuming the userID is passed as a URL parameter
 
   let fileUploads = files.map((file) => {
-    const blob = bucket.file(uuidv4() + file.originalname);
+    // Prepend the userID to the file name to create a folder structure
+    const filePath = `${userId}/${uuidv4()}-${file.originalname}`;
+    const blob = bucket.file(filePath);
     const blobStream = blob.createWriteStream({
       metadata: {
         contentType: file.mimetype,
@@ -158,7 +170,7 @@ const uploadToFirebaseStorage = (req, res, next) => {
         await blob.makePublic();
 
         // The public URL can be used to directly access the file via HTTP.
-        const publicUrl = `https://storage.googleapis.com/${bucket.name}/${blob.name}`;
+        const publicUrl = `https://storage.googleapis.com/${bucket.name}/${filePath}`;
         resolve(publicUrl);
       });
       blobStream.end(file.buffer);
@@ -175,7 +187,6 @@ const uploadToFirebaseStorage = (req, res, next) => {
       next(error);
     });
 };
-
 //TODO : add the the field the the profile is set up
 const setProfile = async (req, res, next) => {
   console.log("Text Fields:", req.body);

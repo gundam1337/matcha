@@ -59,6 +59,7 @@ const Images = ({ setFieldValue, errors, touched, initialValues }) => {
     });
   };
 
+
   const handleDeleteImage = (imageIndex) => {
     const updatedselectedImage = selectedImage.filter(
       (_, index) => index !== imageIndex

@@ -1,7 +1,5 @@
 const jwt = require("jsonwebtoken");
-//FIXME read this two from the .env
-//FIXME : add another layer of securty ,by checking the DB is the user is aleardy exist 
-//FIXME : verify if the refrech tokon is the same in the database 
+const User = require("../../models/user");
 const accessTokenSecret = "yourAccessTokenSecret"; // Replace with your actual secret
 const refreshTokenSecret = "yourRefreshTokenSecret"; // Replace with your actual secret
 
@@ -17,33 +15,48 @@ function verifyTokens(req, res, next) {
     return res.status(403).send({ message: "Refresh Token is required" });
   }
 
+
+
   // Verify Access Token
   jwt.verify(accessToken, accessTokenSecret, (err, user) => {
     if (err) {
       // Access Token is invalid or expired, verify Refresh Token
 
-      jwt.verify(refreshToken, refreshTokenSecret, (err, user) => {
+      jwt.verify(refreshToken, refreshTokenSecret, async (err, decoded) => {
         if (err) {
           // Refresh Token is invalid
           return res.status(403).send({ message: "Invalid Refresh Token" });
         }
 
-        // Refresh Token is valid, generate new Access Token
-        const newAccessToken = jwt.sign(
-          { username: user.username ,email: user.email },
-          accessTokenSecret,
-          { expiresIn: "10m" }
-        );
-        // Attach new Access Token to the request, but don't send it yet
-        req.newAccessToken = newAccessToken;
-       
-        req.user = user;
-        next();
+        try {
+          // Find user by decoded username or email
+          const foundUser = await User.findOne({
+            $or: [{ username: decoded.username }, { email: decoded.email }],
+          });
+
+          // Check if the found user's refresh token matches the provided one
+          if (!foundUser || foundUser.refreshToken !== refreshToken) {
+            return res.status(403).send({ message: "Invalid Refresh Token" });
+          }
+
+          // Refresh Token is valid, generate new Access Token
+          const newAccessToken = jwt.sign(
+            { username: decoded.username, email: decoded.email },
+            accessTokenSecret,
+            { expiresIn: "10m" }
+          );
+
+          // Attach new Access Token to the request, but don't send it yet
+          req.newAccessToken = newAccessToken;
+          req.user = decoded;
+          next();
+        } catch (error) {
+          // Handle database or other errors
+          return res.status(500).send({ message: "Internal Server Error" });
+        }
       });
     } else {
-
-      console.log("req.user in the virfy 2:",req.user)
-      req.user = user;
+      
       next();
     }
   });
