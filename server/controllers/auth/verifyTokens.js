@@ -15,16 +15,15 @@ function verifyTokens(req, res, next) {
     return res.status(403).send({ message: "Refresh Token is required" });
   }
 
-
-
   // Verify Access Token
   jwt.verify(accessToken, accessTokenSecret, (err, user) => {
+
     if (err) {
       // Access Token is invalid or expired, verify Refresh Token
-
       jwt.verify(refreshToken, refreshTokenSecret, async (err, decoded) => {
         if (err) {
           // Refresh Token is invalid
+         
           return res.status(403).send({ message: "Invalid Refresh Token" });
         }
 
@@ -48,7 +47,8 @@ function verifyTokens(req, res, next) {
 
           // Attach new Access Token to the request, but don't send it yet
           req.newAccessToken = newAccessToken;
-          req.user = decoded;
+          req.user= decoded;
+          req.userID = foundUser.userID;
           next();
         } catch (error) {
           // Handle database or other errors

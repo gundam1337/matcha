@@ -98,8 +98,6 @@ const validate = async (req, res, next) => {
 
     const validMedia = combinedMedia.filter((mediaItem) => mediaItem);
 
-    console.log("Filtered media items: ", validMedia);
-
     // Ensure req.body is an object before destructuring
     const { image, ...otherRequestBodyFields } =
       req.body && typeof req.body === "object" ? req.body : {};
@@ -113,10 +111,9 @@ const validate = async (req, res, next) => {
 
     await validationSchema.validate(dataForValidation);
 
-    req.body.image = dataForValidation.image;
+    req.body.images = dataForValidation.image;
     next();
   } catch (err) {
-    //console.log("Validation error:", err);
     res.status(400).send(err.errors);
   }
 };
@@ -126,31 +123,98 @@ const validate = async (req, res, next) => {
 //TODO : create for every user a bucket and this bucket only can caontain 2 images
 //TODO : only upload the file with the file
 
-
-//based on the format of the req.body.image I will do an action 
-//if the array only contain the urls then I should jump this middlware
-//if the array contain files and url , remove the url
-//sorte them by the new one 
-//List the files in the user's folder make them arranged 
-
-
 admin.initializeApp({
   credential: admin.credential.cert(serviceAccount),
-  storageBucket: "matcha-406014.appspot.com", 
+  storageBucket: "matcha-406014.appspot.com",
 });
 
 const bucket = admin.storage().bucket();
-//create a folder with userID field 
 
-const uploadToFirebaseStorage = (req, res, next) => {
-  
-  if (!req.files) {
-    res.status(500).json({ error: "No files to upload." });
-    return;
+const getUserIdFiles = async (userId) => {
+  return new Promise((resolve, reject) => {
+    const userFolderPath = `${userId}/`;
+    bucket.getFiles({ prefix: userFolderPath }, (err, files) => {
+      if (err) {
+        reject(err);
+        return;
+      }
+      const publicUrls = files.map((file) => {
+        // Assuming the bucket is configured for public access, construct the URL
+        return `https://storage.googleapis.com/${bucket.name}/${file.name}`;
+      });
+      resolve(publicUrls);
+    });
+  });
+};
+
+function extractFilesFromArray(images) {
+  const files = [];
+
+  images.forEach((image) => {
+    if (
+      typeof image === "object" &&
+      (image.hasOwnProperty("filename") || image.hasOwnProperty("mimetype"))
+    ) {
+      files.push(image);
+    }
+  });
+  return files;
+}
+
+function extractUrlFromArrays(array1, array2) {
+  const filteredArray1 = array1.filter((item) => typeof item === "string");
+  const combinedArray = filteredArray1.concat(array2);
+  const uniqueArray = [...new Set(combinedArray)];
+
+  return uniqueArray;
+}
+
+function extractFilePathFromUrl(url) {
+  const urlParts = url.split("/");
+  // Remove the first three elements ("https:", "", "storage.googleapis.com") and join the rest
+  const filePath = urlParts.slice(3).join("/");
+  return filePath;
+}
+
+const uploadToFirebaseStorage = async (req, res, next) => {
+  const userId = req.userID;
+
+  //DONE :step 1 newly uploaded files
+  const images = req.body.images;
+  console.log("newly uploaded files", images);
+
+  //DONE :step 2 initial files
+  //the existingFiles is an array of public URL
+  let existingFiles;
+  try {
+    existingFiles = await getUserIdFiles(userId);
+    console.log("initial files", existingFiles);
+  } catch (error) {
+    console.error("Error:", error);
+    // Handle error response
   }
+  //DONE  :step 3 Detect the files to upload
+  const fileToUpdate = extractFilesFromArray(images);
+  if (fileToUpdate.length === 0) {
+    req.files.firebaseUrls = images;
+    next();
+  }
+  //DONE  :step 4 detect the file I should delete
+  const fileTodelete = extractUrlFromArrays(images, existingFiles);
+  console.log("file to delet",fileTodelete)
+  const fileNameTodelete = extractFilePathFromUrl(fileTodelete);
+  bucket
+    .file(fileNameTodelete)
+    .delete()
+    .then(() => {
+      console.log(`File at ${fileNameTodelete} successfully deleted.`);
+    })
+    .catch((error) => {
+      console.error("Error deleting file:", error);
+    });
 
-  const files = req.files;
-  const userId = req.params.userId; // Assuming the userID is passed as a URL parameter
+  //DONE  :step 5 update the file
+  const files = fileToUpdate;
 
   let fileUploads = files.map((file) => {
     // Prepend the userID to the file name to create a folder structure
@@ -189,10 +253,6 @@ const uploadToFirebaseStorage = (req, res, next) => {
 };
 //TODO : add the the field the the profile is set up
 const setProfile = async (req, res, next) => {
-  console.log("Text Fields:", req.body);
-  console.log("image url ", req.files.firebaseUrls);
-  console.log("user", req.user);
-
   try {
     if (!req.user || !req.user.username || !req.user.email) {
       return res
@@ -208,7 +268,6 @@ const setProfile = async (req, res, next) => {
       username: username,
       email: email,
     });
-    //console.log("the user that I found in the database :", user);
     if (!user) {
       return res.status(404).send({ error: "User not found" });
     }
@@ -266,8 +325,7 @@ const setProfile = async (req, res, next) => {
 const getProfile = async (req, res) => {
   try {
     const { username, email } = req.user;
-
-    const user = await User.findOne({ username, email }).lean();
+    const user = await User.findOne({ username, email });
 
     if (!user) {
       return res.status(404).json({ message: "User not found" });

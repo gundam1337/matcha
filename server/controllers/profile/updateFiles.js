@@ -18,18 +18,6 @@ let updatedArray = replaceFiles(array1, array2);
 console.log(updatedArray);
 
 
-const uploadToFirebaseStorage = (req, res, next) => {
-
-    //setp 1: newly uploaded files
-    //and that contain the url or file
-    let newFiles = req.body.image
-    
-    if (!newFiles) {
-      res.status(500).json({ error: "No files to upload." });
-      return;
-    }
-}  
-
 
 // let oldFiles = ['oldFile1', 'oldFile2', 'oldFile3']; // initial files
 // let newFiles = ['newFile1', 'newFile2']; // newly uploaded files
