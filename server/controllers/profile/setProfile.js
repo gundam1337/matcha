@@ -112,6 +112,7 @@ const validate = async (req, res, next) => {
     await validationSchema.validate(dataForValidation);
 
     req.body.images = dataForValidation.image;
+
     next();
   } catch (err) {
     res.status(400).send(err.errors);
@@ -176,50 +177,8 @@ function extractFilePathFromUrl(url) {
   return filePath;
 }
 
-//FIXME : 
-//TODO : orgnize the code 
-const uploadToFirebaseStorage = async (req, res, next) => {
-  const userId = req.userID;
-
-  //DONE :step 1 newly uploaded files
-  const images = req.body.images;
-  console.log("newly uploaded files", images);
-
-  //DONE :step 2 initial files
-  //the existingFiles is an array of public URL
-  let existingFiles;
-  try {
-    existingFiles = await getUserIdFiles(userId);
-    console.log("initial files", existingFiles);
-  } catch (error) {
-    console.error("Error:", error);
-    // Handle error response
-  }
-  //DONE  :step 3 Detect the files to upload
-  const fileToUpdate = extractFilesFromArray(images);
-  if (fileToUpdate.length === 0) {
-    req.files.firebaseUrls = images;
-    next();
-  }
-  //DONE  :step 4 detect the file I should delete
-  const fileTodelete = extractUrlFromArrays(images, existingFiles);
-  console.log("file to delet",fileTodelete)
-  const fileNameTodelete = extractFilePathFromUrl(fileTodelete);
-  bucket
-    .file(fileNameTodelete)
-    .delete()
-    .then(() => {
-      console.log(`File at ${fileNameTodelete} successfully deleted.`);
-    })
-    .catch((error) => {
-      console.error("Error deleting file:", error);
-    });
-
-  //DONE  :step 5 update the file
-  const files = fileToUpdate;
-
+function uploadFilesToFirebase(files, userId) {
   let fileUploads = files.map((file) => {
-    // Prepend the userID to the file name to create a folder structure
     const filePath = `${userId}/${uuidv4()}-${file.originalname}`;
     const blob = bucket.file(filePath);
     const blobStream = blob.createWriteStream({
@@ -232,26 +191,142 @@ const uploadToFirebaseStorage = async (req, res, next) => {
       blobStream.on("error", (error) => reject(error));
 
       blobStream.on("finish", async () => {
-        // Make the file publicly readable
         await blob.makePublic();
-
-        // The public URL can be used to directly access the file via HTTP.
         const publicUrl = `https://storage.googleapis.com/${bucket.name}/${filePath}`;
+        //TODO: make the publicURL in the req
         resolve(publicUrl);
       });
+
       blobStream.end(file.buffer);
     });
   });
 
-  Promise.all(fileUploads)
+  return Promise.all(fileUploads)
     .then((publicUrls) => {
-      // Add the URLs to the request so they can be used in subsequent middleware or response
-      req.files.firebaseUrls = publicUrls;
-      next();
+      // You can modify what to do with the URLs here
+      console.log("Files uploaded:", publicUrls);
+      return publicUrls;
     })
     .catch((error) => {
-      next(error);
+      console.error("Error uploading files:", error);
+      throw error;
     });
+}
+
+function determineAction(receivedImages) {
+  let hasURL = false;
+  let hasFile = false;
+
+  for (let image of receivedImages) {
+    if (
+      typeof image === "string" &&
+      (image.startsWith("http://") || image.startsWith("https://"))
+    ) {
+      hasURL = true;
+    } else if (image && image.mimetype && image.mimetype.startsWith("image/")) {
+      hasFile = true;
+    }
+
+    // If both types are found, we can stop checking further
+    if (hasURL && hasFile) {
+      break;
+    }
+  }
+
+  if (hasURL && hasFile) {
+    return "Delete";
+  } else if (hasURL) {
+    return "skip";
+  } else if (hasFile) {
+    return "upload";
+  } else {
+    return "No valid images"; // or handle this case as you see fit
+  }
+}
+
+const uploadToFirebaseStorage = async (req, res, next) => {
+  const userId = req.userID;
+
+  //DONE :step 1 newly uploaded files
+  const receivedImages = req.body.images;
+  const action = determineAction(receivedImages);
+  //DONE :step 2 initial files
+  let existingFiles;
+  try {
+    existingFiles = await getUserIdFiles(userId);
+  } catch (error) {
+    console.error("Error:", error);
+  }
+
+  if (action === "skip") {
+    next()
+  } else if (action === "upload") {
+    const newPulicURLs= await uploadFilesToFirebase(receivedImages)
+    req.files.firebaseUrls = newPulicURLs;
+    console.log(newPulicURLs)
+  } else if (action === "Delete") {
+
+  } else {
+
+  }
+
+  // //DONE  :step 3 Detect the files to upload
+  // const fileToUpdate = extractFilesFromArray(receivedImages);
+  // if (fileToUpdate.length === 0) {
+  //   req.files.firebaseUrls = receivedImages;
+  //   next();
+  // }
+  // //DONE  :step 4 detect the file I should delete
+  // const fileTodelete = extractUrlFromArrays(receivedImages, existingFiles);
+  // const fileNameTodelete = extractFilePathFromUrl(fileTodelete);
+  // bucket
+  //   .file(fileNameTodelete)
+  //   .delete()
+  //   .then(() => {
+  //     console.log(`File at ${fileNameTodelete} successfully deleted.`);
+  //   })
+  //   .catch((error) => {
+  //     console.error("Error deleting file:", error);
+  //   });
+
+  // //DONE  :step 5 update the file
+  // const files = fileToUpdate;
+
+  // let fileUploads = files.map((file) => {
+  //   // Prepend the userID to the file name to create a folder structure
+  //   const filePath = `${userId}/${uuidv4()}-${file.originalname}`;
+  //   const blob = bucket.file(filePath);
+  //   const blobStream = blob.createWriteStream({
+  //     metadata: {
+  //       contentType: file.mimetype,
+  //     },
+  //   });
+
+  //   return new Promise((resolve, reject) => {
+  //     blobStream.on("error", (error) => reject(error));
+
+  //     blobStream.on("finish", async () => {
+  //       // Make the file publicly readable
+  //       await blob.makePublic();
+
+  //       // The public URL can be used to directly access the file via HTTP.
+  //       const publicUrl = `https://storage.googleapis.com/${bucket.name}/${filePath}`;
+  //       resolve(publicUrl);
+  //     });
+  //     blobStream.end(file.buffer);
+  //   });
+  // });
+
+  // Promise.all(fileUploads)
+  //   .then((publicUrls) => {
+  //     // Add the URLs to the request so they can be used in subsequent middleware or response
+  //     req.files.firebaseUrls = publicUrls;
+  //     next();
+  //   })
+  //   .catch((error) => {
+  //     next(error);
+  //   });
+  next();
 };
 //TODO : add the the field the the profile is set up
 const setProfile = async (req, res, next) => {
@@ -324,10 +399,14 @@ const setProfile = async (req, res, next) => {
 
 //NOTE  : at the end of the cycle send token
 //TODO : dont send the password !
+
 const getProfile = async (req, res) => {
   try {
+    console.log("user",req.user)
     const { username, email } = req.user;
+    
     const user = await User.findOne({ username, email });
+    
 
     if (!user) {
       return res.status(404).json({ message: "User not found" });

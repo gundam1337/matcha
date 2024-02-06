@@ -1,5 +1,6 @@
 const jwt = require("jsonwebtoken");
 const User = require("../../models/user");
+const { connect } = require("mongoose");
 const accessTokenSecret = "yourAccessTokenSecret"; // Replace with your actual secret
 const refreshTokenSecret = "yourRefreshTokenSecret"; // Replace with your actual secret
 
@@ -17,13 +18,10 @@ function verifyTokens(req, res, next) {
 
   // Verify Access Token
   jwt.verify(accessToken, accessTokenSecret, (err, user) => {
-
     if (err) {
       // Access Token is invalid or expired, verify Refresh Token
       jwt.verify(refreshToken, refreshTokenSecret, async (err, decoded) => {
-        if (err) {
-          // Refresh Token is invalid
-         
+        if (err) {         
           return res.status(403).send({ message: "Invalid Refresh Token" });
         }
 
@@ -56,7 +54,8 @@ function verifyTokens(req, res, next) {
         }
       });
     } else {
-      
+      //handle the case where access token is new
+      req.user= user;
       next();
     }
   });
