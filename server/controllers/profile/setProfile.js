@@ -176,6 +176,8 @@ function extractFilePathFromUrl(url) {
   return filePath;
 }
 
+//FIXME : 
+//TODO : orgnize the code 
 const uploadToFirebaseStorage = async (req, res, next) => {
   const userId = req.userID;
 
