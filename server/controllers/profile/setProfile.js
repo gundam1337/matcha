@@ -218,6 +218,7 @@ function determineAction(receivedImages) {
   let hasFile = false;
 
   for (let image of receivedImages) {
+    //TODO : this should be verified
     if (
       typeof image === "string" &&
       (image.startsWith("http://") || image.startsWith("https://"))
@@ -247,10 +248,10 @@ function determineAction(receivedImages) {
 const uploadToFirebaseStorage = async (req, res, next) => {
   const userId = req.userID;
 
-  //DONE :step 1 newly uploaded files
+  //newly uploaded files
   const receivedImages = req.body.images;
   const action = determineAction(receivedImages);
-  //DONE :step 2 initial files
+  //initial files
   let existingFiles;
   try {
     existingFiles = await getUserIdFiles(userId);
@@ -259,35 +260,35 @@ const uploadToFirebaseStorage = async (req, res, next) => {
   }
 
   if (action === "skip") {
-    next()
+    next();
   } else if (action === "upload") {
-    const newPulicURLs= await uploadFilesToFirebase(receivedImages)
+    const newPulicURLs = await uploadFilesToFirebase(receivedImages);
     req.files.firebaseUrls = newPulicURLs;
-    console.log(newPulicURLs)
+    console.log(newPulicURLs);
   } else if (action === "Delete") {
+    //Detect the files to upload
+    const fileToUpdate = extractFilesFromArray(receivedImages);
+    if (fileToUpdate.length === 0) {
+      req.files.firebaseUrls = receivedImages;
+      next();
+    }
+    // detect the file I should delete
+    const fileTodelete = extractUrlFromArrays(receivedImages, existingFiles);
+    const fileNameTodelete = extractFilePathFromUrl(fileTodelete);
+    bucket
+      .file(fileNameTodelete)
+      .delete()
+      .then(() => {
+        console.log(`File at ${fileNameTodelete} successfully deleted.`);
+      })
+      .catch((error) => {
+        console.error("Error deleting file:", error);
+      });
 
   } else {
-
   }
 
-  // //DONE  :step 3 Detect the files to upload
-  // const fileToUpdate = extractFilesFromArray(receivedImages);
-  // if (fileToUpdate.length === 0) {
-  //   req.files.firebaseUrls = receivedImages;
-  //   next();
-  // }
-  // //DONE  :step 4 detect the file I should delete
-  // const fileTodelete = extractUrlFromArrays(receivedImages, existingFiles);
-  // const fileNameTodelete = extractFilePathFromUrl(fileTodelete);
-  // bucket
-  //   .file(fileNameTodelete)
-  //   .delete()
-  //   .then(() => {
-  //     console.log(`File at ${fileNameTodelete} successfully deleted.`);
-  //   })
-  //   .catch((error) => {
-  //     console.error("Error deleting file:", error);
-  //   });
+  //
 
   // //DONE  :step 5 update the file
   // const files = fileToUpdate;
@@ -402,11 +403,10 @@ const setProfile = async (req, res, next) => {
 
 const getProfile = async (req, res) => {
   try {
-    console.log("user",req.user)
+    console.log("user", req.user);
     const { username, email } = req.user;
-    
+
     const user = await User.findOne({ username, email });
-    
 
     if (!user) {
       return res.status(404).json({ message: "User not found" });

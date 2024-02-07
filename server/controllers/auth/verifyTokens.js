@@ -1,6 +1,5 @@
 const jwt = require("jsonwebtoken");
 const User = require("../../models/user");
-const { connect } = require("mongoose");
 const accessTokenSecret = "yourAccessTokenSecret"; // Replace with your actual secret
 const refreshTokenSecret = "yourRefreshTokenSecret"; // Replace with your actual secret
 
@@ -17,11 +16,11 @@ function verifyTokens(req, res, next) {
   }
 
   // Verify Access Token
-  jwt.verify(accessToken, accessTokenSecret, (err, user) => {
+  jwt.verify(accessToken, accessTokenSecret, async (err, user) => {
     if (err) {
       // Access Token is invalid or expired, verify Refresh Token
       jwt.verify(refreshToken, refreshTokenSecret, async (err, decoded) => {
-        if (err) {         
+        if (err) {
           return res.status(403).send({ message: "Invalid Refresh Token" });
         }
 
@@ -45,18 +44,31 @@ function verifyTokens(req, res, next) {
 
           // Attach new Access Token to the request, but don't send it yet
           req.newAccessToken = newAccessToken;
-          req.user= decoded;
+          req.user = decoded;
           req.userID = foundUser.userID;
           next();
         } catch (error) {
-          // Handle database or other errors
           return res.status(500).send({ message: "Internal Server Error" });
         }
       });
     } else {
-      //handle the case where access token is new
-      req.user= user;
-      next();
+      try {
+        // Find user by decoded username or email
+        const foundUser = await User.findOne({
+          $or: [{ username: user.username }, { email: user.email }],
+        });
+
+        // Check if the found user's refresh token matches the provided one
+        if (!foundUser || foundUser.refreshToken !== refreshToken) {
+          return res.status(403).send({ message: "Invalid Refresh Token" });
+        }
+
+        req.user = user;
+        req.userID = foundUser.userID;
+        next();
+      } catch (error) {
+        return res.status(500).send({ message: "Internal Server Error" });
+      }
     }
   });
 }
