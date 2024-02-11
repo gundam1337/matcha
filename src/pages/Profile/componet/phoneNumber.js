@@ -1,9 +1,15 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import PhoneInput from "react-phone-number-input";
 import "react-phone-number-input/style.css";
 
-function PhoneNumber({ setFieldValue, errors, touched }) {
+function PhoneNumber({ setFieldValue, errors, touched,initialValues }) {
   const [phone, setPhone] = useState("");
+
+  useEffect(() => {
+    if (initialValues) {
+      setPhone(initialValues)
+    }
+  }, [initialValues]);
 
   const handlePhoneChange = (value) => {
     setPhone(value);

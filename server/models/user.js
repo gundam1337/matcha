@@ -1,5 +1,4 @@
 var mongoose = require("mongoose");
-const { string } = require("yup");
 var Schema = mongoose.Schema;
 
 var validateEmail = function (email) {
@@ -7,7 +6,7 @@ var validateEmail = function (email) {
   return re.test(email);
 };
 const userSchema = new Schema({
-  userID : {
+  userID: {
     type: String,
   },
   username: {
@@ -39,16 +38,16 @@ const userSchema = new Schema({
       required: false, // Set to true if you want the image to be mandatory
     },
     firstName: {
-        type: String,
+      type: String,
       //required: true
     },
     lastName: {
-        type: String,
+      type: String,
       //required: true
     },
     birthdate: {
-        type: String,
-      //required: true
+      type: Date,
+      // required: true
     },
     phoneNumber: {
       type: String,
@@ -68,13 +67,13 @@ const userSchema = new Schema({
         //required: true
       },
       city: String,
-      country: String,      
+      country: String,
     },
-    bio: String, 
-    interests: [String], 
+    bio: String,
+    interests: [String],
   },
   preferences: {
-    gender: { type: String,}, 
+    gender: { type: String },
     ageRange: {
       min: Number,
       max: Number,

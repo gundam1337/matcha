@@ -65,11 +65,11 @@ const validationSchema = Yup.object({
       ),
   }),
   phoneNumber: Yup.string().required("Phone number is required"),
-  gender: Yup.string().required("Gender is required"),
-  location: Yup.object().shape({
-    city: Yup.string().required("City is required"),
-    country: Yup.string().required("Country is required"),
-  }),
+  // gender: Yup.string().required("Gender is required"),
+  // location: Yup.object().shape({
+  //   city: Yup.string().required("City is required"),
+  //   country: Yup.string().required("Country is required"),
+  // }),
 });
 
 const storage = multer.memoryStorage();
@@ -86,6 +86,7 @@ const validate = async (req, res, next) => {
     if (req.body.hobbies) req.body.hobbies = JSON.parse(req.body.hobbies);
     if (req.body.targetAge) req.body.targetAge = JSON.parse(req.body.targetAge);
 
+    console.log("insie the validate function the data",req.body.info);
     // Structure the data as expected by the validation schema
     const uploadedFiles = req.files || [];
     const requestBodyImages =
@@ -144,7 +145,7 @@ const getUserURLsFiles = async (userId) => {
 
     return urls;
   } catch (error) {
-    console.error('Error fetching user files:', error);
+   // console.error('Error fetching user files:', error);
     return [];  // Return an empty array in case of error
   }
 };
@@ -179,7 +180,7 @@ function extractUrlFromArrays(array1, array2) {
 function extractFilePathFromUrl(urls) {
   // Check if urls is an array
   if (!Array.isArray(urls)) {
-    console.error("Invalid input: Expected an array of URLs.");
+   // console.error("Invalid input: Expected an array of URLs.");
     return [];
   }
 
@@ -209,7 +210,7 @@ async function uploadFilesToFirebase(files, userId) {
     await Promise.all(uploadPromises);
     return true;
   } catch (error) {
-    console.error("Error uploading files:", error);
+   // console.error("Error uploading files:", error);
     return false;
   }
 }
@@ -233,7 +234,7 @@ async function deleteFileFromUserFolder(fileUrls) {
       // Check if the file exists
       const [exists] = await file.exists();
       if (!exists) {
-        console.log(`File not found, skipping deletion: ${filePath}`);
+        //console.log(`File not found, skipping deletion: ${filePath}`);
         continue;
       }
 
@@ -271,7 +272,7 @@ const uploadToFirebaseStorage = async (req, res, next) => {
     // Step 3: Get the name of the file to delete
     const fileNamesToDelete = extractFilePathFromUrl(filesToDelete);
     if ((!fileNamesToDelete || fileNamesToDelete.length === 0) &&  (existingFiles && existingFiles.length >0)) {
-      console.error("No files to delet");
+      //console.error("No files to delet");
       return next();
     }
     // Step 4: Delete the files from the database
@@ -280,7 +281,7 @@ const uploadToFirebaseStorage = async (req, res, next) => {
     // Step 5: Get the files to update
     const filesToUpdate = extractFilesFromArray(receivedImages);
     if (!filesToUpdate || filesToUpdate.length === 0) {
-      console.error("No files to upload");
+     // console.error("No files to upload");
       return next();
     }
 
@@ -293,7 +294,7 @@ const uploadToFirebaseStorage = async (req, res, next) => {
     // Continue to the next middleware if everything is successful
     next();
   } catch (error) {
-    console.error("Error in uploadToFirebaseStorage:", error);
+    //console.error("Error in uploadToFirebaseStorage:", error);
     return res.status(500).send({ error: "Internal Server Error" });
   }
 };
@@ -331,17 +332,14 @@ const setProfile = async (req, res, next) => {
       : parseInt(req.body.targetAge.maxAge, 10);
 
     // Update the user's profile
-    //TODO create a function that get the urls directly form the storage getUserURLsFiles
-    //const pulicURLs= await getUserFilesPublicUrls(userID)
     const pulicURLs= await getUserURLsFiles(userID)
-    console.log("pulicURLs",pulicURLs);
     user.profile = {
       ...user.profile, // Keep existing profile fields
       // isProfileSetup: true,
       profilePicture: pulicURLs, // Assuming req.files.firebaseUrls is the correct path
       firstName: userInfo.info.firstName,
       lastName: userInfo.info.lastName,
-      birthdate: userInfo.info.birthdate,
+      birthdate: userInfo.info.birthday,
       phoneNumber: userInfo.phoneNumber,
       gender: userInfo.gender,
       location: {
@@ -389,11 +387,14 @@ const getProfile = async (req, res) => {
     
     //const pulicURLs= await getUserFilesPublicUrls(userID) 
     const pulicURLs = await getUserURLsFiles(userID) 
+    const firstTwoUrls = pulicURLs.slice(0, 2);
+
 
     // Assuming that the user schema has a 'profile' field with nested properties
     const { profile } = user;
+    console.log("inside the get profile",profile.birthdate)
     const profileData = {
-      profilePicture: pulicURLs,
+      profilePicture: firstTwoUrls,
       firstName: profile.firstName,
       lastName: profile.lastName,
       birthdate: profile.birthdate,

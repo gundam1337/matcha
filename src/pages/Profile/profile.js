@@ -92,7 +92,7 @@ const Profile = () => {
             info: {
               firstName: response.data.firstName || "",
               lastName: response.data.lastName || "",
-              birthday: response.data.birthday || "", // Add birthday to the response data if it's available
+              birthday: response.data.birthdate || "", // Add birthday to the response data if it's available
             },
             phoneNumber: response.data.phoneNumber || "",
             gender: response.data.gender || "",
@@ -202,6 +202,7 @@ const Profile = () => {
                     setFieldValue={setFieldValue}
                     errors={errors}
                     touched={touched}
+                    initialValues={values.phoneNumber}
                   />
                   <br />
                   <Field

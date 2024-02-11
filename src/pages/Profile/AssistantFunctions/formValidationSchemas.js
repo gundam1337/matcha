@@ -27,7 +27,7 @@ export const validationSchema = Yup.object({
         (value) => calculateAge(value) >= 18
       ),
   }),
-  // phoneNumber: Yup.string().required("Phone number is required"),
+  phoneNumber: Yup.string().required("Phone number is required"),
   // gender: Yup.string().required("Gender is required"),
   // location: Yup.object().shape({
   //   city: Yup.string().required("City is required"),
