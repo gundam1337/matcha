@@ -1,12 +1,13 @@
 const User = require("../../models/user");
 const Yup = require("yup");
 const multer = require("multer");
-const { v4: uuidv4 } = require("uuid");
+//const { v4: uuidv4 } = require("uuid");
 const MAX_FILE_SIZE = 5 * 1024 * 1024; // Max file size in bytes (e.g., 5MB)
 const urlPattern = /^https:\/\/storage\.googleapis\.com\/matcha-406014\.appspot\.com\/.*/;
 
 const admin = require("firebase-admin");
 const serviceAccount = require("../../storage/matcha-406014-firebase-adminsdk-fnp82-8517b73387.json");
+
 
 function calculateAge(birthday) {
   const today = new Date();
@@ -52,23 +53,23 @@ const validationSchema = Yup.object({
   image: Yup.array()
     .of(elementSchema)
     .length(2, "Array must contain exactly 2 elements"),
-  // info: Yup.object({
-  //   firstName: nameValidationSchema,
-  //   lastName: nameValidationSchema,
-  //   birthday: Yup.date()
-  //     .required("Birthday is required")
-  //     .test(
-  //       "age",
-  //       "You must be at least 18 years old",
-  //       (value) => calculateAge(value) >= 18
-  //     ),
-  // }),
-  // phoneNumber: Yup.string().required("Phone number is required"),
-  // gender: Yup.string().required("Gender is required"),
-  // location: Yup.object().shape({
-  //   city: Yup.string().required("City is required"),
-  //   country: Yup.string().required("Country is required"),
-  // }),
+  info: Yup.object({
+    firstName: nameValidationSchema,
+    lastName: nameValidationSchema,
+    birthday: Yup.date()
+      .required("Birthday is required")
+      .test(
+        "age",
+        "You must be at least 18 years old",
+        (value) => calculateAge(value) >= 18
+      ),
+  }),
+  phoneNumber: Yup.string().required("Phone number is required"),
+  gender: Yup.string().required("Gender is required"),
+  location: Yup.object().shape({
+    city: Yup.string().required("City is required"),
+    country: Yup.string().required("Country is required"),
+  }),
 });
 
 const storage = multer.memoryStorage();
@@ -128,33 +129,27 @@ admin.initializeApp({
 const bucket = admin.storage().bucket();
 
 //return the Public URLs of files insise folder using the userID(the name of the fodler)
-// const getUserURLsFiles = async (userId) => {
-//   // return new Promise((resolve, reject) => {
-//   //   const userFolderPath = `${userId}/`;
-//   //   bucket.getFiles({ prefix: userFolderPath }, (err, files) => {
-//   //     if (err) {
-//   //       reject(err);
-//   //       return;
-//   //     }
-//   //     const publicUrls = files.map((file) => {
-//   //       // Assuming the bucket is configured for public access, construct the URL
-//   //       return `https://storage.googleapis.com/${bucket.name}/${file.name}`;
-//   //     });
-//   //     resolve(publicUrls);
-//   //   });
-//   // });
-//   try {
-//     const [files] = await bucket.getFiles({ prefix: `${userId}/` });
-//     const urls = files.map(file => {
-//       return `https://storage.googleapis.com/${bucket.name}/${file.name}`;
-//     });
+const getUserURLsFiles = async (userId) => {
+  try {
+    // List all files in the folder named after userId
+    const [files] = await bucket.getFiles({ prefix: `${userId}/` });
+    const urls = await Promise.all(files.map(async file => {
+      // For each file, generate a signed URL that is publicly accessible
+      const [url] = await file.getSignedUrl({
+        action: 'read',
+        expires: '03-17-2025' // Set an expiration date for the URL
+      });
+      return url;
+    }));
 
-//     return urls;
-//   } catch (error) {
-//     console.error('Error retrieving file URLs:', error);
-//     return [];
-//   }
-// };
+    return urls;
+  } catch (error) {
+    console.error('Error fetching user files:', error);
+    return [];  // Return an empty array in case of error
+  }
+};
+
+
 
 function extractFilesFromArray(images) {
   const files = [];
@@ -169,6 +164,8 @@ function extractFilesFromArray(images) {
   });
   return files;
 }
+
+
 
 function extractUrlFromArrays(array1, array2) {
   const filteredArray1 = array1.filter((item) => typeof item === "string");
@@ -219,48 +216,36 @@ async function uploadFilesToFirebase(files, userId) {
 
 //delet a spicfic file for me the databse
 //this function is not working because the structure of the url 
-async function deleteFileFromUserFolder(fileToDeleteUrl, userId) {
+async function deleteFileFromUserFolder(fileUrls) {
   try {
 
-    const filePath = `${userId}/${fileToDeleteUrl}`;
-    const file = bucket.file(filePath);
+    for (const url of fileUrls) {
+      // Extract the file path from the URL
+      const matches = url.match(/\/b\/[^\/]+\/o\/([^?]+)/);
+      if (!matches) {
+        console.error('Unable to extract file path from URL:', url);
+        continue;
+      }
 
-    // Check if file exists
-    const [exists] = await file.exists();
-    if (!exists) {
-      console.log(`File not found: ${filePath}`);
-      return true;
+      const filePath = decodeURIComponent(matches[1]);
+      const file = bucket.file(filePath);
+
+      // Check if the file exists
+      const [exists] = await file.exists();
+      if (!exists) {
+        console.log(`File not found, skipping deletion: ${filePath}`);
+        continue;
+      }
+
+      // Delete the file
+      await file.delete();
+      console.log(`File deleted: ${filePath}`);
     }
-
-    // Delete the file
-    await file.delete();
-    console.log(`File deleted: ${filePath}`);
-    return true;
   } catch (error) {
-    console.error('Error deleting file:', error);
-    return false;
-  }
+    console.error('Error in deleteFilesFromFirebaseStorage:', error);
+  }  
 }
 
-async function getUserFilesPublicUrls(userId) {
-  try {
-    const files = await bucket.getFiles({ prefix: `${userId}/` });
-    const urls = await Promise.all(
-      files[0].map(async file => {
-        const [url] = await file.getSignedUrl({
-          action: 'read',
-          expires: '03-09-2491' // Use a far future date for public URLs
-        });
-        return url;
-      })
-    );
-
-    return urls;
-  } catch (error) {
-    console.error('Error retrieving file URLs:', error);
-    return [];
-  }
-}
 
 //this is the main function
 const uploadToFirebaseStorage = async (req, res, next) => {
@@ -275,24 +260,22 @@ const uploadToFirebaseStorage = async (req, res, next) => {
   let existingFiles;
 
   try {
-    // Step 1: Retrieve existing files
-    existingFiles = await getUserFilesPublicUrls(userID);
+    // Step 1: Retrieve existing files getUserURLsFiles
+    //existingFiles = await getUserFilesPublicUrls(userID);
+    existingFiles = await getUserURLsFiles(userID);
+
 
     // Step 2: Remove the duplicated URLs
     const filesToDelete = extractUrlFromArrays(receivedImages, existingFiles);
 
     // Step 3: Get the name of the file to delete
     const fileNamesToDelete = extractFilePathFromUrl(filesToDelete);
-    console.log("file Names To Delete",fileNamesToDelete)
     if ((!fileNamesToDelete || fileNamesToDelete.length === 0) &&  (existingFiles && existingFiles.length >0)) {
       console.error("No files to delet");
       return next();
     }
     // Step 4: Delete the files from the database
-    const isDeleted = await deleteFileFromUserFolder(fileNamesToDelete);
-    if (isDeleted === false) {
-      return res.status(500).send({ error: "Something went wrong in our storage" });
-    }
+     await deleteFileFromUserFolder(fileNamesToDelete);
 
     // Step 5: Get the files to update
     const filesToUpdate = extractFilesFromArray(receivedImages);
@@ -302,15 +285,13 @@ const uploadToFirebaseStorage = async (req, res, next) => {
     }
 
     // Step 6: Upload the files
-    console.log("file to upload",filesToUpdate)
-    console.log("the user ID ",userID)
     const isUpdated = await uploadFilesToFirebase(filesToUpdate, userID);
     if (isUpdated === false) {
       return res.status(500).send({ error: "We can't upload the files" });
     }
 
     // Continue to the next middleware if everything is successful
-    return next();
+    next();
   } catch (error) {
     console.error("Error in uploadToFirebaseStorage:", error);
     return res.status(500).send({ error: "Internal Server Error" });
@@ -350,8 +331,10 @@ const setProfile = async (req, res, next) => {
       : parseInt(req.body.targetAge.maxAge, 10);
 
     // Update the user's profile
-    //TODO create a function that get the urls directly form the storage
-    const pulicURLs= await getUserFilesPublicUrls(userID)
+    //TODO create a function that get the urls directly form the storage getUserURLsFiles
+    //const pulicURLs= await getUserFilesPublicUrls(userID)
+    const pulicURLs= await getUserURLsFiles(userID)
+    console.log("pulicURLs",pulicURLs);
     user.profile = {
       ...user.profile, // Keep existing profile fields
       // isProfileSetup: true,
@@ -395,7 +378,6 @@ const setProfile = async (req, res, next) => {
 
 const getProfile = async (req, res) => {
   try {
-    console.log("user", req.user);
     const { username, email } = req.user;
 
     const user = await User.findOne({ username, email });
@@ -403,11 +385,15 @@ const getProfile = async (req, res) => {
     if (!user) {
       return res.status(404).json({ message: "User not found" });
     }
+    const userID = user.userID;
+    
+    //const pulicURLs= await getUserFilesPublicUrls(userID) 
+    const pulicURLs = await getUserURLsFiles(userID) 
 
     // Assuming that the user schema has a 'profile' field with nested properties
     const { profile } = user;
     const profileData = {
-      profilePicture: profile.profilePicture,
+      profilePicture: pulicURLs,
       firstName: profile.firstName,
       lastName: profile.lastName,
       birthdate: profile.birthdate,

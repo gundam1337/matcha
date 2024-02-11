@@ -1,4 +1,14 @@
-const Info = ({ setFieldValue, errors, touched }) => {
+import { useEffect } from "react";
+
+const Info = ({ setFieldValue, errors, touched,initialValues }) => {
+
+  useEffect(()=>{
+    if (initialValues && initialValues.length > 0)
+    {
+      console.log(initialValues)
+    }
+  },[])
+ 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
     setFieldValue(name, value);

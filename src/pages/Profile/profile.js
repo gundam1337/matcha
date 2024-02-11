@@ -193,6 +193,7 @@ const Profile = () => {
                     setFieldValue={setFieldValue}
                     errors={errors}
                     touched={touched}
+                    initialValues={values.info}
                   />
                   <br />
                   <Field
