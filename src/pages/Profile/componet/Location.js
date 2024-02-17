@@ -1,15 +1,29 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import Modal from "react-modal";
 import { MapContainer, TileLayer, Marker, useMapEvents } from "react-leaflet";
 import "../style/location.css";
 
+const URL =
+  "https://assets-global.website-files.com/620d42e86cb8ec4d0839e59d/6230e9244963aa3b684c5ed2_61cb6723e4c8112dbd440616_Location-Based-Services-Example.jpeg";
+
 Modal.setAppElement("#root");
 
+//I can make the center depend on the user last data
 const center = [34.020882, -6.84165];
 
-function MyMapComponent({ onDataFetch, setFieldValue }) {
+function MyMapComponent({ onDataFetch, setFieldValue, initialValues }) {
+  // const [position, setPosition] = useState();
+
   const [position, setPosition] = useState(center);
-  const [place, setPlace] = useState({city: "",country: ""})
+
+  useEffect(() => {
+    if (initialValues)
+      setPosition({
+        lat: initialValues.latitude,
+        lng: initialValues.longitude,
+      });
+  }, [initialValues]);
+
   function LocationMarker() {
     useMapEvents({
       async click(e) {
@@ -43,9 +57,10 @@ function MyMapComponent({ onDataFetch, setFieldValue }) {
     return position === null ? null : <Marker position={position}></Marker>;
   }
 
+  // Replace defaultLat and defaultLng with your default coordinates
   return (
     <MapContainer
-      center={center}
+      center={center || [initialValues.latitude, initialValues.longitude]}
       zoom={5}
       style={{ height: "70%", width: "100%" }}
     >
@@ -55,22 +70,33 @@ function MyMapComponent({ onDataFetch, setFieldValue }) {
   );
 }
 
-const Location = ({ setFieldValue, errors, touched }) => {
+const Location = ({ setFieldValue, errors, touched, initialValues }) => {
   const [modalIsOpen, setModalIsOpen] = useState(false);
   const [dataFromChild, setDataFromChild] = useState({});
+  const [location, setLocation] = useState({ city: "", country: "" });
 
   const handleData = (data) => {
     setDataFromChild(data);
   };
+
+  useEffect(() => {
+    const city = initialValues && initialValues.city ? initialValues.city : "";
+    const country =
+      initialValues && initialValues.country ? initialValues.country : "";
+
+    if (initialValues) {
+      setLocation({ city, country });
+    }
+  }, [initialValues]);
+
+  // console.log("the initial value in the Location", initialValues);
+
   return (
     <>
       <div className="form-group profile-photo-upload">
         <label htmlFor="profilePhoto">Location</label>
-        <img
-          src="https://assets-global.website-files.com/620d42e86cb8ec4d0839e59d/6230e9244963aa3b684c5ed2_61cb6723e4c8112dbd440616_Location-Based-Services-Example.jpeg"
-          alt="Person's profile"
-          className="profile-img"
-        ></img>
+        <img src={URL} alt="Person's profile" className="profile-img"></img>
+
         <button
           onClick={() => setModalIsOpen(true)}
           type="button"
@@ -79,28 +105,22 @@ const Location = ({ setFieldValue, errors, touched }) => {
           find me
         </button>
 
-        
-          {/* Display city and country data if there are no errors */}
-          {!errors.location && (
-            <p className="location-info">
-              city: {dataFromChild.city} <br />
-              country: {dataFromChild.country}
-            </p>
-          )}
+        {/* Display city and country data if there are no errors */}
+        {!errors.location && (
+          <p className="location-info">
+            city: {location.city} <br />
+            country: {location.country}
+          </p>
+        )}
 
-          {/* Display error message if there are errors */}
-          {errors.location && touched.location && (
-            <>
-            <p className="infoError">
-              {errors.location.city}
-            </p>
+        {/* Display error message if there are errors */}
+        {errors.location && touched.location && (
+          <>
+            <p className="infoError">{errors.location.city}</p>
             <br></br>
-            <p className="infoError">
-              {errors.location.country}
-            </p>
-            </>
-          )}
-        
+            <p className="infoError">{errors.location.country}</p>
+          </>
+        )}
 
         <Modal
           style={{
@@ -118,12 +138,14 @@ const Location = ({ setFieldValue, errors, touched }) => {
           <MyMapComponent
             onDataFetch={handleData}
             setFieldValue={setFieldValue}
+            initialValues={initialValues}
           />
+
           <br />
           <div className="modal-container">
             <p className="location-info">
-              city: {dataFromChild.city} <br />
-              country: {dataFromChild.country}
+              city: {location.city} <br />
+              country: {location.country}
             </p>
           </div>
 

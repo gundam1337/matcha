@@ -22,7 +22,7 @@
     flex-wrap: nowrap; /* Prevents wrapping, keeping items in one row */
     justify-content: space-between; /* Adds space between the images */
     overflow-x: auto; /* Adds horizontal scrolling if images overflow */
-    width: 100%
+    width: 80%
 
   }
   .profile-img-preview {

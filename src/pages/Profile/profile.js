@@ -14,22 +14,19 @@ import Hobies from "./componet/Hobies";
 import { Distance, DualRangeSlider } from "./componet/SliderComponent";
 import Bio from "./componet/Bio";
 import AnimatedLoader from "../../components/AnimatedLoader/AnimatedLoader";
-
 import { validationSchema } from "./AssistantFunctions/formValidationSchemas";
 
-//TODO 1 : display the already existed data
-//TODO 2 : set a limite size to the uploaded images
-//DONE 3 : if the connection get cut display a message
-//TODO 4 : make the error message more styled
-//TODO 5 : make the style of the loading in the center
-//TODO 6 : the data in front end is not matched with the back end ,profileData and response sould be matched
+//TODO : handel errors
+//Display an Error Message on the Same Page // modal
+//Redirect to an Error Page
+//Retry Logic
 
 const Profile = () => {
-  const [submitError, setSubmitError] = useState(null);
-  //use this to push errors
+  const [errorSUB, setErrorSUB] = useState(null);
+  const [errorGET, setErrorGET] = useState(null);
   const [isLoading, setIsLoading] = useState(false);
+  const [showModal, setShowModal] = useState(false);
   const navigate = useNavigate();
-
   const [profileData, setProfileData] = useState({
     image: [],
     info: {
@@ -54,8 +51,7 @@ const Profile = () => {
     },
   });
 
-  const [error, setError] = useState(null);
-
+  //this use effect to get the data fromm the server when the componet first load
   useEffect(() => {
     const fetchProfileData = async () => {
       try {
@@ -86,7 +82,7 @@ const Profile = () => {
 
           // Since we are here, it means fetchPromise resolved before timeoutPromise
           //setProfileData(response.data);
-          setProfileData(prev => ({
+          setProfileData((prev) => ({
             ...prev,
             image: response.data.profilePicture || [],
             info: {
@@ -99,8 +95,8 @@ const Profile = () => {
             location: {
               latitude: response.data.location?.latitude || "",
               longitude: response.data.location?.longitude || "",
-              city: response.data.city || "", // Make sure 'city' is provided in the response
-              country: response.data.country || "", // Make sure 'country' is provided in the response
+              city: response.data.location?.city || "", // Make sure 'city' is provided in the response
+              country: response.data.location?.country || "", // Make sure 'country' is provided in the response
             },
             hobbies: response.data.hobbies || [], // Add hobbies to the response data if it's available
             bio: response.data.bio || "",
@@ -108,25 +104,29 @@ const Profile = () => {
             targetAge: {
               maxAge: response.data.targetAge?.maxAge || "",
               minAge: response.data.targetAge?.minAge || "",
-            }
+            },
           }));
-          
         } else {
-          // Handle the case where there is no token
-          setError("No access token available.");
-          // Additional logic to handle an absent token, like redirecting to login
+          setErrorGET("No access token available.");
         }
       } catch (err) {
-        // This will catch either an Axios error or a timeout error
-        setError(err.message);
+        if (err.message === "Request timed out") {
+          setErrorGET("Timeout: The request took too long to respond.");
+        } else if (err.response) {
+          // Error response from server, you can check for specific status codes here
+          setErrorGET("Server Error");
+        } else if (err.request) {
+          // The request was made but no response was received
+          setErrorGET("Network Error");
+        } else {
+          // Something else happened in setting up the request
+          setErrorGET("Error: An unexpected error occurred.");
+        }
       }
     };
 
     fetchProfileData();
   }, []);
-
-  if (error) return <div> there is an error</div>;
-  //if (!profileData) return <AnimatedLoader />;
 
   const handleSubmit = (values) => {
     const formData = new FormData();
@@ -143,7 +143,7 @@ const Profile = () => {
     formData.append("targetAge", JSON.stringify(values.targetAge));
     formData.append("bio", values.bio);
 
-    console.log("the request ",values)
+    console.log("the request ", values);
 
     axios
       .post("http://localhost:3001/profile", formData, {
@@ -165,7 +165,44 @@ const Profile = () => {
       });
   };
 
-  if (!isLoading )
+  //NOTE : handle the GET errors
+
+  switch (errorGET) {
+    case "Request timed out": // show the modal 
+      console.log("Request timed out");
+      // Add logic for timeout error
+      break;
+    case "Server Error": // redirect to login page 
+      console.log("Server Error");
+      // Add logic for server error
+      break;
+    case "Network Error": // show a modal
+      console.log("Network Error: Failed to receive response.");
+
+      break; // show the modal
+    case "Error: An unexpected error occurred.":
+      console.log("Error: An unexpected error occurred.");
+      // Add logic for unexpected error
+      break; //redirect to the login page
+    case "No access token available":
+      //Add logic for no access token
+      break;
+    default:
+      //console.log("An unknown error occurred.");
+      break;
+  }
+
+  //NOTE : handle the submit errors
+
+  switch (errorSUB) {
+    case "something":
+      break;
+
+    default:
+      break;
+  }
+
+  if (!isLoading)
     return (
       <>
         <Formik
@@ -211,6 +248,7 @@ const Profile = () => {
                     setFieldValue={setFieldValue}
                     errors={errors}
                     touched={touched}
+                    initialValues={values.gender}
                   />
                   <br />
                   <Field
@@ -219,8 +257,10 @@ const Profile = () => {
                     setFieldValue={setFieldValue}
                     errors={errors}
                     touched={touched}
+                    initialValues={values.location}
                   />
                   <br />
+
                   <Hobies setFieldValue={setFieldValue} values={values} />
                   <br />
                   <Field
@@ -242,7 +282,6 @@ const Profile = () => {
                   />
 
                   <input className="btn-login" type="submit" value="Submit" />
-                  {/* <input className="btn-login" value="skip" /> */}
                 </div>
               </div>
             </form>

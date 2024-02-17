@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Error Page</title>
+<style>
+  body, html {
+    height: 100%;
+    margin: 0;
+    font-family: Arial, sans-serif;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: #f4f4f4;
+    text-align: center;
+  }
+
+  .error-container {
+    width: 100%;
+    padding: 20px;
+  }
+
+  h1 {
+    color: #000;
+    font-size: 5em;
+  }
+
+  p {
+    color: #333;
+    font-size: 1.2em;
+  }
+
+  .error-message {
+    margin: 20px 0;
+  }
+
+  .retry-button {
+    background-color: #007bff;
+    color: white;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 5px;
+    font-size: 1em;
+    cursor: pointer;
+    outline: none;
+  }
+
+  /* Responsive styling */
+  @media (max-width: 600px) {
+    h1 {
+      font-size: 3em;
+    }
+
+    p {
+      font-size: 1em;
+    }
+
+    .retry-button {
+      padding: 8px 16px;
+      font-size: 0.9em;
+    }
+  }
+</style>
+</head>
+<body>
+<div class="error-container">
+  <h1>Oops!</h1>
+  <div class="error-message">
+    <p>There's an error</p>
+    <p>Error: This is a test error thrown by ComponentWithError.</p>
+  </div>
+  <button class="retry-button">Try again</button>
+</div>
+</body>
+</html>

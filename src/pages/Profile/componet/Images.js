@@ -9,7 +9,7 @@ const Images = ({ setFieldValue, errors, touched, initialValues }) => {
 
   useEffect(() => {
     if (initialValues && initialValues.length > 0) {
-      console.log("initial values", initialValues);
+      // console.log("initial values", initialValues);
       const imageUrls = initialValues
         .map((image) =>
           typeof image === "string" ? image : URL.createObjectURL(image)
