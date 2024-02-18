@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import { Formik, Field } from "formik";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
+import Modal from "react-modal";
 
 import "./profile.css";
 
@@ -15,18 +16,26 @@ import { Distance, DualRangeSlider } from "./componet/SliderComponent";
 import Bio from "./componet/Bio";
 import AnimatedLoader from "../../components/AnimatedLoader/AnimatedLoader";
 import { validationSchema } from "./AssistantFunctions/formValidationSchemas";
+import ErrorComp from "./componet/Error";
 
-//TODO : handel errors
+//FIXME : the refrech token in the cokies
+
 //Display an Error Message on the Same Page // modal
 //Redirect to an Error Page
-//Retry Logic
+//Retry Logic // in the case of the network error
+
+Modal.setAppElement("#root");
 
 const Profile = () => {
   const [errorSUB, setErrorSUB] = useState(null);
   const [errorGET, setErrorGET] = useState(null);
+  const [isFetchingComplete, setIsFetchingComplete] = useState(false);
+
   const [isLoading, setIsLoading] = useState(false);
-  const [showModal, setShowModal] = useState(false);
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [modalMessage, setModalMessage] = useState("");
   const navigate = useNavigate();
+
   const [profileData, setProfileData] = useState({
     image: [],
     info: {
@@ -53,9 +62,11 @@ const Profile = () => {
 
   //this use effect to get the data fromm the server when the componet first load
   useEffect(() => {
+    setIsFetchingComplete(false);
     const fetchProfileData = async () => {
       try {
         // Retrieve the token from localStorage
+        setIsFetchingComplete(true);
         const token = localStorage.getItem("accessToken");
 
         // Only proceed if the token exists
@@ -110,6 +121,8 @@ const Profile = () => {
           setErrorGET("No access token available.");
         }
       } catch (err) {
+        setIsFetchingComplete(true); // Also set to true if there's an error
+
         if (err.message === "Request timed out") {
           setErrorGET("Timeout: The request took too long to respond.");
         } else if (err.response) {
@@ -128,6 +141,7 @@ const Profile = () => {
     fetchProfileData();
   }, []);
 
+  //this function submit the inputs value to the endpoint
   const handleSubmit = (values) => {
     const formData = new FormData();
 
@@ -165,44 +179,28 @@ const Profile = () => {
       });
   };
 
-  //NOTE : handle the GET errors
+  // if (
+  //   errorGET === "Timeout: The request took too long to respond." ||
+  //   errorGET === "Network Error"
+  // ) {
+  //   // Code to display the modal
+  //   // You can also pass errorGET as a prop to the Modal for displaying the message
+    
+  // } else if (errorGET === "Server Error") {
+  //   // console.log("Server Error");
+  //   // Redirect to the login page
+  //   //history.push('/login');
+  //   return <ErrorComp />;
+  // }
 
-  switch (errorGET) {
-    case "Request timed out": // show the modal 
-      console.log("Request timed out");
-      // Add logic for timeout error
-      break;
-    case "Server Error": // redirect to login page 
-      console.log("Server Error");
-      // Add logic for server error
-      break;
-    case "Network Error": // show a modal
-      console.log("Network Error: Failed to receive response.");
-
-      break; // show the modal
-    case "Error: An unexpected error occurred.":
-      console.log("Error: An unexpected error occurred.");
-      // Add logic for unexpected error
-      break; //redirect to the login page
-    case "No access token available":
-      //Add logic for no access token
-      break;
-    default:
-      //console.log("An unknown error occurred.");
-      break;
+  if (errorGET) {
+    return <ErrorComp />;
   }
 
-  //NOTE : handle the submit errors
-
-  switch (errorSUB) {
-    case "something":
-      break;
-
-    default:
-      break;
+  if (!isFetchingComplete) {
+    return <AnimatedLoader />;
   }
-
-  if (!isLoading)
+  else
     return (
       <>
         <Formik
@@ -289,9 +287,7 @@ const Profile = () => {
         </Formik>
       </>
     );
-  else {
-    return <AnimatedLoader />;
-  }
+ // else return <AnimatedLoader />;
 };
 
 export default Profile;
