@@ -18,8 +18,6 @@ import AnimatedLoader from "../../components/AnimatedLoader/AnimatedLoader";
 import { validationSchema } from "./AssistantFunctions/formValidationSchemas";
 import ErrorComp from "./componet/Error";
 
-//FIXME : the refrech token in the cokies
-
 //Display an Error Message on the Same Page // modal
 //Redirect to an Error Page
 //Retry Logic // in the case of the network error
@@ -62,11 +60,11 @@ const Profile = () => {
 
   //this use effect to get the data fromm the server when the componet first load
   useEffect(() => {
-    setIsFetchingComplete(false);
+    //setIsFetchingComplete(true);
     const fetchProfileData = async () => {
       try {
         // Retrieve the token from localStorage
-        setIsFetchingComplete(true);
+
         const token = localStorage.getItem("accessToken");
 
         // Only proceed if the token exists
@@ -93,6 +91,7 @@ const Profile = () => {
 
           // Since we are here, it means fetchPromise resolved before timeoutPromise
           //setProfileData(response.data);
+          setIsFetchingComplete(true);
           setProfileData((prev) => ({
             ...prev,
             image: response.data.profilePicture || [],
@@ -121,7 +120,7 @@ const Profile = () => {
           setErrorGET("No access token available.");
         }
       } catch (err) {
-        setIsFetchingComplete(true); // Also set to true if there's an error
+        setIsFetchingComplete(false); // Also set to true if there's an error
 
         if (err.message === "Request timed out") {
           setErrorGET("Timeout: The request took too long to respond.");
@@ -179,28 +178,23 @@ const Profile = () => {
       });
   };
 
-  // if (
-  //   errorGET === "Timeout: The request took too long to respond." ||
-  //   errorGET === "Network Error"
-  // ) {
-  //   // Code to display the modal
-  //   // You can also pass errorGET as a prop to the Modal for displaying the message
-    
-  // } else if (errorGET === "Server Error") {
-  //   // console.log("Server Error");
-  //   // Redirect to the login page
-  //   //history.push('/login');
-  //   return <ErrorComp />;
-  // }
-
-  if (errorGET) {
-    return <ErrorComp />;
-  }
-
-  if (!isFetchingComplete) {
+  if (isFetchingComplete === false) {
+    if (
+      errorGET === "Timeout: The request took too long to respond." ||
+      errorGET === "Network Error"
+    ) {
+      return <ErrorComp />;
+      // Code to display the modal
+      // You can also pass errorGET as a prop to the Modal for displaying the message
+    } else if (errorGET === "Server Error") {
+      
+      // console.log("Server Error");
+      // Redirect to the login page
+      //history.push('/login');
+      
+    }
     return <AnimatedLoader />;
-  }
-  else
+  } else
     return (
       <>
         <Formik
@@ -287,7 +281,6 @@ const Profile = () => {
         </Formik>
       </>
     );
- // else return <AnimatedLoader />;
 };
 
 export default Profile;
