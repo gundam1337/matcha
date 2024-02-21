@@ -2,7 +2,6 @@ import React, { useState, useEffect } from "react";
 import { Formik, Field } from "formik";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
-import Modal from "react-modal";
 
 import "./profile.css";
 
@@ -18,11 +17,10 @@ import AnimatedLoader from "../../components/AnimatedLoader/AnimatedLoader";
 import { validationSchema } from "./AssistantFunctions/formValidationSchemas";
 import ErrorComp from "./componet/Error";
 
-//Display an Error Message on the Same Page // modal
+//Display an Error Message on the Same Page 
 //Redirect to an Error Page
 //Retry Logic // in the case of the network error
 
-Modal.setAppElement("#root");
 
 const Profile = () => {
   const [errorSUB, setErrorSUB] = useState(null);
@@ -30,8 +28,6 @@ const Profile = () => {
   const [isFetchingComplete, setIsFetchingComplete] = useState(false);
 
   const [isLoading, setIsLoading] = useState(false);
-  const [isModalOpen, setIsModalOpen] = useState(false);
-  const [modalMessage, setModalMessage] = useState("");
   const navigate = useNavigate();
 
   const [profileData, setProfileData] = useState({
@@ -59,6 +55,7 @@ const Profile = () => {
   });
 
   //this use effect to get the data fromm the server when the componet first load
+  //TODO :checking for specific status codes then asing it an error message
   useEffect(() => {
     //setIsFetchingComplete(true);
     const fetchProfileData = async () => {
@@ -70,7 +67,7 @@ const Profile = () => {
         // Only proceed if the token exists
         if (token) {
           // Set a timeout duration (e.g., 5000 milliseconds)
-          const TIMEOUT = 5000;
+          const TIMEOUT = 10000;
 
           // Create a promise that rejects after the timeout duration
           const timeoutPromise = new Promise((_, reject) =>

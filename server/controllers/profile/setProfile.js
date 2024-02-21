@@ -4,9 +4,11 @@ const multer = require("multer");
 //const { v4: uuidv4 } = require("uuid");
 const MAX_FILE_SIZE = 5 * 1024 * 1024; // Max file size in bytes (e.g., 5MB)
 const urlPattern = /^https:\/\/storage\.googleapis\.com\/matcha-406014\.appspot\.com\/.*/;
+const { bucket } = require("../../DataBase/firebaseConfig")
 
-const admin = require("firebase-admin");
-const serviceAccount = require("../../storage/matcha-406014-firebase-adminsdk-fnp82-8517b73387.json");
+
+// const admin = require("firebase-admin");
+// const serviceAccount = require("../../storage/matcha-406014-firebase-adminsdk-fnp82-8517b73387.json");
 
 
 function calculateAge(birthday) {
@@ -122,12 +124,12 @@ const validate = async (req, res, next) => {
 
 //NOTE : UPLOAD the files into fire base
 
-admin.initializeApp({
-  credential: admin.credential.cert(serviceAccount),
-  storageBucket: "matcha-406014.appspot.com",
-});
+// admin.initializeApp({
+//   credential: admin.credential.cert(serviceAccount),
+//   storageBucket: "matcha-406014.appspot.com",
+// });
 
-const bucket = admin.storage().bucket();
+// const bucket = admin.storage().bucket();
 
 //return the Public URLs of files insise folder using the userID(the name of the fodler)
 const getUserURLsFiles = async (userId) => {
@@ -374,50 +376,6 @@ const setProfile = async (req, res, next) => {
 
 //NOTE  : at the end of the cycle send token
 
-const getProfile = async (req, res) => {
-  try {
-    const { username, email } = req.user;
-
-    const user = await User.findOne({ username, email });
-
-    if (!user) {
-      return res.status(404).json({ message: "User not found" });
-    }
-    const userID = user.userID;
-    
-    //const pulicURLs= await getUserFilesPublicUrls(userID) 
-    const pulicURLs = await getUserURLsFiles(userID) 
-    const firstTwoUrls = pulicURLs.slice(0, 2);
-
-
-    // Assuming that the user schema has a 'profile' field with nested properties
-    const { profile } = user;
-    console.log("inside the get profile",profile.birthdate)
-    const profileData = {
-      profilePicture: firstTwoUrls,
-      firstName: profile.firstName,
-      lastName: profile.lastName,
-      birthdate: profile.birthdate,
-      phoneNumber: profile.phoneNumber,
-      gender: profile.gender,
-      location: profile.location
-        ? {
-            latitude: profile.location.latitude,
-            longitude: profile.location.longitude,
-            city: profile.location.city,
-            country: profile.location.country,
-          }
-        : undefined,
-      bio: profile.bio,
-      interests: profile.hobbies, // Assuming hobbies is the correct field name
-    };
-
-    res.json(profileData);
-  } catch (error) {
-    res.status(500).json({ message: error.message });
-  }
-};
-
 const profileSetup = [
   upload.any(),
   validate,
@@ -425,4 +383,4 @@ const profileSetup = [
   setProfile,
 ];
 
-module.exports = { profileSetup, getProfile };
+module.exports = { profileSetup, getUserURLsFiles};

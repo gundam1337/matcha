@@ -1,8 +1,6 @@
 const express = require("express");
-const {
-  profileSetup,
-  getProfile,
-} = require("../controllers/profile/setProfile");
+const {profileSetup} = require("../controllers/profile/setProfile");
+const {getProfile} = require("../controllers/profile/getProfile")
 const router = express.Router();
 const verifyTokens = require("../controllers/auth/verifyTokens");
 
