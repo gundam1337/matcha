@@ -1,26 +1,36 @@
+/* Add this to your existing CSS */
+
+/* This will make the parent of loader-container a flex container */
+.parent-container {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 100vh; /* This assumes you want to center it in the viewport */
+}
+
 .loader-container {
-    width: 150px;
-    height: 150px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
+  width: 150px;
+  height: 150px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.loader {
+  content: "";
+  width: 60px;
+  height: 60px;
+  border: 8px solid #e8e8e8;
+  border-top-color: #00a8e7;
+  border-radius: 50%;
+  animation: loading-anim 1s ease infinite;
+}
+
+@keyframes loading-anim {
+  to {
+    transform: rotate(0deg);
   }
-   
-  .loader {
-    content: "";
-    width: 60px;
-    height: 60px;
-    border: 8px solid #e8e8e8;
-    border-top-color: #00a8e7;
-    border-radius: 50%;
-    animation: loading-anim 1s ease infinite;
+  100% {
+    transform: rotate(360deg);
   }
-   
-  @keyframes loading-anim {
-    to {
-      transform: rotate(0deg);
-    }
-    100% {
-      transform: rotate(360deg);
-    }
-  }
+}

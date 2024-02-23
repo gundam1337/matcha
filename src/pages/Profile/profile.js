@@ -1,3 +1,5 @@
+//TODO 1°: finsh the handling the get error
+
 import React, { useState, useEffect } from "react";
 import { Formik, Field } from "formik";
 import axios from "axios";
@@ -17,17 +19,12 @@ import AnimatedLoader from "../../components/AnimatedLoader/AnimatedLoader";
 import { validationSchema } from "./AssistantFunctions/formValidationSchemas";
 import ErrorComp from "./componet/Error";
 
-//Display an Error Message on the Same Page 
-//Redirect to an Error Page
-//Retry Logic // in the case of the network error
-
-
 const Profile = () => {
   const [errorSUB, setErrorSUB] = useState(null);
   const [errorGET, setErrorGET] = useState(null);
   const [isFetchingComplete, setIsFetchingComplete] = useState(false);
 
-  const [isLoading, setIsLoading] = useState(false);
+  const [isLoading, setIsLoading] = useState(false); //I should use this
   const navigate = useNavigate();
 
   const [profileData, setProfileData] = useState({
@@ -54,90 +51,113 @@ const Profile = () => {
     },
   });
 
-  //this use effect to get the data fromm the server when the componet first load
-  //TODO :checking for specific status codes then asing it an error message
+  //NOTE : this use effect to get the data fromm the server when the componet first load
+
+  const fetchProfileData = async () => {
+    try {
+      // Retrieve the token from localStorage
+      const token = localStorage.getItem("accessToken");
+
+      // Only proceed if the token exists
+      if (token) {
+        // Set a timeout duration (e.g.,10000 milliseconds)
+        const TIMEOUT = 10000;
+
+        // Create a promise that rejects after the timeout duration
+        const timeoutPromise = new Promise((_, reject) =>
+          setTimeout(() => reject(new Error("Request timed out")), TIMEOUT)
+        );
+
+        // Fetch the profile data
+        const fetchPromise = axios.get("http://localhost:3001/profile", {
+          withCredentials: true,
+          headers: {
+            "x-access-token": token,
+          },
+        });
+
+        // Use Promise.race to race between the fetchPromise and the timeoutPromise
+        const response = await Promise.race([fetchPromise, timeoutPromise]);
+
+        // Since we are here, it means fetchPromise resolved before timeoutPromise
+        setIsFetchingComplete(true);
+        setProfileData((prev) => ({
+          ...prev,
+          image: response.data.profilePicture || [],
+          info: {
+            firstName: response.data.firstName || "",
+            lastName: response.data.lastName || "",
+            birthday: response.data.birthdate || "", // Add birthday to the response data if it's available
+          },
+          phoneNumber: response.data.phoneNumber || "",
+          gender: response.data.gender || "",
+          location: {
+            latitude: response.data.location?.latitude || "",
+            longitude: response.data.location?.longitude || "",
+            city: response.data.location?.city || "", // Make sure 'city' is provided in the response
+            country: response.data.location?.country || "", // Make sure 'country' is provided in the response
+          },
+          hobbies: response.data.hobbies || [], // Add hobbies to the response data if it's available
+          bio: response.data.bio || "",
+          distance: response.data.distance || "", // Add distance to the response data if it's available
+          targetAge: {
+            maxAge: response.data.targetAge?.maxAge || "",
+            minAge: response.data.targetAge?.minAge || "",
+          },
+        }));
+        setIsLoading(false)
+        //catching the error in that maigh happen in the get request
+      } else {
+        setErrorGET("No access token available.");
+        return;
+      }
+    } catch (err) {
+      setIsFetchingComplete(false); // Set to false in case of an error
+
+      if (err.message === "Request timed out") {
+        setErrorGET("Timeout");
+      } else if (err.response) {
+        // Error response from server, handle different status codes
+        const statusCode = err.response.status;
+        switch (statusCode) {
+          case 404:
+            setErrorGET(
+              "User Not Found"
+            );
+            break;
+          case 403:
+            setErrorGET(
+              "Forbidden"
+            );
+            break;
+          case 500:
+            setErrorGET(
+              "Internal Server Error"
+            );
+            break;
+          // Additional status codes can be handled here
+          default:
+            setErrorGET(`Server Error`);
+        }
+      } else if (err.request) {
+        // The request was made but no response was received
+        setErrorGET(
+          "Network Error"
+        );
+      } else {
+        // Something else happened in setting up the request
+        setErrorGET("Unexpected Error");
+      }
+    }
+  };
+
   useEffect(() => {
     //setIsFetchingComplete(true);
-    const fetchProfileData = async () => {
-      try {
-        // Retrieve the token from localStorage
-
-        const token = localStorage.getItem("accessToken");
-
-        // Only proceed if the token exists
-        if (token) {
-          // Set a timeout duration (e.g., 5000 milliseconds)
-          const TIMEOUT = 10000;
-
-          // Create a promise that rejects after the timeout duration
-          const timeoutPromise = new Promise((_, reject) =>
-            setTimeout(() => reject(new Error("Request timed out")), TIMEOUT)
-          );
-
-          // Fetch the profile data
-          const fetchPromise = axios.get("http://localhost:3001/profile", {
-            withCredentials: true,
-            headers: {
-              "x-access-token": token,
-            },
-          });
-
-          // Use Promise.race to race between the fetchPromise and the timeoutPromise
-          const response = await Promise.race([fetchPromise, timeoutPromise]);
-          console.log("the response data", response.data);
-
-          // Since we are here, it means fetchPromise resolved before timeoutPromise
-          //setProfileData(response.data);
-          setIsFetchingComplete(true);
-          setProfileData((prev) => ({
-            ...prev,
-            image: response.data.profilePicture || [],
-            info: {
-              firstName: response.data.firstName || "",
-              lastName: response.data.lastName || "",
-              birthday: response.data.birthdate || "", // Add birthday to the response data if it's available
-            },
-            phoneNumber: response.data.phoneNumber || "",
-            gender: response.data.gender || "",
-            location: {
-              latitude: response.data.location?.latitude || "",
-              longitude: response.data.location?.longitude || "",
-              city: response.data.location?.city || "", // Make sure 'city' is provided in the response
-              country: response.data.location?.country || "", // Make sure 'country' is provided in the response
-            },
-            hobbies: response.data.hobbies || [], // Add hobbies to the response data if it's available
-            bio: response.data.bio || "",
-            distance: response.data.distance || "", // Add distance to the response data if it's available
-            targetAge: {
-              maxAge: response.data.targetAge?.maxAge || "",
-              minAge: response.data.targetAge?.minAge || "",
-            },
-          }));
-        } else {
-          setErrorGET("No access token available.");
-        }
-      } catch (err) {
-        setIsFetchingComplete(false); // Also set to true if there's an error
-
-        if (err.message === "Request timed out") {
-          setErrorGET("Timeout: The request took too long to respond.");
-        } else if (err.response) {
-          // Error response from server, you can check for specific status codes here
-          setErrorGET("Server Error");
-        } else if (err.request) {
-          // The request was made but no response was received
-          setErrorGET("Network Error");
-        } else {
-          // Something else happened in setting up the request
-          setErrorGET("Error: An unexpected error occurred.");
-        }
-      }
-    };
-
+    setIsLoading(true)
     fetchProfileData();
   }, []);
 
-  //this function submit the inputs value to the endpoint
+  //NOTE : this function submit the inputs value to the endpoint
   const handleSubmit = (values) => {
     const formData = new FormData();
 
@@ -175,20 +195,23 @@ const Profile = () => {
       });
   };
 
-  if (isFetchingComplete === false) {
-    if (
-      errorGET === "Timeout: The request took too long to respond." ||
-      errorGET === "Network Error"
-    ) {
-      return <ErrorComp />;
-      // Code to display the modal
-      // You can also pass errorGET as a prop to the Modal for displaying the message
-    } else if (errorGET === "Server Error") {
-      
-      // console.log("Server Error");
-      // Redirect to the login page
-      //history.push('/login');
-      
+  //TODO : GET errors :
+  if (isLoading)
+      return <AnimatedLoader />;
+  if (!isFetchingComplete) {
+    console.log("errorGET = ",errorGET)
+    const errorActions = {
+      "Timeout": () => <ErrorComp message={errorGET} onRetry={fetchProfileData} />,
+      "Server Error": () => <ErrorComp message={errorGET} />,
+      "Internal Server Error": () => <ErrorComp message={errorGET} />,
+      "Network Error": () => <ErrorComp message={errorGET} onRetry={fetchProfileData} />,
+      "User Not Found": () => navigate('/'),
+      "Forbidden": () => navigate('/'),
+      "Unexpected Error": () => navigate('/')
+    };
+
+    if (errorActions[errorGET]) {
+      return errorActions[errorGET]();
     }
     return <AnimatedLoader />;
   } else

@@ -4,6 +4,8 @@ const { bucket } = require("../../DataBase/firebaseConfig")
   //return the Public URLs of files insise folder using the userID(the name of the fodler)
   const getUserURLsFiles = async (userId) => {
     try {
+     
+     
       // List all files in the folder named after userId
       const [files] = await bucket.getFiles({ prefix: `${userId}/` });
       const urls = await Promise.all(files.map(async file => {
@@ -25,6 +27,7 @@ const { bucket } = require("../../DataBase/firebaseConfig")
 
 const getProfile = async (req, res) => {
     try {
+      
       const { username, email } = req.user;
   
       const user = await User.findOne({ username, email });
@@ -64,7 +67,7 @@ const getProfile = async (req, res) => {
   
       res.json(profileData);
     } catch (error) {
-        console.log("error.message",error.message)
+        //console.log("error.message",error.message)
       res.status(500).json({ message: error.message });
     }
   };
