@@ -12,25 +12,6 @@ export const AuthProvider = ({ children }) => {
     isAuthenticated,
   });
   
-  // const [authState, setAuthState] = useState({
-  //   accessToken: null,
-  //   isAuthenticated: false,
-  //   isLoading: true, // Initialize loading state
-  // });
-  
-  // useEffect(() => {
-  //   const accessToken = localStorage.getItem('accessToken');
-  //   if (accessToken) {
-  //     setAuthState({
-  //       accessToken,
-  //       isAuthenticated: true,
-  //       isLoading: false,
-  //     });
-  //   } else {
-  //     setAuthState({ accessToken: null, isAuthenticated: false, isLoading: false });
-  //   }
-  // }, []);
-  
   // Function to update authentication state and local storage when the user logs in
   const login = (accessToken) => {
     localStorage.setItem('accessToken', accessToken);

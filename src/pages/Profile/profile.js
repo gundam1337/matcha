@@ -1,5 +1,3 @@
-//TODO 1°: finsh the handling the get error
-
 import React, { useState, useEffect } from "react";
 import { Formik, Field } from "formik";
 import axios from "axios";
@@ -23,7 +21,6 @@ const Profile = () => {
   const [errorSUB, setErrorSUB] = useState(null);
   const [errorGET, setErrorGET] = useState(null);
   const [isFetchingComplete, setIsFetchingComplete] = useState(false);
-
   const [isLoading, setIsLoading] = useState(false); //I should use this
   const navigate = useNavigate();
 
@@ -52,7 +49,6 @@ const Profile = () => {
   });
 
   //NOTE : this use effect to get the data fromm the server when the componet first load
-
   const fetchProfileData = async () => {
     try {
       // Retrieve the token from localStorage
@@ -105,7 +101,7 @@ const Profile = () => {
             minAge: response.data.targetAge?.minAge || "",
           },
         }));
-        setIsLoading(false)
+        setIsLoading(false);
         //catching the error in that maigh happen in the get request
       } else {
         setErrorGET("No access token available.");
@@ -121,19 +117,13 @@ const Profile = () => {
         const statusCode = err.response.status;
         switch (statusCode) {
           case 404:
-            setErrorGET(
-              "User Not Found"
-            );
+            setErrorGET("User Not Found");
             break;
           case 403:
-            setErrorGET(
-              "Forbidden"
-            );
+            setErrorGET("Forbidden");
             break;
           case 500:
-            setErrorGET(
-              "Internal Server Error"
-            );
+            setErrorGET("Internal Server Error");
             break;
           // Additional status codes can be handled here
           default:
@@ -141,9 +131,7 @@ const Profile = () => {
         }
       } else if (err.request) {
         // The request was made but no response was received
-        setErrorGET(
-          "Network Error"
-        );
+        setErrorGET("Network Error");
       } else {
         // Something else happened in setting up the request
         setErrorGET("Unexpected Error");
@@ -153,17 +141,21 @@ const Profile = () => {
 
   useEffect(() => {
     //setIsFetchingComplete(true);
-    setIsLoading(true)
+    setIsLoading(true);
     fetchProfileData();
   }, []);
 
   //NOTE : this function submit the inputs value to the endpoint
-  const handleSubmit = (values) => {
+  const handleSubmit = async (values) => {
+    setIsLoading(true);
+    setErrorSUB(null); // Reset error state on new submission
+
     const formData = new FormData();
 
     values.image.forEach((file) => {
       formData.append("image", file);
     });
+
     formData.append("info", JSON.stringify(values.info));
     formData.append("phoneNumber", values.phoneNumber);
     formData.append("gender", values.gender);
@@ -173,41 +165,90 @@ const Profile = () => {
     formData.append("targetAge", JSON.stringify(values.targetAge));
     formData.append("bio", values.bio);
 
-    console.log("the request ", values);
+    try {
+      // Check if accessToken cookie is available
+      const accessToken = localStorage.getItem("accessToken");
+      if (!accessToken) {
+        setErrorSUB("Access token is missing. Please log in again.");
+        setIsLoading(false);
+        return;
+      }
+      // Check if refreshToken cookie is available
+      // const refreshToken = document.cookie
+      //   .split(";")
+      //   .find((cookie) => cookie.trim().startsWith("refreshToken="));
+      // if (!refreshToken) {
+      //   setErrorSUB("Refresh token is missing. Please log in again.");
+      //   setIsLoading(false);
+      //   return;
+      // }
+      const response = await axios.post(
+        "http://localhost:3001/profile",
+        formData,
+        {
+          withCredentials: true,
+          headers: {
+            "Content-Type": "multipart/form-data",
+            "x-access-token": accessToken,
+          },
+        }
+      );
+      //TODO : update the access token from the user user
 
-    axios
-      .post("http://localhost:3001/profile", formData, {
-        withCredentials: true,
-        headers: {
-          "Content-Type": "multipart/form-data",
-          "x-access-token": localStorage.getItem("accessToken"),
-        },
-      })
-
-      .then((response) => {
-        console.log(response);
-      })
-      .catch((error) => {
-        console.error(error);
-      })
-      .finally(() => {
-        //setIsLoading(true);
-      });
+      if (response.accessToken) {
+        // Update the access token in local storage
+        localStorage.setItem('accessToken', response.accessToken);
+      }
+      navigate("/home")
+      //console.log(response);
+    } catch (error) {
+      if (!error.response) {
+        // Network or other error, not a response from the server
+        setErrorSUB("An unexpected error occurred");
+      } else {
+        // Handle specific status codes
+        switch (error.response.status) {
+          case 400:
+            setErrorSUB(
+              "Bad Request - The server could not understand the request due to invalid syntax."
+            );
+            break;
+          case 404:
+            setErrorSUB(
+              "Not Found - The server can not find the requested resource."
+            );
+            break;
+          case 500:
+            setErrorSUB(
+              "Internal Server Error - The server has encountered a situation it does not know how to handle."
+            );
+            break;
+          default:
+            setErrorSUB("An unexpected error occurred");
+        }
+      }
+    } finally {
+      setIsLoading(false);
+    }
   };
 
-  //TODO : GET errors :
-  if (isLoading)
-      return <AnimatedLoader />;
+
+  //NOTE : the rendring
+  if (isLoading) return <AnimatedLoader />;
   if (!isFetchingComplete) {
-    console.log("errorGET = ",errorGET)
+    console.log("errorGET = ", errorGET);
     const errorActions = {
-      "Timeout": () => <ErrorComp message={errorGET} onRetry={fetchProfileData} />,
+      Timeout: () => (
+        <ErrorComp message={errorGET} onRetry={fetchProfileData} />
+      ),
       "Server Error": () => <ErrorComp message={errorGET} />,
       "Internal Server Error": () => <ErrorComp message={errorGET} />,
-      "Network Error": () => <ErrorComp message={errorGET} onRetry={fetchProfileData} />,
-      "User Not Found": () => navigate('/'),
-      "Forbidden": () => navigate('/'),
-      "Unexpected Error": () => navigate('/')
+      "Network Error": () => (
+        <ErrorComp message={errorGET} onRetry={fetchProfileData} />
+      ),
+      "User Not Found": () => navigate("/"),
+      Forbidden: () => navigate("/"),
+      "Unexpected Error": () => navigate("/"),
     };
 
     if (errorActions[errorGET]) {

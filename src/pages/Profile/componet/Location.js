@@ -95,7 +95,7 @@ const Location = ({ setFieldValue, errors, touched, initialValues }) => {
     <>
       <div className="form-group profile-photo-upload">
         <label htmlFor="profilePhoto">Location</label>
-        <img src={URL} alt="Person's profile" className="profile-img"></img>
+        {/* <img src={URL} alt="Person's profile" className="profile-img"></img> */}
 
         <button
           onClick={() => setModalIsOpen(true)}

@@ -3,13 +3,12 @@ const Yup = require("yup");
 const multer = require("multer");
 //const { v4: uuidv4 } = require("uuid");
 const MAX_FILE_SIZE = 5 * 1024 * 1024; // Max file size in bytes (e.g., 5MB)
-const urlPattern = /^https:\/\/storage\.googleapis\.com\/matcha-406014\.appspot\.com\/.*/;
-const { bucket } = require("../../DataBase/firebaseConfig")
-
+const urlPattern =
+  /^https:\/\/storage\.googleapis\.com\/matcha-406014\.appspot\.com\/.*/;
+const { bucket } = require("../../DataBase/firebaseConfig");
 
 // const admin = require("firebase-admin");
 // const serviceAccount = require("../../storage/matcha-406014-firebase-adminsdk-fnp82-8517b73387.json");
-
 
 function calculateAge(birthday) {
   const today = new Date();
@@ -88,7 +87,6 @@ const validate = async (req, res, next) => {
     if (req.body.hobbies) req.body.hobbies = JSON.parse(req.body.hobbies);
     if (req.body.targetAge) req.body.targetAge = JSON.parse(req.body.targetAge);
 
-    console.log("insie the validate function the data",req.body.info);
     // Structure the data as expected by the validation schema
     const uploadedFiles = req.files || [];
     const requestBodyImages =
@@ -124,35 +122,28 @@ const validate = async (req, res, next) => {
 
 //NOTE : UPLOAD the files into fire base
 
-// admin.initializeApp({
-//   credential: admin.credential.cert(serviceAccount),
-//   storageBucket: "matcha-406014.appspot.com",
-// });
-
-// const bucket = admin.storage().bucket();
-
 //return the Public URLs of files insise folder using the userID(the name of the fodler)
 const getUserURLsFiles = async (userId) => {
   try {
     // List all files in the folder named after userId
     const [files] = await bucket.getFiles({ prefix: `${userId}/` });
-    const urls = await Promise.all(files.map(async file => {
-      // For each file, generate a signed URL that is publicly accessible
-      const [url] = await file.getSignedUrl({
-        action: 'read',
-        expires: '03-17-2025' // Set an expiration date for the URL
-      });
-      return url;
-    }));
+    const urls = await Promise.all(
+      files.map(async (file) => {
+        // For each file, generate a signed URL that is publicly accessible
+        const [url] = await file.getSignedUrl({
+          action: "read",
+          expires: "03-17-2025", // Set an expiration date for the URL
+        });
+        return url;
+      })
+    );
 
     return urls;
   } catch (error) {
-   // console.error('Error fetching user files:', error);
-    return [];  // Return an empty array in case of error
+    // console.error('Error fetching user files:', error);
+    return []; // Return an empty array in case of error
   }
 };
-
-
 
 function extractFilesFromArray(images) {
   const files = [];
@@ -168,8 +159,6 @@ function extractFilesFromArray(images) {
   return files;
 }
 
-
-
 function extractUrlFromArrays(array1, array2) {
   const filteredArray1 = array1.filter((item) => typeof item === "string");
   const combinedArray = filteredArray1.concat(array2);
@@ -182,29 +171,27 @@ function extractUrlFromArrays(array1, array2) {
 function extractFilePathFromUrl(urls) {
   // Check if urls is an array
   if (!Array.isArray(urls)) {
-   // console.error("Invalid input: Expected an array of URLs.");
+    // console.error("Invalid input: Expected an array of URLs.");
     return [];
   }
 
-  return urls.map(url => {
+  return urls.map((url) => {
     // Split the URL into parts and extract the file name part
     const urlParts = url.split("/");
     return urlParts[urlParts.length - 1]; // The last part of the URL is the file name
   });
 }
 
-
-
 //this function upload
 async function uploadFilesToFirebase(files, userId) {
-  const uploadPromises = files.map(file => {
+  const uploadPromises = files.map((file) => {
     const filePath = `${userId}/${file.originalname}`;
     const fileUpload = bucket.file(filePath).createWriteStream();
 
     return new Promise((resolve, reject) => {
-      fileUpload.on('error', (error) => reject(error));
-      fileUpload.on('finish', () => resolve());
-      fileUpload.end(file.buffer); 
+      fileUpload.on("error", (error) => reject(error));
+      fileUpload.on("finish", () => resolve());
+      fileUpload.end(file.buffer);
     });
   });
 
@@ -212,21 +199,20 @@ async function uploadFilesToFirebase(files, userId) {
     await Promise.all(uploadPromises);
     return true;
   } catch (error) {
-   // console.error("Error uploading files:", error);
+    // console.error("Error uploading files:", error);
     return false;
   }
 }
 
 //delet a spicfic file for me the databse
-//this function is not working because the structure of the url 
+//this function is not working because the structure of the url
 async function deleteFileFromUserFolder(fileUrls) {
   try {
-
     for (const url of fileUrls) {
       // Extract the file path from the URL
       const matches = url.match(/\/b\/[^\/]+\/o\/([^?]+)/);
       if (!matches) {
-        console.error('Unable to extract file path from URL:', url);
+        console.error("Unable to extract file path from URL:", url);
         continue;
       }
 
@@ -245,10 +231,9 @@ async function deleteFileFromUserFolder(fileUrls) {
       console.log(`File deleted: ${filePath}`);
     }
   } catch (error) {
-    console.error('Error in deleteFilesFromFirebaseStorage:', error);
-  }  
+    console.error("Error in deleteFilesFromFirebaseStorage:", error);
+  }
 }
-
 
 //this is the main function
 const uploadToFirebaseStorage = async (req, res, next) => {
@@ -267,23 +252,26 @@ const uploadToFirebaseStorage = async (req, res, next) => {
     //existingFiles = await getUserFilesPublicUrls(userID);
     existingFiles = await getUserURLsFiles(userID);
 
-
     // Step 2: Remove the duplicated URLs
     const filesToDelete = extractUrlFromArrays(receivedImages, existingFiles);
 
     // Step 3: Get the name of the file to delete
     const fileNamesToDelete = extractFilePathFromUrl(filesToDelete);
-    if ((!fileNamesToDelete || fileNamesToDelete.length === 0) &&  (existingFiles && existingFiles.length >0)) {
+    if (
+      (!fileNamesToDelete || fileNamesToDelete.length === 0) &&
+      existingFiles &&
+      existingFiles.length > 0
+    ) {
       //console.error("No files to delet");
       return next();
     }
     // Step 4: Delete the files from the database
-     await deleteFileFromUserFolder(fileNamesToDelete);
+    await deleteFileFromUserFolder(fileNamesToDelete);
 
     // Step 5: Get the files to update
     const filesToUpdate = extractFilesFromArray(receivedImages);
     if (!filesToUpdate || filesToUpdate.length === 0) {
-     // console.error("No files to upload");
+      // console.error("No files to upload");
       return next();
     }
 
@@ -301,8 +289,7 @@ const uploadToFirebaseStorage = async (req, res, next) => {
   }
 };
 
-
-//TODO : send the new access token 
+//TODO : send the new access token
 const setProfile = async (req, res, next) => {
   try {
     if (!req.user || !req.user.username || !req.user.email) {
@@ -314,7 +301,6 @@ const setProfile = async (req, res, next) => {
     // Retrieve username and email from req.user
     const { username, email } = req.user;
     const userID = req.userID;
-
 
     // Look up the user in the database based on username and email
     const user = await User.findOne({
@@ -334,10 +320,10 @@ const setProfile = async (req, res, next) => {
       : parseInt(req.body.targetAge.maxAge, 10);
 
     // Update the user's profile
-    const pulicURLs= await getUserURLsFiles(userID)
+    const pulicURLs = await getUserURLsFiles(userID);
     user.profile = {
       ...user.profile, // Keep existing profile fields
-      // isProfileSetup: true,
+      //isProfileSetup: true,
       profilePicture: pulicURLs, // Assuming req.files.firebaseUrls is the correct path
       firstName: userInfo.info.firstName,
       lastName: userInfo.info.lastName,
@@ -366,7 +352,12 @@ const setProfile = async (req, res, next) => {
 
     // Save the updated user
     await user.save();
-    res.status(200).send("User added successfully");
+
+    //send the OK and the access token 
+    res.json({
+      message: "Profile updated successfully",
+      accessToken: req.newAccessToken,
+    });
   } catch (error) {
     res.status(500).send({ error: error.message });
   }
@@ -374,7 +365,6 @@ const setProfile = async (req, res, next) => {
   // res.send("FormData received");
 };
 
-//NOTE  : at the end of the cycle send token
 
 const profileSetup = [
   upload.any(),
@@ -383,4 +373,4 @@ const profileSetup = [
   setProfile,
 ];
 
-module.exports = { profileSetup, getUserURLsFiles};
+module.exports = { profileSetup, getUserURLsFiles };

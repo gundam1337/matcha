@@ -45,7 +45,6 @@ const getProfile = async (req, res) => {
   
       // Assuming that the user schema has a 'profile' field with nested properties
       const { profile } = user;
-      console.log("inside the get profile",profile.birthdate)
       const profileData = {
         profilePicture: firstTwoUrls,
         firstName: profile.firstName,

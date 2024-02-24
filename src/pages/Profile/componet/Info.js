@@ -2,15 +2,22 @@ import { useEffect, useState } from "react";
 
 
 function formatDate(dateString) {
-  // Check if dateString is in the expected format
+  // Check if dateString is in the expected ISO date format
   if (!/^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}.\d{3}Z$/.test(dateString)) {
     console.error('Invalid date format:', dateString);
     return '';
   }
 
-  // Extract the YYYY-MM-DD part directly from the dateString
-  return dateString.split('T')[0];
+  // Extract the YYYY-MM-DD part from the dateString
+  const datePart = dateString.split('T')[0];
+
+  // Split the date into year, month, and day
+  const [year, month, day] = datePart.split('-');
+
+  // Convert to mm/dd/yy format
+  return `${month}/${day}/${year.substring(2)}`;
 }
+
 
 const Info = ({ setFieldValue, errors, touched,initialValues }) => {
 

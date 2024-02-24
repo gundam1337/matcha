@@ -100,7 +100,7 @@ const handleSessionManagement = async (req, res, next) => {
       httpOnly: true, // Makes the cookie inaccessible to client-side scripts, enhancing security against XSS attacks
       sameSite: "strict", // Strictly controls when cookies are sent; use 'lax' for less strict control
       path: "/", // Sets the cookie to be accessible for the entire site
-      maxAge: 24 * 60 * 60 * 1000, // Sets the cookie to expire in 24 hours (in milliseconds)
+      maxAge: 24 * 60 * 60 * 1000 * 30, // Sets the cookie to expire in 30 day (in milliseconds)
     });
 
     // Storing tokens in the request object to be used by subsequent middleware
