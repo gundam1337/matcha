@@ -1,40 +1,41 @@
-import { useEffect, useState } from "react";
+import React, { useState, useEffect } from 'react';
 
+const Info = ({ setFieldValue, errors, touched, initialValues }) => {
 
-function formatDate(dateString) {
-  // Check if dateString is in the expected ISO date format
-  if (!/^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}.\d{3}Z$/.test(dateString)) {
-    console.error('Invalid date format:', dateString);
+  const toYYYYMMDD = (isoString) => {
+    if (isoString) {
+      const date = new Date(isoString);
+      const year = date.getFullYear();
+      const month = (date.getMonth() + 1).toString().padStart(2, '0');
+      const day = date.getDate().toString().padStart(2, '0');
+      return `${year}-${month}-${day}`;
+    }
     return '';
-  }
+  };
 
-  // Extract the YYYY-MM-DD part from the dateString
-  const datePart = dateString.split('T')[0];
-
-  // Split the date into year, month, and day
-  const [year, month, day] = datePart.split('-');
-
-  // Convert to mm/dd/yy format
-  return `${month}/${day}/${year.substring(2)}`;
-}
-
-
-const Info = ({ setFieldValue, errors, touched,initialValues }) => {
-
-  const [info,setInfo] = useState({firstName: '', lastName: '', birthday: ''});
+  const [info, setInfo] = useState({
+    firstName: '',
+    lastName: '',
+    birthday: initialValues?.birthday ? toYYYYMMDD(initialValues.birthday) : ''
+  });
 
   useEffect(() => {
-    if (initialValues && 'birthday' in initialValues) {
-      setInfo({
+    if (initialValues) {
+      setInfo(prevState => ({
+        ...prevState,
         ...initialValues,
-        birthday: formatDate(initialValues.birthday)
-      });
+        birthday: initialValues.birthday ? toYYYYMMDD(initialValues.birthday) : prevState.birthday
+      }));
     }
   }, [initialValues]);
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
     setFieldValue(name, value);
+    setInfo(prevState => ({
+      ...prevState,
+      [name.split('.')[1]]: value
+    }));
   };
 
   return (
@@ -46,7 +47,7 @@ const Info = ({ setFieldValue, errors, touched,initialValues }) => {
             type="text"
             id="info.firstName"
             name="info.firstName"
-            value = {info.firstName}
+            value={info.firstName}
             onChange={handleInputChange}
           />
           {errors.info && touched.info && (
@@ -65,8 +66,7 @@ const Info = ({ setFieldValue, errors, touched,initialValues }) => {
             id="info.lastName"
             name="info.lastName"
             onChange={handleInputChange}
-            value = {info.lastName}
-
+            value={info.lastName}
           />
           {errors.info && touched.info && (
             <>
@@ -85,17 +85,16 @@ const Info = ({ setFieldValue, errors, touched,initialValues }) => {
           id="info.birthday"
           name="info.birthday"
           onChange={handleInputChange}
-          value = {info.birthday}
-
+          value={info.birthday}
         />
         {errors.info && touched.info && (
-            <>
-              <p className="infoError">
-                {errors.info.birthday && "⚠️ "}
-                {errors.info.birthday}
-              </p>
-            </>
-          )}
+          <>
+            <p className="infoError">
+              {errors.info.birthday && "⚠️ "}
+              {errors.info.birthday}
+            </p>
+          </>
+        )}
       </div>
     </>
   );

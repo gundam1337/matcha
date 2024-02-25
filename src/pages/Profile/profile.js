@@ -236,7 +236,7 @@ const Profile = () => {
   //NOTE : the rendring
   if (isLoading) return <AnimatedLoader />;
   if (!isFetchingComplete) {
-    console.log("errorGET = ", errorGET);
+    //console.log("errorGET = ", errorGET);
     const errorActions = {
       Timeout: () => (
         <ErrorComp message={errorGET} onRetry={fetchProfileData} />

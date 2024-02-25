@@ -7,7 +7,7 @@ const ProtectedRoute = ({ children }) => {
 
   if (isLoading) {
     // Render loading indicator or return null while checking the auth state
-    return null; // or return null;
+    return null; 
   }
   if (!isAuthenticated) {
     // Redirect them to the login page if not authenticated
@@ -18,5 +18,3 @@ const ProtectedRoute = ({ children }) => {
 };
 
 export default ProtectedRoute;
-
-// return isAuthenticated ? <Outlet /> : <Navigate to="/login" />;

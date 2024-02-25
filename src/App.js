@@ -19,20 +19,21 @@ function App() {
         <Route path="/" element={<Authentication />} />
 
         {/* private routes */}
-        <Route
-          path="/home"
-          element={
-            <ProtectedRoute>
-              <Homepage />
-            </ProtectedRoute>
-          }
-        />
 
         <Route
           path="/profile"
           element={
             <ProtectedRoute>
               <Profile />
+            </ProtectedRoute>
+          }
+        />
+
+        <Route
+          path="/home"
+          element={
+            <ProtectedRoute>
+              <Homepage />
             </ProtectedRoute>
           }
         />
