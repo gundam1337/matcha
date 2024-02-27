@@ -323,7 +323,7 @@ const setProfile = async (req, res, next) => {
     const pulicURLs = await getUserURLsFiles(userID);
     user.profile = {
       ...user.profile, // Keep existing profile fields
-      //isProfileSetup: true,
+      isProfileSetup: true,
       profilePicture: pulicURLs, // Assuming req.files.firebaseUrls is the correct path
       firstName: userInfo.info.firstName,
       lastName: userInfo.info.lastName,
