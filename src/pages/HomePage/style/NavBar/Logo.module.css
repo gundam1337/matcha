@@ -1,0 +1,10 @@
+.logo {
+    color: #ffffff;
+    font-size: 40px;
+    font-weight: bold;
+    display: inline-block;
+    background-image: url('../../../../assets/images/love.png');
+    background-repeat: no-repeat;
+    background-size: contain;
+    padding-left: 60px; 
+}

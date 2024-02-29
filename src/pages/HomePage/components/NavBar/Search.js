@@ -1,20 +1,12 @@
-
-
 const Search = () => {
   return (
-    <>
-      <input
-        id="search"
-        //className={styles.input}
-        type="search"
-        placeholder="Search..."
-        autofocus
-        required
-      />
-      <button type="submit" >
-        Go
-      </button>
-    </>
+    <div>
+      <div className="inputBox">
+        <i className="uil uil-search"></i>
+        <input  placeholder="Search here..." className="input" />
+        <button className="button">Search</button>
+      </div>
+    </div>
   );
 };
 

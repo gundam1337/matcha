@@ -1,4 +1,6 @@
-import React from "react";
+//TODO: how to handle the "not exist" url field
+//TODO : if the user Is aleardy login if enter the / navigate them to the home page 
+
 import Authentication from "./pages/Authentication/Authentication";
 import Homepage from "./pages/HomePage/HomePage";
 import NotFound from "./pages/NotFound/NotFound";
@@ -8,8 +10,6 @@ import About from "./pages/About/About";
 import ContactUs from "./pages/ContactUs/ContactUs";
 
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
-
-//TODO: how to handle the "not exist" url field
 
 function App() {
   return (
@@ -32,6 +32,7 @@ function App() {
         <Route
           path="/home"
           element={
+            //<Homepage />
             <ProtectedRoute>
               <Homepage />
             </ProtectedRoute>
