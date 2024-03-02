@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import "../style/Images.css";
+//import "../style/Images.css";
 
 //TODO : study the state to see if you can use one state in the hole app
 const Images = ({ setFieldValue, errors, touched, initialValues }) => {

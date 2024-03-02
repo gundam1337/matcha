@@ -23,6 +23,28 @@ const Profile = () => {
   const [isFetchingComplete, setIsFetchingComplete] = useState(false);
   const [isLoading, setIsLoading] = useState(false); //I should use this
   const navigate = useNavigate();
+  const [cssLoaded, setCssLoaded] = useState(false);
+
+  useEffect(() => {
+    const cssLink = document.createElement('link');
+    cssLink.href = '/profile.css'; // Adjust the path as needed
+    cssLink.rel = 'stylesheet';
+    cssLink.type = 'text/css';
+    cssLink.id = 'auth-css';
+
+    // Event listener to set cssLoaded to true when CSS loads
+    cssLink.onload = () => setCssLoaded(true);
+
+    document.head.appendChild(cssLink);
+
+    return () => {
+      const existingLink = document.getElementById('auth-css');
+      if (existingLink) {
+        existingLink.remove();
+      }
+    };
+  }, []);
+
 
   const [profileData, setProfileData] = useState({
     image: [],
@@ -234,7 +256,9 @@ const Profile = () => {
 
 
   //NOTE : the rendring
+  //if (cssLoaded) return <AnimatedLoader />
   if (isLoading) return <AnimatedLoader />;
+  
   if (!isFetchingComplete) {
     //console.log("errorGET = ", errorGET);
     const errorActions = {

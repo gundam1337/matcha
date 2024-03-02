@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import "../style/bio.css";
+//import "../style/bio.css";
 
 const Bio = ({ setFieldValue }) => {
   const [bio, setBio] = useState("");
