@@ -1,10 +1,153 @@
 @import url("https://fonts.googleapis.com/css2?family=Readex+Pro:wght@200;300;400;500;700&display=swap");
 
 
+.close {
+  float: right !important; /* Move the button to the right */
+  font-size: 2em; /* Increase the font size to make it bigger */
+  margin-right: -90%; /* Add some margin to create space between the button and other elements */
+  background-color: transparent; /* Make the background transparent */
+  border: none; /* Remove any border */
+  cursor: pointer;
+}
+
+.formik-container {
+  background: linear-gradient(90deg, #fe3175, #ff6f63);
+  border-radius: 10px;
+  box-shadow: 3px 4px 50px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  height: 500px;
+  width: 380px;
+  padding: 5px;
+}
+
+.formik-content {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  overflow-y: scroll;
+}
+
+.formik-content h2 {
+  margin : 0px;
+  color: white;
+  font-size: 55px;
+}
+
+.formik-content h2 a {
+  color: white;
+}
+
+.formik-content h3 {
+  color: #ffffff;
+  font-size: 25px;
+  font-style: italic;
+  margin-top: 20px;
+  text-transform: uppercase;
+}
+
+.formik-content h4 {
+  color: white;
+  font-size: 20px;
+  text-transform: uppercase;
+  margin-top: 20px;
+}
+
+.formik-content p {
+  text-align: center;
+  color: #ffffff;
+  margin-top: 20px;
+}
+
+.formik-content p a {
+  text-decoration: underline;
+  color: white;
+}
+
+formik {
+  margin-top: 20px;
+  width: 100%;
+}
+
+.main-informations input {
+  color: white;
+  font-weight: bold;
+  width: 80%;
+  border-radius: 20px;
+  padding: 10px 20px; /* Adjusted padding */
+  margin: 10px 0 0;
+  border: 2px solid white;
+  background: transparent;
+  transition: 0.3s;
+  outline: none;
+  position: relative; /* Added relative position */
+}
+::placeholder {
+  color: white;
+  text-transform: uppercase;
+  font-weight: bold;
+}
+
+
+
+input:focus {
+  display: inline-block;
+  transform: scale(1.1);
+  border: 2px solid #e91e63;
+}
+
+.form-container .form-content .btn-login {
+  background: white;
+  color: #fe3175;
+  font-size: 20px;
+  font-weight: bold;
+  box-shadow: 0px 0px 10px white;
+  border-radius: 30px;
+  border: 2px solid white;
+  margin: 80px 0px 20px 0;
+  transition: 0.5s;
+  padding: 10px 20px;
+  width: 80%;
+}
+
+.error {
+  font-size: 12px;
+  color: var(--red-600);
+  width: 400px;
+  margin-top: 0.25rem;
+  &:before {
+    content: "🗝️";
+    font-size: 16px;
+  }
+  @media (prefers-color-scheme: dark) {
+    color: var(--red-300);
+  }
+  bottom: -20px; /* or adjust as needed */
+  left: 0;
+}
+
+.toggle-password {
+  position: absolute; 
+  top: 50%;
+  right: 10px; /* 10 pixels from the right edge of the container */
+  transform: translateY(-50%); /* vertically center the button */
+  background-color: #eee; 
+  padding: 10px;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+
+
+
+
 /* || General styles */
 body {
   background: linear-gradient(rgb(0, 0, 0), rgba(0, 0, 0, 0.5)),
-    url("../assets/images/back_ground.jpg");
+    url("./back_ground.jpg");
   background-repeat: no-repeat;
   background-size: cover;
   font-family: "Readex Pro", sans-serif;
@@ -79,7 +222,7 @@ a.logo {
     font-size: 40px;
     font-weight: bold;
     display: inline-block;
-    background-image: url('../assets/images/love.png');
+    background-image: url('./love.png');
     background-repeat: no-repeat;
     background-size: contain;
     padding-left: 60px; /* adjust as necessary */
@@ -211,7 +354,7 @@ footer p {
   /* ------ general responsive styles -----  */
   body {
     background: linear-gradient(rgb(0, 0, 0), rgba(0, 0, 0, 0.5), rgb(0, 0, 0)),
-      url("../assets/images/back_ground.jpg");
+      url("./back_ground.jpg");
     background-size: cover;
     background-position: center; /* Shorthand for 'center center' */
     background-repeat: no-repeat;

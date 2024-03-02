@@ -2,7 +2,7 @@ import { Formik, Form } from "formik";
 import { useState } from "react";
 import axios from "axios";
 import * as Yup from "yup";
-import "../../styles/register.css";
+//import "../../styles/register.css";
 import MyTextInput from "./MytextInput";
 import AnimatedLoader from "../AnimatedLoader/AnimatedLoader";
 import EmailSuccessComponent from "../EmailSuccessComponent/EmailSuccessComponent";
