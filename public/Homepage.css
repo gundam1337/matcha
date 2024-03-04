@@ -168,13 +168,12 @@ nav .notification-count {
   z-index: 11; /* Ensure the notification count is above other elements */
 }
 
-
 /* =============== Profile Card ============== */
 
 .modal {
   position: fixed;
   top: 0;
-  left: 0; 
+  left: 0;
   width: 100%;
   height: 100%;
   background-color: rgba(0, 0, 0, 0.5);
@@ -185,128 +184,164 @@ nav .notification-count {
 
 .modal-content {
   background-color: transparent;
-  border-radius: 5px;
+  border-radius: 8px;
+  padding: 0px; /* Adjust as needed */
+  border: 0;
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  overflow: auto; /* In case content is too large */
+  position: relative; /* Added line */
+}
+
+.close {
+  position: absolute; /* Changed from relative to absolute */
+  top: 10px; /* Added line */
+  right: 0px; /* Added line */
+  width: 40px; /* Increased width */
+  height: 40px; /* Increased height */
+  opacity: 0.3;
+}
+.close:hover {
+  opacity: 1;
+}
+.close:before,
+.close:after {
+  position: absolute;
+  left: 15px;
+  content: " ";
+  height: 33px;
+  width: 2px;
+  background-color: #333;
+}
+.close:before {
+  transform: rotate(45deg);
+}
+.close:after {
+  transform: rotate(-45deg);
 }
 
 #card {
-	background-color: #393B45;
-	height: auto;
-	width: 350px;
-	margin: 10vh auto;
-	border-radius: 25px;
-	padding-bottom: 1px;
-	box-shadow: 2px 2px 5px #4069E2;
+  background: linear-gradient(90deg, #fe3175, #ff6f63);
+  height: auto;
+  width: 350px;
+  margin: 0 auto;
+  border-radius: 25px;
+  padding-bottom: 1px;
+  box-shadow: 2px 2px 5px #4069e2;
 }
 
 h1 {
-	color: white;
-	text-align: center;
-	width: 100%;
-	background-color: #E6EBEE;
-	border-radius: 25px 25px 0 0;
-	color: #393B45;
-	padding: 30px 0;
-	font-weight: 800;
-	margin: 0;
+  color: white;
+  text-align: center;
+  width: 100%;
+  background-color: #e6ebee;
+  border-radius: 25px 25px 0 0;
+  color: #393b45;
+  padding: 15px 0;
+  font-weight: 800;
+  margin: 0;
 }
 
 .image-crop {
-	display: block;
-	position: relative;
-	background-color: #E6EBEE;
-	width: 150px;
-	height: 150px;
-	margin: 0 auto;
-	margin-top: 30px;
-	overflow: hidden;
-	border-radius: 50%;
-	box-shadow: 1px 1px 5px #4069E2;
+  display: block;
+  position: relative;
+  background-color: #e6ebee;
+  width: 150px;
+  height: 150px;
+  margin: 0 auto;
+  margin-top: 30px;
+  overflow: hidden;
+  border-radius: 50%;
+  box-shadow: 1px 1px 5px #4069e2;
 }
 
 #avatar {
-	display: inline;
-	height: 230px;
-	width: auto;
-	margin-left: -34px;
+  display: inline;
+  height: 230px;
+  width: auto;
+  margin-left: -34px;
 }
 
 #bio {
-	display: block;
-	margin: 30px auto;
-	width: 280px;
-	height: auto;
+  display: block;
+  margin: 30px auto;
+  width: 280px;
+  height: auto;
 }
 
 #bio p {
-	color: #E6EBEE;
-	font-weight: lighter;
-	font-size: 15px;
-	text-align: justify;
+  color: #e6ebee;
+  font-weight: lighter;
+  font-size: 15px;
+  text-align: justify;
 }
 
 #stats {
-	display: flex;
-	flex-direction: row;
-	height: auto;
-	width: 280px;
-	justify-content: space-between;
-	align-items: center;
-	margin: 0 auto;
-	font-weight: 500;
+  display: flex;
+  flex-direction: row;
+  height: auto;
+  width: 280px;
+  justify-content: space-between;
+  align-items: center;
+  margin: 0 auto;
+  font-weight: 500;
 }
 
 .col {
-	display: flex;
-	flex-direction: column;
-	justify-content: center;
-	align-items: center;
-	width: auto;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  width: auto;
 }
 
 .stat {
-	font-size: 25px;
-	margin: 0;
+  font-size: 25px;
+  margin: 0;
 }
 
 .label {
-	margin: 0;
+  margin: 0;
 }
 
 #buttons {
-	display: flex;
-	margin: 0 auto;
-	justify-content: space-between;
-	width: 280px;
+  display: flex;
+  margin: 0 auto;
+  justify-content: space-between;
+  width: 280px;
 }
 
 button {
-	display: block;
-	position: relative;
-	padding: 10px 0;
-	width: 130px;
-	margin: 30px 0;
-	border-radius: 25px;
-	border: none;
-	font-size: 20px;
-	letter-spacing: 0.2px;
-	font-weight: 500;
-	background-color: #4069E2;
-	color: #E6EBEE;
+  display: block;
+  position: relative;
+  padding: 10px 0;
+  width: 130px;
+  margin: 30px 0;
+  border-radius: 25px;
+  border: none;
+  font-size: 20px;
+  letter-spacing: 0.2px;
+  font-weight: 500;
+  background-color: #4069e2;
+  color: #e6ebee;
 }
 
 button:focus {
-	display: none;
+  display: none;
 }
 
 button:hover {
-	transform: scale(1.03);
-	cursor: pointer;
-	transition: all 0.2s ease-in-out;
+  transform: scale(1.03);
+  cursor: pointer;
+  transition: all 0.2s ease-in-out;
 }
 
-#msg{
-	background-color: #E6EBEE;
-	color: #393B45;
+#msg {
+  background-color: #e6ebee;
+  color: #393b45;
 }
 
 /* ================= 
@@ -336,7 +371,7 @@ MEDIA QUERIES FOR SMALL LAPTOP AND BIG TABLETS
   .full-width-search .search-bar {
     flex-grow: 1; /* This will make the search bar grow to occupy all available space */
   }
-  
+
   /* This hides other navbar elements when the search bar is active */
   .full-width-search .logo,
   .full-width-search .profile,
@@ -350,8 +385,7 @@ MEDIA QUERIES FOR SMALL LAPTOP AND BIG TABLETS
   .btn-primary {
     //width: 30px;
     font-size: 0.9rem;
-    padding:10px;
-
+    padding: 10px;
   }
 
   .profile-photo {

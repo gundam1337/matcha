@@ -4,7 +4,7 @@ import { useState, useEffect, useRef } from "react";
 const ProfileCardData = () => {
   return (
     <div id="card">
-      <h1>John Doe</h1>
+      <h1>User Name</h1>
       <div className="image-crop">
         <img
           id="avatar"
@@ -13,28 +13,21 @@ const ProfileCardData = () => {
         />
       </div>
       <div id="bio">
-        <p>
-          Hello, my name is John! Bacon ipsum dolor amet short ribs prosciutto
-          strip steak, pig ham tongue buffalo beef ribs hamburger pork venison.
-        </p>
+        <p>Hello, my name is John!</p>
       </div>
       <div id="stats">
         <div className="col">
-          <p className="stat">108</p>
-          <p className="label">Posts</p>
+          <p className="stat">10</p>
+          <p className="label">Likes</p>
         </div>
         <div className="col">
-          <p className="stat">457</p>
-          <p className="label">Followers</p>
-        </div>
-        <div className="col">
-          <p className="stat">229</p>
-          <p className="label">Following</p>
+          <p className="stat">50</p>
+          <p className="label">Matches</p>
         </div>
       </div>
       <div id="buttons">
-        <button>Follow</button>
-        <button id="msg">Message</button>
+        <button>Profile</button>
+        <button id="msg">Log out</button>
       </div>
     </div>
   );
@@ -70,7 +63,7 @@ const Modal = ({ show, children, onClose }) => {
   return (
     <div className="modal">
       <div className="modal-content" ref={modalContentRef}>
-        {/* <button onClick={onClose}>Close</button> */}
+        <div className="close" onClick={onClose}></div>
         {children}
       </div>
     </div>

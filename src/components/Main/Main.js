@@ -6,7 +6,7 @@ import Registration from "../Registration/Registration";
 import Login from "../Login/Login";
 import ResetPassword from "../ResetPassword/ResetPassword";
 
-//TODO 1:if there is no conxion ,display an error message 
+//TODO 1:if there is no conxion ,display an error message
 
 Modal.setAppElement("#root");
 
@@ -52,8 +52,8 @@ export const AppModal = ({ isOpen, handleClose, children }) => (
 export default function Main() {
   const [isRegistrationModalOpen, setRegistrationModalOpen] = useState(false);
   const [isLoginModalOpen, setLoginModalOpen] = useState(false);
-  const [isVerified,setIsVerified] = useState(false);
-  const [isResetPassword,setIsResetPassword] = useState(false)
+  const [isVerified, setIsVerified] = useState(false);
+  const [isResetPassword, setIsResetPassword] = useState(false);
   const handleModal = (setter) => () => setter((prev) => !prev);
 
   useEffect(() => {
@@ -64,9 +64,9 @@ export default function Main() {
       setIsResetPassword(true);
     }
     const queryParams = queryString.parse(window.location.search);
-     if (queryParams.openLogin) {
+    if (queryParams.openLogin) {
       setIsVerified(true);
-     }
+    }
   }, []);
 
   useEffect(() => {
@@ -83,7 +83,7 @@ export default function Main() {
           <h2>
             <span className="slogan-app"></span>
           </h2>
-          {/* NOTE : register */}
+         
           <ModalButton
             label="Create account"
             handleOpen={handleModal(setRegistrationModalOpen)}
@@ -93,10 +93,11 @@ export default function Main() {
             handleClose={handleModal(setRegistrationModalOpen)}
           >
             <Registration onClick={handleModal(setRegistrationModalOpen)} />
+            
           </AppModal>
+          <br></br>
+          <br></br>
 
-          <br />
-          {/* NOTE : login */}
           <ModalButton
             label="login"
             handleOpen={handleModal(setLoginModalOpen)}
@@ -105,7 +106,10 @@ export default function Main() {
             isOpen={isLoginModalOpen}
             handleClose={handleModal(setLoginModalOpen)}
           >
-            <Login onClick={handleModal(setLoginModalOpen)} isVerified= {isVerified} />
+            <Login
+              onClick={handleModal(setLoginModalOpen)}
+              isVerified={isVerified}
+            />
           </AppModal>
 
           {/* NOTE : rest password  */}
@@ -113,9 +117,8 @@ export default function Main() {
             isOpen={isResetPassword}
             handleClose={handleModal(setIsResetPassword)}
           >
-            <ResetPassword/>
+            <ResetPassword />
           </AppModal>
-
         </div>
       </div>
     </main>
