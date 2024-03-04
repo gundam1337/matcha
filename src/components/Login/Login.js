@@ -8,8 +8,8 @@ import ForgotPassword from "../ResetPassword/ForgotPassword";
 import { useAuth } from "../../context/AuthProvider";
 import { useNavigate } from "react-router-dom";
 
-import "../../styles/common.css";
-import "../../styles/login.css";
+//import "../../styles/common.css";
+//import "../../styles/login.css";
 
 const Login = (props) => {
   const [submitError, setSubmitError] = useState(null);

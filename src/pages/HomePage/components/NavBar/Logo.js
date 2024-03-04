@@ -2,7 +2,7 @@
 const Logo = () => {
   return (
     <a className="logo" href="index.html">
-      matcha
+      <div>Matcha</div>
     </a>
   );
 };

@@ -1,5 +1,5 @@
 //TODO: how to handle the "not exist" url field
-//TODO : if the user Is aleardy login if enter the / navigate them to the home page 
+//TODO : if the user Is aleardy login if enter the / navigate them to the home page
 
 import Authentication from "./pages/Authentication/Authentication";
 import Homepage from "./pages/HomePage/HomePage";
@@ -17,9 +17,7 @@ function App() {
       <Routes>
         {/* public routes */}
         <Route path="/" element={<Authentication />} />
-
         {/* private routes */}
-
         <Route
           path="/profile"
           element={
@@ -28,7 +26,6 @@ function App() {
             </ProtectedRoute>
           }
         />
-
         <Route
           path="/home"
           element={
@@ -38,10 +35,8 @@ function App() {
             </ProtectedRoute>
           }
         />
-
         {/* the not found page  */}
         <Route path="/notFound" element={<NotFound />} />
-
         {/* information about the app  */}
         <Route path="/About" element={<About />}></Route>
         <Route path="/About" element={<ContactUs />}></Route>

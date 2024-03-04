@@ -1,0 +1,364 @@
+@import url("https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600&display=swap");
+
+:root {
+  --primary-color-hue: 252;
+  --dark-color-lightness: 17%;
+  --light-color-lightness: 95%;
+  --white-color-lightness: 100%;
+
+  --color-white: hsl(252, 30%, var(--white-color-lightness));
+  --color-light: hsl(252, 30%, var(--light-color-lightness));
+  --color-grey: hsl(252, 15%, 65%);
+  --color-primary: hsl(var(--primary-color-hue), 75%, 60%);
+  --color-secondary: hsl(252, 100%, 90%);
+  --color-success: hsl(120, 95%, 65%);
+  --color-danger: hsl(0, 95%, 65%);
+  --color-dark: hsl(252, 30%, var(--dark-color-lightness));
+  --color-black: hsl(252, 30%, 10%);
+
+  --border-radius: 2rem;
+  --card-border-radius: 1rem;
+  --btn-padding: 0.6rem 2rem;
+  --search-padding: 0.6rem 1rem;
+  --card-padding: 1rem;
+
+  --sticky-top-left: 5.4rem;
+  --sticky-top-right: -18rem;
+}
+
+*,
+*::before,
+*::after {
+  margin: 0;
+  padding: 0;
+  outline: 0;
+  box-sizing: border-box;
+  text-decoration: none;
+  list-style: none;
+  border: none;
+}
+
+//TODO make it as the same as the home page
+
+body {
+  font-family: "Poppins", sans-serif;
+  color: var(--color-dark);
+  background: var(--color-light);
+  overflow-x: hidden;
+}
+
+/* =============== General Style ============== */
+.container {
+  width: 80%;
+  margin: 0 auto;
+}
+
+.profile-photo {
+  width: 2.7rem;
+  aspect-ratio: 1/1;
+  border-radius: 50%;
+  overflow: hidden;
+}
+
+img {
+  display: block;
+  width: 100%;
+}
+
+.btn {
+  display: inline-block;
+  padding: var(--btn-padding);
+  font-weight: 500;
+  border-radius: var(--border-radius);
+  cursor: pointer;
+  transition: all 300ms ease;
+  font-size: 0.9rem;
+}
+
+.btn:hover {
+  opacity: 0.8;
+}
+
+.btn-primary {
+  background: var(--color-primary);
+  color: var(--color-white);
+}
+
+.text-bold {
+  font-weight: 500;
+}
+
+.text-muted {
+  color: var(--color-grey);
+}
+
+/* =============== Navbar ============== */
+nav {
+  width: 100%;
+  background: var(--color-white);
+  padding: 0.7rem 0;
+  position: fixed;
+  top: 0;
+  z-index: 10;
+}
+
+nav .container {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.logo {
+  color: black;
+  font-size: 30px;
+  font-weight: bold;
+  display: inline-block;
+  background-image: url("./love.png");
+  background-repeat: no-repeat;
+  background-size: contain;
+  padding-left: 50px; /* adjust as necessary */
+}
+
+.search-bar {
+  background: var(--color-light);
+  border-radius: var(--border-radius);
+  padding: var(--search-padding);
+}
+
+.search-bar input[type="search"] {
+  background: transparent;
+  width: 30vw;
+  margin-left: 1rem;
+  font-size: 0.9rem;
+  color: var(--color-dark);
+}
+
+nav .search-bar input[type="search"]::placeholder {
+  color: var(--color-grey);
+}
+
+nav .profile {
+  display: flex;
+  align-items: center;
+  gap: 2rem;
+}
+
+.notification {
+  position: relative;
+  display: inline-block;
+}
+
+nav .uil-bell {
+  position: relative;
+  font-size: 30px;
+}
+
+nav .notification-count {
+  background: var(--color-danger);
+  color: white;
+  font-size: 20px;
+  width: fit-content;
+  border-radius: 0.8rem;
+  padding: 0.1rem 0.4rem;
+  position: absolute;
+  top: -1px; /* Adjust this value to position the notification count at the top right of the bell icon */
+  right: -10px;
+  font-size: 0.75rem; /* Adjust the font size of the notification count as needed */
+  padding: 0.2rem 0.4rem; /* Adjust the padding to fit the content */
+  z-index: 11; /* Ensure the notification count is above other elements */
+}
+
+
+/* =============== Profile Card ============== */
+
+.modal {
+  position: fixed;
+  top: 0;
+  left: 0; 
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.5);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.modal-content {
+  background-color: transparent;
+  border-radius: 5px;
+}
+
+#card {
+	background-color: #393B45;
+	height: auto;
+	width: 350px;
+	margin: 10vh auto;
+	border-radius: 25px;
+	padding-bottom: 1px;
+	box-shadow: 2px 2px 5px #4069E2;
+}
+
+h1 {
+	color: white;
+	text-align: center;
+	width: 100%;
+	background-color: #E6EBEE;
+	border-radius: 25px 25px 0 0;
+	color: #393B45;
+	padding: 30px 0;
+	font-weight: 800;
+	margin: 0;
+}
+
+.image-crop {
+	display: block;
+	position: relative;
+	background-color: #E6EBEE;
+	width: 150px;
+	height: 150px;
+	margin: 0 auto;
+	margin-top: 30px;
+	overflow: hidden;
+	border-radius: 50%;
+	box-shadow: 1px 1px 5px #4069E2;
+}
+
+#avatar {
+	display: inline;
+	height: 230px;
+	width: auto;
+	margin-left: -34px;
+}
+
+#bio {
+	display: block;
+	margin: 30px auto;
+	width: 280px;
+	height: auto;
+}
+
+#bio p {
+	color: #E6EBEE;
+	font-weight: lighter;
+	font-size: 15px;
+	text-align: justify;
+}
+
+#stats {
+	display: flex;
+	flex-direction: row;
+	height: auto;
+	width: 280px;
+	justify-content: space-between;
+	align-items: center;
+	margin: 0 auto;
+	font-weight: 500;
+}
+
+.col {
+	display: flex;
+	flex-direction: column;
+	justify-content: center;
+	align-items: center;
+	width: auto;
+}
+
+.stat {
+	font-size: 25px;
+	margin: 0;
+}
+
+.label {
+	margin: 0;
+}
+
+#buttons {
+	display: flex;
+	margin: 0 auto;
+	justify-content: space-between;
+	width: 280px;
+}
+
+button {
+	display: block;
+	position: relative;
+	padding: 10px 0;
+	width: 130px;
+	margin: 30px 0;
+	border-radius: 25px;
+	border: none;
+	font-size: 20px;
+	letter-spacing: 0.2px;
+	font-weight: 500;
+	background-color: #4069E2;
+	color: #E6EBEE;
+}
+
+button:focus {
+	display: none;
+}
+
+button:hover {
+	transform: scale(1.03);
+	cursor: pointer;
+	transition: all 0.2s ease-in-out;
+}
+
+#msg{
+	background-color: #E6EBEE;
+	color: #393B45;
+}
+
+/* ================= 
+MEDIA QUERIES FOR SMALL LAPTOP AND BIG TABLETS 
+==================== */
+
+@media screen and (max-width: 992px) {
+  .container {
+    width: 96%;
+  }
+
+  .logo {
+    font-size: 20px;
+    padding-left: 35px;
+    text-indent: -9999px; /* pushes the text out of view */
+  }
+
+  nav .uil-bell {
+    font-size: 20px;
+  }
+
+  .search-bar input[type="search"] {
+    width: 20vw;
+    font-size: 0.9rem;
+  }
+
+  .full-width-search .search-bar {
+    flex-grow: 1; /* This will make the search bar grow to occupy all available space */
+  }
+  
+  /* This hides other navbar elements when the search bar is active */
+  .full-width-search .logo,
+  .full-width-search .profile,
+  .full-width-search .notification {
+    display: none;
+  }
+  nav .notification-count {
+    font-size: 10px;
+  }
+
+  .btn-primary {
+    //width: 30px;
+    font-size: 0.9rem;
+    padding:10px;
+
+  }
+
+  .profile-photo {
+    display: none;
+  }
+
+  main .container .left .profile {
+    display: none;
+  }
+}

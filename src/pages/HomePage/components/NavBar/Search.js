@@ -1,14 +1,22 @@
 const Search = () => {
+  const handleFocus = () => {
+    document.querySelector("nav").classList.add("full-width-search");
+  };
+
+  const handleBlur = () => {
+    document.querySelector("nav").classList.remove("full-width-search");
+  };
   return (
-    <div>
-      <div className="inputBox">
-        <i className="uil uil-search"></i>
-        <input  placeholder="Search here..." className="input" />
-        <button className="button">Search</button>
-      </div>
+    <div className="search-bar">
+      <i className="uil uil-search"></i>
+      <input
+        type="search"
+        placeholder="Search for a Matcha"
+        onFocus={handleFocus}
+        onBlur={handleBlur}
+      />
     </div>
   );
 };
 
-
-export default Search
+export default Search;
