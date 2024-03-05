@@ -1,4 +1,3 @@
-//TODO create a Modal that show profile and log out
 import { useState, useEffect, useRef } from "react";
 
 const ProfileCardData = () => {
