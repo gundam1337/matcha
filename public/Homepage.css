@@ -116,7 +116,7 @@ nav .container {
   background-image: url("./love.png");
   background-repeat: no-repeat;
   background-size: contain;
-  padding-left: 50px; 
+  padding-left: 50px;
 }
 
 .search-bar {
@@ -169,59 +169,56 @@ nav .notification-count {
 }
 
 /* notification drop down  */
-.dropdown{
-  left : 30px;
-	width: 300px;
-	height: auto;
-	background: #fff0f0;
-	border-radius: 5px;
-	box-shadow: 2px 2px 3px rgba(0,0,0,0.125);
-	margin: 15px auto 0;
-	padding: 15px;
-  left : -130px;
-	position: absolute;
-  //index-z : 10;
+.dropdown {
+  left: 30px;
+  width: 300px;
+  height: auto;
+  background: var(--color-secondary);
+  border-radius: 5px;
+  box-shadow: 2px 2px 3px rgba(0, 0, 0, 0.125);
+  margin: 15px auto 0;
+  padding: 15px;
+  left: -130px;
+  position: absolute;
 }
 
-.dropdown .notify_item{
-	display: flex;
-	align-items: center;
-
-	border-bottom: 1px solid #dbdaff;
+.dropdown .notify_item {
+  display: flex;
+  align-items: center;
+  border-bottom: 1px solid #dbdaff;
 }
 
- .dropdown .notify_item:last-child{
-	border-bottom: 0px;
+.dropdown .notify_item:last-child {
+  border-bottom: 0px;
 }
 
-.dropdown .notify_item .notify_img{
-	margin-right: 15px;
+.dropdown .notify_item .notify_img {
+  margin-right: 15px;
 }
 
-.dropdown .notify_item .notify_info p{
-	margin-bottom: 5px;
+.dropdown .notify_item .notify_info p {
+  margin-bottom: 5px;
 }
 
-.dropdown .notify_item .notify_info p span{
-	color: #605dff;
-	margin-left: 5px;
+.dropdown .notify_item .notify_info p span {
+  color: #0d0d1b;
+  margin-left: 5px;
 }
 
- .dropdown .notify_item .notify_info .notify_time{
-	color: #c5c5e6;
-	font-size: 12px;
+.dropdown .notify_item .notify_info .notify_time {
+  color: #000000;
+  font-size: 12px;
 }
 
- .dropdown:before{
-	content: "";
-	position: absolute;
-	top: -30px;
-	left: 50%;
-	transform: translateX(-50%);
-	border: 15px solid;
-	border-color: transparent transparent #fce5e5 transparent;
+.dropdown:before {
+  content: "";
+  position: absolute;
+  top: -30px;
+  left: 50%;
+  transform: translateX(-50%);
+  border: 15px solid;
+  border-color: transparent transparent var(--color-secondary) transparent;
 }
-
 
 /* =============== Profile Card ============== */
 
@@ -401,16 +398,16 @@ button:hover {
 /* ================= 
 MEDIA QUERIES FOR SMALL LAPTOP AND BIG TABLETS 
 ==================== */
-
-@media screen and (max-width: 992px) {
-  .container {
-    width: 96%;
-  }
-
+@media screen and (max-width: 600px) {
   .logo {
     font-size: 20px;
     padding-left: 35px;
     text-indent: -9999px; /* pushes the text out of view */
+  }
+}
+@media screen and (max-width: 992px) {
+  .container {
+    width: 96%;
   }
 
   nav .uil-bell {
