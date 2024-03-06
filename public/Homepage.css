@@ -118,6 +118,9 @@ nav .container {
   background: var(--color-light);
   border-radius: var(--border-radius);
   padding: var(--search-padding);
+  display: flex; /* Enable flexbox */
+  align-items: center; /* Align items vertically */
+  position: relative; /* Needed for absolute positioning of children */
 }
 
 .search-bar input[type="search"] {
@@ -130,25 +133,46 @@ nav .container {
 
 nav .search-bar input[type="search"]::placeholder {
   color: var(--color-grey);
+  position: relative;
 }
 
-nav:focus-within .search-bar {
-  flex-grow: 1;
+
+
+.dropdownSuggestions {
+  width: calc(100% - 2rem);
+  height: auto;
+  background: var(--color-secondary);
+  border-radius: 10px;
+  box-shadow: 2px 2px 3px rgba(0, 0, 0, 0.125);
+  padding: 15px;
+  position: absolute;
+  top: 110%; /* Position below the search bar */
+  left: -10; 
+}
+
+.dropdownSuggestions .suggestion_item{
   display: flex;
-  justify-content: center;
   align-items: center;
+  border-bottom: 1px solid #dbdaff;
+  padding: 0.6rem; /* Increase padding to add more space inside each item */
+  font-size: 0.6rem;
+ 
 }
 
-nav:focus-within .search-bar input[type="search"] {
-  width: 100%;
-  margin-left: 0;
+.dropdownSuggestions .suggestion_item:last-child {
+  border-bottom: 0px;
 }
 
-nav:focus-within .logo,
-nav:focus-within .profile,
-nav:focus-within .notification {
-  display: none;
+.dropdownSuggestions .suggestion_item .suggestions_info  span {
+  color: #0d0d1b;
+  margin-left: 5px;
 }
+
+.dropdownSuggestions .suggestion_item .suggestions_info  {
+  color: #000000;
+  font-size: 12px;
+}
+
 
 /* === Notification == */
 
@@ -290,7 +314,7 @@ nav .profile {
 }
 
 #card {
-  background: linear-gradient(90deg, #fe3175, #ff6f63);
+  background: linear-gradient(90deg, #dbdaff, #dbdaff);
   height: auto;
   width: 350px;
   margin: 0 auto;
@@ -338,9 +362,9 @@ h1 {
 }
 
 #bio p {
-  color: #e6ebee;
+  color: #000000;
   font-weight: lighter;
-  font-size: 15px;
+  font-size: 20px;
   text-align: justify;
 }
 
@@ -422,6 +446,30 @@ MEDIA QUERIES FOR SMALL LAPTOP AND BIG TABLETS
 @media screen and (max-width: 992px) {
   .container {
     width: 96%;
+  }
+
+  .dropdown {
+    left: 25px;
+    width: 220px;
+ 
+  }
+
+  nav:focus-within .search-bar {
+    flex-grow: 1;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+  
+  nav:focus-within .search-bar input[type="search"] {
+    width: 100%;
+    margin-left: 0;
+  }
+  
+  nav:focus-within .logo,
+  nav:focus-within .profile,
+  nav:focus-within .notification {
+    display: none;
   }
 
   nav .uil-bell {

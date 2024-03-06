@@ -1,14 +1,21 @@
 import { useState, useRef } from "react";
 import useOutsideAlerter from "../../Hooks/useOutsideAlerter";
 
-const SuggestionsItem = (suggestion) => {
-  return <span className="notify_time">{suggestion}</span>;
+const SuggestionsItem = ({ suggestion }) => {
+  return (
+    <div className="suggestion_item">
+      <span className="suggestions_info">{suggestion}</span>
+    </div>
+  );
 };
 
+
 const DropdownSuggestions = () => (
-  <div className="dropdown">
-    <SuggestionsItem suggestion="Alex commented on" />
-    <SuggestionsItem suggestion="Ben hur" />
+  <div className="dropdownSuggestions">
+    <SuggestionsItem suggestion="Omar" />
+    <SuggestionsItem suggestion="Omari" />
+    <SuggestionsItem suggestion="Omaroui" />
+    <SuggestionsItem suggestion="Omarali" />
   </div>
 );
 
@@ -26,9 +33,9 @@ const Search = () => {
   useOutsideAlerter(wrapperRef, handleClose);
 
   return (
-    <div className="search-bar">
+    <div className="search-bar" ref={wrapperRef} onClick={toggleDropdown}>
       <i className="uil uil-search"></i>
-      <input type="search" placeholder="Search for a Matcha" />
+      <input type="search" placeholder="Search for a Matcha" ></input>
       {isDropdownVisible && <DropdownSuggestions></DropdownSuggestions>}
     </div>
   );
