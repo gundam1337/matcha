@@ -38,8 +38,6 @@
   border: none;
 }
 
-//TODO make it as the same as the home page
-
 body {
   font-family: "Poppins", sans-serif;
   color: var(--color-dark);
@@ -51,13 +49,6 @@ body {
 .container {
   width: 80%;
   margin: 0 auto;
-}
-
-.profile-photo {
-  width: 2.7rem;
-  aspect-ratio: 1/1;
-  border-radius: 50%;
-  overflow: hidden;
 }
 
 img {
@@ -108,6 +99,8 @@ nav .container {
   justify-content: space-between;
 }
 
+/* === Navbar Logo == */
+
 .logo {
   color: black;
   font-size: 30px;
@@ -118,6 +111,8 @@ nav .container {
   background-size: contain;
   padding-left: 50px;
 }
+
+/* === Search Bar == */
 
 .search-bar {
   background: var(--color-light);
@@ -137,11 +132,25 @@ nav .search-bar input[type="search"]::placeholder {
   color: var(--color-grey);
 }
 
-nav .profile {
+nav:focus-within .search-bar {
+  flex-grow: 1;
   display: flex;
+  justify-content: center;
   align-items: center;
-  gap: 2rem;
 }
+
+nav:focus-within .search-bar input[type="search"] {
+  width: 100%;
+  margin-left: 0;
+}
+
+nav:focus-within .logo,
+nav:focus-within .profile,
+nav:focus-within .notification {
+  display: none;
+}
+
+/* === Notification == */
 
 .notification {
   position: relative;
@@ -168,7 +177,6 @@ nav .notification-count {
   z-index: 11; /* Ensure the notification count is above other elements */
 }
 
-/* notification drop down  */
 .dropdown {
   left: 30px;
   width: 300px;
@@ -220,7 +228,13 @@ nav .notification-count {
   border-color: transparent transparent var(--color-secondary) transparent;
 }
 
-/* =============== Profile Card ============== */
+/* === Profile card == */
+
+nav .profile {
+  display: flex;
+  align-items: center;
+  gap: 2rem;
+}
 
 .modal {
   position: fixed;
@@ -412,25 +426,6 @@ MEDIA QUERIES FOR SMALL LAPTOP AND BIG TABLETS
 
   nav .uil-bell {
     font-size: 30px;
-  }
-
-  .search-bar input[type="search"] {
-    width: 20vw;
-    font-size: 0.9rem;
-  }
-
-  .full-width-search .search-bar {
-    flex-grow: 1; /* This will make the search bar grow to occupy all available space */
-  }
-
-  /* This hides other navbar elements when the search bar is active */
-  .full-width-search .logo,
-  .full-width-search .profile,
-  .full-width-search .notification {
-    display: none;
-  }
-  nav .notification-count {
-    font-size: 10px;
   }
 
   .btn-primary {

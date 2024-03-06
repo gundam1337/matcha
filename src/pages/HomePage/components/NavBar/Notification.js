@@ -1,8 +1,8 @@
 //Notification dorp down
 import { useState,useEffect,useRef } from "react";
+import useOutsideAlerter from "../../Hooks/useOutsideAlerter";
 
 //NOTE : Notification Types : matches,messages,likes,visitors
-//TODO: to add the dopdown at the notification system
 
 //Match : New Match Alert!
 //likes : [Username] has liked your profile! See who's interested in you."
@@ -37,20 +37,6 @@ const DropdownNotifications = () => (
   </div>
 );
 
-// Custom hook to detect clicks outside the drop down notifaction
-function useOutsideAlerter(ref, onOutsideClick) {
-  useEffect(() => {
-    function handleClickOutside(event) {
-      if (ref.current && !ref.current.contains(event.target)) {
-        onOutsideClick();
-      }
-    }
-    document.addEventListener('mousedown', handleClickOutside);
-    return () => {
-      document.removeEventListener('mousedown', handleClickOutside);
-    };
-  }, [ref, onOutsideClick]);
-}
 
 const Notification = () => {
   const [isDropdownVisible, setDropdownVisible] = useState(false);

@@ -1,4 +1,3 @@
-// import Logo from "./Logo";
 import Search from "./Search";
 import ProfileCard from "./ProfileCard";
 import Notifcation from "./Notification";
