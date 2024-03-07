@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import NavigationBar from "./components/NavBar/Navigation";
 import AnimatedLoader from "../../components/AnimatedLoader/AnimatedLoader";
+import Cards from "./components/Cards/Cards";
 
 function HomePage() {
   const [cssLoaded, setCssLoaded] = useState(false);
@@ -31,6 +32,7 @@ function HomePage() {
     <>
       {!cssLoaded && <AnimatedLoader />}
       <NavigationBar></NavigationBar>
+      <Cards></Cards>
     </>
   );
 }
