@@ -437,7 +437,6 @@ button:hover {
 main {
   width: 600px;
   height: 650px;
-  //background-color: #ffcc00;
   position: absolute; /* or 'fixed' depending on your layout */
   right: 10%;
   transform: translateY(-50%);
@@ -451,7 +450,7 @@ main {
   align-items: center;
   position: relative;
   width: auto;
-  height: 87%;
+  height: 100%;
   //background-color: #ff0000;
 }
 
@@ -513,10 +512,12 @@ main {
   margin-top: 6px;
 }
 
+
 .actions {
+  width: 100%; /* Full width of the container */
   display: flex;
-  justify-content: center;
-  margin-top: 1rem;
+  justify-content: center; /* Center buttons horizontally */
+  padding: 20px 0; /* Add some padding at the top and bottom */
 }
 
 .action {
@@ -526,9 +527,10 @@ main {
   display: flex;
   align-items: center;
   justify-content: center;
-  font-size: 2rem;
-  transition: transform 500ms ease;
   margin: 0 10px;
+  /* Adjust the sizes below as needed */
+  height: 50px;
+  width: 50px;
 }
 
 .action:hover {
