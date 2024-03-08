@@ -24,6 +24,9 @@
 
   --sticky-top-left: 5.4rem;
   --sticky-top-right: -18rem;
+
+  --main-horizontal-position: 50%; /* Adjust for left-right positioning */
+  --main-vertical-position: 50%; /* Adjust for up-down positioning */
 }
 
 *,
@@ -43,8 +46,6 @@ body {
   color: var(--color-dark);
   background: var(--color-light);
   overflow-x: hidden;
-
-  
 }
 
 /* =============== General Style ============== */
@@ -92,6 +93,7 @@ nav {
   padding: 0.7rem 0;
   position: fixed;
   top: 0;
+  right: 0;
   z-index: 10;
 }
 
@@ -138,8 +140,6 @@ nav .search-bar input[type="search"]::placeholder {
   position: relative;
 }
 
-
-
 .dropdownSuggestions {
   width: calc(100% - 2rem);
   height: auto;
@@ -149,32 +149,30 @@ nav .search-bar input[type="search"]::placeholder {
   padding: 15px;
   position: absolute;
   top: 110%; /* Position below the search bar */
-  left: -10; 
+  left: -10;
 }
 
-.dropdownSuggestions .suggestion_item{
+.dropdownSuggestions .suggestion_item {
   display: flex;
   align-items: center;
   border-bottom: 1px solid #dbdaff;
   padding: 0.6rem; /* Increase padding to add more space inside each item */
   font-size: 0.6rem;
- 
 }
 
 .dropdownSuggestions .suggestion_item:last-child {
   border-bottom: 0px;
 }
 
-.dropdownSuggestions .suggestion_item .suggestions_info  span {
+.dropdownSuggestions .suggestion_item .suggestions_info span {
   color: #0d0d1b;
   margin-left: 5px;
 }
 
-.dropdownSuggestions .suggestion_item .suggestions_info  {
+.dropdownSuggestions .suggestion_item .suggestions_info {
   color: #000000;
   font-size: 12px;
 }
-
 
 /* === Notification == */
 
@@ -437,49 +435,58 @@ button:hover {
 
 /* =============== Main ============== */
 main {
-  position: relative; /* or 'absolute' if you want to position relative to the first positioned ancestor */
-  top: 91px; /* Adjust this value to move the element down from the top */
-  left: 400px; /* Adjust this value to move the element right from the left */
-  width: 590px; /* Or any width you prefer */
-  height: 630px; /* Or any height you prefer */
-  /*background-color: #ffcc00;  This color is just for visibility, change as needed */
-  /* Add any other styles you need for main */
+  width: 600px;
+  height: 650px;
+  background-color: #ffcc00;
+  position: absolute; /* or 'fixed' depending on your layout */
+  right: 10%;
+  transform: translateY(-50%);
+  top: 55%; /* Centers it vertically */
 }
+
 .photo-and-actions {
   height: calc(100% - 44px);
   display: flex;
   flex-direction: column;
   align-items: center;
   position: relative;
+  width: auto;
+  height: 87%;
+  //background-color: #ff0000;
 }
 
 .photo {
-  width: 80%; 
-  height: 80%; 
   border-radius: 10px;
   display: flex;
-  align-items: center; 
+  align-items: center;
   justify-content: center;
-  box-shadow: 0 2px 10px 0 rgba(136,136,136,0.7);
-  overflow: hidden; 
+  box-shadow: 0 2px 10px 0 rgba(136, 136, 136, 0.7);
+  overflow: hidden;
+  position: relative;
+  width: 95%; 
+  height: 95%; 
+  max-height: 650px; 
+  background-color: rgba(0, 0, 0, 0.92); 
   position: relative;
 }
 
 .photo img {
-  max-width: 400px; 
-  max-height: 700px; 
+  display: block; /* Remove any default inline spacing */
+  //width: 100%; /* Full width of the container */
+  //height: 100%; /* Full height of the container */
+  object-fit: cover; /* Cover the entire container */
+  object-position: center; /* Center the image within the container */
 }
-
-
-.photo-text {
-  width: 100%;
-  padding: 15px;
-  background: linear-gradient(180deg, rgba(2, 0, 36, 0) 0%, rgba(0, 0, 0, 0.7) 100%);
-  border-radius: 0 0 10px 10px;
-  display: flex;
-  flex-direction: column;
-  justify-content: flex-end;
-}
+ .photo-text {
+  position: absolute; /* Absolute position to overlay the photo */
+  bottom: 0; /* Align to the bottom of the .photo container */
+  left: 0; /* Align to the left of the .photo container */
+  width: 100%; /* Take the full width of the .photo container */
+  padding: 15px; /* Padding inside the text container */
+  background: linear-gradient(180deg, rgba(2, 0, 36, 0) 0%, rgba(0, 0, 0, 0.7) 100%); /* Gradient background */
+  border-radius: 0 0 10px 10px; /* Rounded corners at the bottom */
+  color: white; /* Text color */
+} 
 
 .photo-name-and-age {
   display: flex;
@@ -512,7 +519,7 @@ main {
 }
 
 .action {
-  background: #fff;
+  background-color: #ff0000;
   box-shadow: 0 2px 6px 0 rgba(112, 125, 134, 0.14);
   border-radius: 50%;
   display: flex;
@@ -545,16 +552,22 @@ main {
   color: #1be4a1;
   height: 60px;
   width: 60px;
-}
+}  
 
 /* ================= 
 MEDIA QUERIES FOR SMALL LAPTOP AND BIG TABLETS 
 ==================== */
 @media screen and (max-width: 600px) {
+  /* =============== Navbar ============== */
   .logo {
     font-size: 20px;
     padding-left: 35px;
     text-indent: -9999px; /* pushes the text out of view */
+  }
+
+  main {
+    width: 75%;
+    right: 3%;
   }
 }
 @media screen and (max-width: 992px) {
@@ -573,12 +586,12 @@ MEDIA QUERIES FOR SMALL LAPTOP AND BIG TABLETS
     justify-content: center;
     align-items: center;
   }
-  
+
   nav:focus-within .search-bar input[type="search"] {
     width: 100%;
     margin-left: 0;
   }
-  
+
   nav:focus-within .logo,
   nav:focus-within .profile,
   nav:focus-within .notification {
@@ -594,12 +607,24 @@ MEDIA QUERIES FOR SMALL LAPTOP AND BIG TABLETS
     font-size: 0.9rem;
     padding: 10px;
   }
-
-  .profile-photo {
-    display: none;
+  /* =============== Main ============== */
+  main {
+    width: 90%;
+    height: 85%;
+    right: 50%; /* Moves it to the middle */
+    top: 52%;
+    margin-righ: 0px;
+    transform: translateX(50%) translateY(-50%); /* Adjusts for the width of the element */
   }
-
-  main .container .left .profile {
-    display: none;
+  .photo {
+    border-radius: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 2px 10px 0 rgba(136, 136, 136, 0.7);
+    overflow: hidden;
+    position: relative;
+    height: 100%;
+    width: 95%;
   }
 }
