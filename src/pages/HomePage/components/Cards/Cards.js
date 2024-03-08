@@ -4,7 +4,7 @@ const Cards = () => {
       <div className="photo-and-actions">
         <div className="photo">
           <img
-            src="https://upload.wikimedia.org/wikipedia/commons/e/e2/Bella_Hadid_Cannes_2018.jpg"
+            src="https://www.krqe.com/wp-content/uploads/sites/12/2022/12/AdobeStock_81556974.jpeg?w=2560&h=1440&crop=1"
             alt=""
           />
           <div className="photo-text">
