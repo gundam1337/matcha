@@ -49,14 +49,22 @@ body {
 }
 
 /* =============== General Style ============== */
-.container {
-  width: 80%;
-  margin: 0 auto;
+.Nav_container {
+  width: 90%;
+  margin: 0 auto 0px auto;
 }
 
-img {
-  display: block;
-  width: 100%;
+.container {
+  display: flex;
+  justify-content: space-between;
+  align-items: start;
+  height: 650px; /* Adjust as needed */
+}
+
+.connect, .main {
+  /* Remove absolute positioning and use flex sizing */
+  width: calc(50% - 10px); /* Adjust the spacing between them */
+  height: 100%;
 }
 
 .btn {
@@ -97,7 +105,7 @@ nav {
   z-index: 10;
 }
 
-nav .container {
+nav .Nav_container {
   display: flex;
   align-items: center;
   justify-content: space-between;
@@ -435,12 +443,13 @@ button:hover {
 
 /* =============== Main ============== */
 main {
-  width: 600px;
-  height: 650px;
-  position: absolute; /* or 'fixed' depending on your layout */
-  right: 10%;
+  //width: 600px;
+  width: 43% ;
+  height: 88%;
+  position: absolute;
+  right: 3%;
   transform: translateY(-50%);
-  top: 55%; /* Centers it vertically */
+  top: 55%;
 }
 
 .photo-and-actions {
@@ -462,10 +471,10 @@ main {
   box-shadow: 0 2px 10px 0 rgba(136, 136, 136, 0.7);
   overflow: hidden;
   position: relative;
-  width: 95%; 
-  height: 95%; 
-  max-height: 650px; 
-  background-color: rgba(0, 0, 0, 0.92); 
+  width: 95%;
+  height: 95%;
+  max-height: 650px;
+  background-color: rgba(0, 0, 0, 0.92);
   position: relative;
 }
 
@@ -477,16 +486,20 @@ main {
   object-position: center; /* Center the image within the container */
 }
 
- .photo-text {
+.photo-text {
   position: absolute; /* Absolute position to overlay the photo */
   bottom: 0; /* Align to the bottom of the .photo container */
   left: 0; /* Align to the left of the .photo container */
   width: 100%; /* Take the full width of the .photo container */
   padding: 15px; /* Padding inside the text container */
-  background: linear-gradient(180deg, rgba(2, 0, 36, 0) 0%, rgba(0, 0, 0, 0.7) 100%); /* Gradient background */
+  background: linear-gradient(
+    180deg,
+    rgba(2, 0, 36, 0) 0%,
+    rgba(0, 0, 0, 0.7) 100%
+  ); /* Gradient background */
   border-radius: 0 0 10px 10px; /* Rounded corners at the bottom */
   color: white; /* Text color */
-} 
+}
 
 .photo-name-and-age {
   display: flex;
@@ -512,7 +525,6 @@ main {
   margin-top: 6px;
 }
 
-
 .actions {
   width: 100%; /* Full width of the container */
   display: flex;
@@ -521,16 +533,15 @@ main {
 }
 
 .action {
-  background-color: #ff0000;
+  background: linear-gradient(90deg, #dbdaff, #dbdaff);
   box-shadow: 0 2px 6px 0 rgba(112, 125, 134, 0.14);
   border-radius: 50%;
   display: flex;
   align-items: center;
   justify-content: center;
   margin: 0 10px;
-  /* Adjust the sizes below as needed */
-  height: 50px;
-  width: 50px;
+  height: 60px;
+  width: 60px;
 }
 
 .action:hover {
@@ -553,9 +564,130 @@ main {
 
 .like {
   color: #1be4a1;
-  height: 60px;
-  width: 60px;
-}  
+  height: 40px;
+  width: 40px;
+}
+
+/* =============== Connect ============== */
+
+.connect {
+  position: absolute;
+  left: 20px;
+  top: 11%;
+  max-width: 780px;
+  max-width: 780px; /* Example max-width */
+  height: 650px;
+  //background-color: #e09d9d;
+}
+
+.connect .messages {
+  background: var(--color-white);
+  border-radius: var(--card-border-radius);
+  padding: var(--card-padding);
+  height : 100%;
+}
+
+.connect .messages .heading {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 1rem;
+}
+
+.connect .messages i {
+  font-size: 1.4rem;
+}
+
+.connect .messages .search-bar {
+  display: flex;
+  margin-bottom: 1rem;
+}
+
+.connect .messages .category {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 1rem;
+}
+
+.connect .messages .category h6 {
+  width: 100%;
+  text-align: center;
+  border-bottom: 4px solid var(--color-light);
+  padding-bottom: 0.5rem;
+  font-size: 0.75rem;
+}
+
+.connect .messages .category .active {
+  border-color: var(--color-dark);
+}
+
+.connect .messages .message-requests {
+  color: var(--color-primary);
+}
+
+.connect .messages .message {
+  display: flex;
+  gap: 1rem;
+  margin-bottom: 1rem;
+  align-items: start;
+}
+
+.connect .message .profile-photo {
+  position: relative;
+  overflow: visible;
+}
+
+.connect .profile-photo img {
+  border-radius: 50%;
+}
+
+.connect .messages .message:last-child {
+  margin: 0;
+}
+
+.connect .messages .message p {
+  font-size:0.8rem;
+}
+
+.connect .messages .message .profile-photo .active {
+  width: 0.8rem;
+  height: 0.8rem;
+  border-radius: 50%;
+  border: 3px solid var(--color-white);
+  background: var(--color-success);
+  position: absolute;
+  bottom: 0;
+  right: 0;
+}
+
+/* =============== Friend Requests ============== */
+.right .friend-requests {
+  margin-top: 1rem;
+}
+
+.right .friend-requests h4 {
+  color: var(--color-grey);
+  margin: 1rem 0;
+}
+
+.right .request {
+  background: var(--color-white);
+  padding: var(--card-padding);
+  border-radius: var(--card-border-radius);
+  margin-bottom: 0.7rem;
+}
+
+.right .request .info {
+  display: flex;
+  gap: 1rem;
+  margin-bottom: 1rem;
+}
+
+.right .request .action {
+  display: flex;
+  gap: 1rem;
+}
+
 
 /* ================= 
 MEDIA QUERIES FOR SMALL LAPTOP AND BIG TABLETS 
@@ -613,9 +745,9 @@ MEDIA QUERIES FOR SMALL LAPTOP AND BIG TABLETS
   /* =============== Main ============== */
   main {
     width: 90%;
-    height: 85%;
+    height: 77%;
     right: 50%; /* Moves it to the middle */
-    top: 52%;
+    top: 48%;
     margin-righ: 0px;
     transform: translateX(50%) translateY(-50%); /* Adjusts for the width of the element */
   }
@@ -629,5 +761,11 @@ MEDIA QUERIES FOR SMALL LAPTOP AND BIG TABLETS
     position: relative;
     height: 100%;
     width: 95%;
+  }
+
+  /* =============== Connect ============== */
+
+  .connect {
+    display: none;
   }
 }

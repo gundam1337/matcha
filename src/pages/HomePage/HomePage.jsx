@@ -1,7 +1,8 @@
 import { useEffect, useState } from "react";
-import NavigationBar from "./components/NavBar/Navigation";
 import AnimatedLoader from "../../components/AnimatedLoader/AnimatedLoader";
 import Cards from "./components/Cards/Cards";
+import NavigationBar from "./components/NavBar/Navigation";
+import Connect from "./components/Connect/Connect";
 
 function HomePage() {
   const [cssLoaded, setCssLoaded] = useState(false);
@@ -9,10 +10,10 @@ function HomePage() {
   useEffect(() => {
     // Create a link element for the CSS file
     const cssLink = document.createElement("link");
-    cssLink.href = "/Homepage.css";  
+    cssLink.href = "/Homepage.css";
     cssLink.rel = "stylesheet";
     cssLink.type = "text/css";
-    cssLink.id = "auth-css";  
+    cssLink.id = "auth-css";
 
     cssLink.onload = () => setCssLoaded(true);
 
@@ -32,7 +33,10 @@ function HomePage() {
     <>
       {!cssLoaded && <AnimatedLoader />}
       <NavigationBar></NavigationBar>
-      <Cards></Cards>
+      <div className="container">
+        <Cards></Cards>
+        <Connect></Connect>
+      </div>
     </>
   );
 }

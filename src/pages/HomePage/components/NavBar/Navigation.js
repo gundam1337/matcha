@@ -4,7 +4,7 @@ import Notifcation from "./Notification";
 const Navbar = () => {
   return (
     <nav>
-      <div className="container">
+      <div className="Nav_container">
         <div className="logo">
           <div>Matcha</div>
         </div>

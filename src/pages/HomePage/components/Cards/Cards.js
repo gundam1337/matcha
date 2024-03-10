@@ -1,12 +1,18 @@
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faTimes, faStar, faHeart } from "@fortawesome/free-solid-svg-icons";
+
+//TODO : add a  javscript code that can change the images 
+//TODO : make each section as separted compont
 const Cards = () => {
   return (
-    <main >
+    <main>
       <div className="photo-and-actions">
         <div className="photo">
           <img
-            src="https://www.krqe.com/wp-content/uploads/sites/12/2022/12/AdobeStock_81556974.jpeg?w=2560&h=1440&crop=1"
+            src="https://fr.web.img6.acsta.net/c_310_420/pictures/15/11/10/14/58/490093.jpg"
             alt=""
           />
+
           <div className="photo-text">
             <div className="photo-name-and-age">
               <h2>Lorem</h2>
@@ -23,13 +29,13 @@ const Cards = () => {
 
         <div className="actions">
           <div className="action">
-            <i className="fas fa-times"></i>
+            <FontAwesomeIcon className="dislike " icon={faTimes} />
           </div>
           <div className="action">
-            <i className="fas fa-star"></i>
+            <FontAwesomeIcon className="superlike" icon={faStar} />
           </div>
           <div className="action">
-            <i className="fas fa-heart"></i>
+            <FontAwesomeIcon className="like" icon={faHeart} />
           </div>
         </div>
       </div>

@@ -121,7 +121,7 @@ const validate = async (req, res, next) => {
 };
 
 //NOTE : UPLOAD the files into fire base
-
+//NOTE : STUPOD !!!
 //return the Public URLs of files insise folder using the userID(the name of the fodler)
 const getUserURLsFiles = async (userId) => {
   try {
