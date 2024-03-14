@@ -7,6 +7,8 @@ import BottomNavBar from "./components/BottomNavBar/BottomNavBar";
 
 function HomePage() {
   const [cssLoaded, setCssLoaded] = useState(false);
+  const [currentView, setCurrentView] = useState("Home");
+  const [isMobile, setIsMobile] = useState(window.innerWidth < 768);
 
   useEffect(() => {
     // Create a link element for the CSS file
@@ -30,16 +32,24 @@ function HomePage() {
     };
   }, []);
 
+  useEffect(() => {
+    const handleResize = () => {
+      setIsMobile(window.innerWidth < 768);
+    };
+
+    window.addEventListener("resize", handleResize);
+    return () => window.removeEventListener("resize", handleResize);
+  }, []);
+
   return (
     <div>
       {!cssLoaded && <AnimatedLoader />}
       <NavigationBar></NavigationBar>
       <div className="container">
-        <Cards></Cards>
-        <Connect></Connect>
+       {currentView === 'Home' && <Cards />}
+        {(!isMobile || currentView === "Messages") && <Connect />}
       </div>
-      <BottomNavBar></BottomNavBar>
-      
+      <BottomNavBar onNavItemClicked={setCurrentView} />
     </div>
   );
 }

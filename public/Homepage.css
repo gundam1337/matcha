@@ -694,6 +694,7 @@ main {
   display:none;
 }
 
+
 /* ================= 
 MEDIA QUERIES FOR SMALL LAPTOP AND BIG TABLETS 
 ==================== */
@@ -773,8 +774,14 @@ MEDIA QUERIES FOR SMALL LAPTOP AND BIG TABLETS
   /* =============== Connect ============== */
 
   .connect {
-    display: none;
-  }
+    width: 90%;
+    height: 77%;
+    right: 50%; /* Moves it to the middle */
+    top: 48%;
+    margin-righ: 0px;
+    transform: translateX(1%) translateY(-50%); /* Adjusts for the width of the element */
+  } 
+
   .bottom-nav-bar {
     display: flex;
     position: fixed;
