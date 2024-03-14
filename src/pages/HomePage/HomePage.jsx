@@ -3,6 +3,7 @@ import AnimatedLoader from "../../components/AnimatedLoader/AnimatedLoader";
 import Cards from "./components/Cards/Cards";
 import NavigationBar from "./components/NavBar/Navigation";
 import Connect from "./components/Connect/Connect";
+import BottomNavBar from "./components/BottomNavBar/BottomNavBar";
 
 function HomePage() {
   const [cssLoaded, setCssLoaded] = useState(false);
@@ -30,14 +31,16 @@ function HomePage() {
   }, []);
 
   return (
-    <>
+    <div>
       {!cssLoaded && <AnimatedLoader />}
       <NavigationBar></NavigationBar>
       <div className="container">
         <Cards></Cards>
         <Connect></Connect>
       </div>
-    </>
+      <BottomNavBar></BottomNavBar>
+      
+    </div>
   );
 }
 

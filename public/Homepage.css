@@ -44,13 +44,14 @@
 body {
   font-family: "Poppins", sans-serif;
   color: var(--color-dark);
-  background: var(--color-light);
-  overflow-x: hidden;
+  background-color:#F7F2F2;
+  //overflow-x: hidden;
+  min-height: 100vh;
 }
 
 /* =============== General Style ============== */
 .Nav_container {
-  width: 90%;
+  width: 98%;
   margin: 0 auto 0px auto;
 }
 
@@ -59,9 +60,11 @@ body {
   justify-content: space-between;
   align-items: start;
   height: 650px; /* Adjust as needed */
+  padding-bottom: 10px;
 }
 
-.connect, .main {
+.connect,
+.main {
   /* Remove absolute positioning and use flex sizing */
   width: calc(50% - 10px); /* Adjust the spacing between them */
   height: 100%;
@@ -82,7 +85,7 @@ body {
 }
 
 .btn-primary {
-  background: var(--color-primary);
+  background: #6c6ba1;
   color: var(--color-white);
 }
 
@@ -444,7 +447,7 @@ button:hover {
 /* =============== Main ============== */
 main {
   //width: 600px;
-  width: 43% ;
+  width: 43%;
   height: 88%;
   position: absolute;
   right: 3%;
@@ -533,7 +536,7 @@ main {
 }
 
 .action {
-  background: linear-gradient(90deg, #dbdaff, #dbdaff);
+  background: #fff;
   box-shadow: 0 2px 6px 0 rgba(112, 125, 134, 0.14);
   border-radius: 50%;
   display: flex;
@@ -551,8 +554,8 @@ main {
 
 .dislike {
   color: #fd5068;
-  height: 60px;
-  width: 60px;
+  height: 50px;
+  width: 50px;
 }
 
 .superlike {
@@ -577,14 +580,13 @@ main {
   max-width: 780px;
   max-width: 780px; /* Example max-width */
   height: 650px;
-  //background-color: #e09d9d;
 }
 
 .connect .messages {
   background: var(--color-white);
   border-radius: var(--card-border-radius);
   padding: var(--card-padding);
-  height : 100%;
+  height: 100%;
 }
 
 .connect .messages .heading {
@@ -646,7 +648,7 @@ main {
 }
 
 .connect .messages .message p {
-  font-size:0.8rem;
+  font-size: 0.8rem;
 }
 
 .connect .messages .message .profile-photo .active {
@@ -688,6 +690,9 @@ main {
   gap: 1rem;
 }
 
+.bottom-nav-bar {
+  display:none;
+}
 
 /* ================= 
 MEDIA QUERIES FOR SMALL LAPTOP AND BIG TABLETS 
@@ -695,7 +700,7 @@ MEDIA QUERIES FOR SMALL LAPTOP AND BIG TABLETS
 @media screen and (max-width: 600px) {
   /* =============== Navbar ============== */
   .logo {
-    font-size: 20px;
+    font-size: 25px;
     padding-left: 35px;
     text-indent: -9999px; /* pushes the text out of view */
   }
@@ -705,9 +710,11 @@ MEDIA QUERIES FOR SMALL LAPTOP AND BIG TABLETS
     right: 3%;
   }
 }
+
 @media screen and (max-width: 992px) {
   .container {
     width: 96%;
+    overflow: hidden;
   }
 
   .dropdown {
@@ -768,4 +775,41 @@ MEDIA QUERIES FOR SMALL LAPTOP AND BIG TABLETS
   .connect {
     display: none;
   }
+  .bottom-nav-bar {
+    display: flex;
+    position: fixed;
+    bottom: 0;
+    width: 100%;
+    height: 70px; /* fixed height instead of percentage */
+    
+    background-color: #4D4C7D; /* Deep Blue */
+    color: #FFFFFF; /* White for text/icons */
+    
+    z-index: 10; /* Make sure it's above other content */
+    justify-content: space-around;
+    align-items: center; /* Vertically center the items */
+    padding: 0;
+    margin: 0;
+  }
+  
+  .bottom-nav-bar-item {
+    display: flex;
+    align-items: center;
+    justify-content: center; /* Center the icon and text horizontally */
+    flex-grow: 1; /* Equal width for each nav item */
+    color: white;
+    padding: 12px;
+    text-decoration: none; /* No underlines on links */
+    transition: background-color 0.2s; /* Smooth transition for background color */
+  }
+  
+  .bottom-nav-bar-item:hover, .bottom-nav-bar-item:focus {
+    background-color: rgba(255, 255, 255, 0.2);
+  }
+  
+  /* No additional span styles are necessary unless you want to animate the text appearance */
+  .bottom-nav-bar-item i {
+    pointer-events: none; /* Ignore pointer events on the icon itself */
+  }
+  
 }
