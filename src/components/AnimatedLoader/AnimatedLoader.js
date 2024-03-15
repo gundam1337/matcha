@@ -1,4 +1,3 @@
-import "../../styles/AnimatedLoader.css"
  
 function AnimatedLoader() {
   return (

@@ -290,7 +290,7 @@ const Profile = () => {
         >
           {({ setFieldValue, handleSubmit, values, errors, touched }) => (
             <form onSubmit={handleSubmit}>
-              <div style={{ textAlign: "center" }}>
+              <div >
                 <div className="settings-box">
                   <Field
                     name="image"
