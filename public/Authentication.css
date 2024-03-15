@@ -95,18 +95,16 @@ formik {
   width: 100%;
 }
 
-
-
 .main-informations input {
   color: white;
   font-weight: bold;
-  width: 80%;
+  width: 75%;
   border-radius: 20px;
   padding: 10px 20px; 
   margin: 10px 0 0;
   border: 2px solid white;
   background: transparent;
-  transition: 0.3s;
+  transition: none;
   outline: none;
   position: relative; 
 }
@@ -114,8 +112,7 @@ formik {
 
 hide-show {
   display: inline-block;
-  width: 50px; /* Adjust as necessary */
-  /* Other styling */
+  width: 50px; 
 }
 
 ::placeholder {
@@ -147,7 +144,7 @@ input:focus {
 }
 
 .error {
-  font-size: 12px;
+  font-size: 16px;
   color: var(--red-600);
   width: 400px;
   margin-top: 0.25rem;
@@ -459,4 +456,6 @@ footer p {
     right: 0;
     text-align: center;
   }
+
+ 
 }

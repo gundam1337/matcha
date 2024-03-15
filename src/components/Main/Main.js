@@ -10,18 +10,20 @@ import ResetPassword from "../ResetPassword/ResetPassword";
 
 Modal.setAppElement("#root");
 
+const isMobile = window.innerWidth <= 950;
 const customStyles = {
   content: {
     top: "50%",
-    left: "50%",
-    right: "auto",
+    left: isMobile ? "0%" : "50%", // Full width for mobile
+    right: isMobile ? "0%" : "auto",
     bottom: "auto",
-    marginRight: "-50%",
-    transform: "translate(-50%, -50%)",
+    marginRight: isMobile ? "0%" : "-50%",
+    transform: isMobile ? "translate(6%, -50%)" : "translate(-50%, -50%)",
     padding: "0px",
     border: "10px",
     margin: "0px",
     borderRadius: "25px",
+    width: isMobile ? "90%" : "auto", // Full width for mobile
   },
   overlay: {
     backgroundColor: "rgba(0, 0, 0, 0.6)",
