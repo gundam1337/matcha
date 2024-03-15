@@ -10,7 +10,7 @@
   cursor: pointer;
 }
 
-.formik-container {
+/* .formik-container {
   background: linear-gradient(90deg, #fe3175, #ff6f63);
   border-radius: 10px;
   box-shadow: 3px 4px 50px;
@@ -29,7 +29,30 @@
   align-items: center;
   text-align: center;
   overflow-y: scroll;
+} */
+
+.formik-container {
+  background: linear-gradient(90deg, #fe3175, #ff6f63);
+  border-radius: 10px;
+  box-shadow: 3px 4px 50px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 5px;
+  max-width: 400px; /* optional, if you want to limit the maximum width */
+  max-height: 500px; /* optional, if you want to limit the maximum height */
 }
+
+.formik-content {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  overflow-y: auto; /* changed from 'scroll' to 'auto' to hide scrollbar when not needed */
+  width: 100%; /* ensures it fills the parent container horizontally */
+}
+
 
 .formik-content h2 {
   margin : 0px;
@@ -72,19 +95,29 @@ formik {
   width: 100%;
 }
 
+
+
 .main-informations input {
   color: white;
   font-weight: bold;
   width: 80%;
   border-radius: 20px;
-  padding: 10px 20px; /* Adjusted padding */
+  padding: 10px 20px; 
   margin: 10px 0 0;
   border: 2px solid white;
   background: transparent;
   transition: 0.3s;
   outline: none;
-  position: relative; /* Added relative position */
+  position: relative; 
 }
+
+
+hide-show {
+  display: inline-block;
+  width: 50px; /* Adjust as necessary */
+  /* Other styling */
+}
+
 ::placeholder {
   color: white;
   text-transform: uppercase;
@@ -127,17 +160,6 @@ input:focus {
   }
   bottom: -20px; /* or adjust as needed */
   left: 0;
-}
-
-.toggle-password {
-  position: absolute; 
-  top: 50%;
-  right: 10px; /* 10 pixels from the right edge of the container */
-  transform: translateY(-50%); /* vertically center the button */
-  background-color: #eee; 
-  padding: 10px;
-  border-radius: 5px;
-  cursor: pointer;
 }
 
 

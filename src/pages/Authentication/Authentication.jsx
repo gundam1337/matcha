@@ -1,24 +1,9 @@
-// import Main from "../../components/Main/Main";
-// import Navbar from "../../components/Navbar/Navbar";
-// import Footer from "../../components/Footer/Footer";
-// import "../../styles/Authentication.css"
-
-// const Authentication = () => {
-//   return (
-//     <>
-//       <Navbar></Navbar>
-//       <Main></Main>
-//       <Footer></Footer>
-//     </>
-//   );
-// };
-
-// export default Authentication;
 
 import React, { useEffect,useState } from 'react';
 import Main from "../../components/Main/Main";
 import Navbar from "../../components/Navbar/Navbar";
 import Footer from "../../components/Footer/Footer";
+//FIXME : this Animated loader is not looking great at the registration stage
 import AnimatedLoader from "../../components/AnimatedLoader/AnimatedLoader"
 
 const Authentication = () => {

@@ -29,10 +29,9 @@ function App() {
         <Route
           path="/home"
           element={
-            <Homepage />
-            // <ProtectedRoute>
-            //   <Homepage />
-            // </ProtectedRoute>
+            <ProtectedRoute>
+              <Homepage />
+            </ProtectedRoute>
           }
         />
         {/* the not found page  */}

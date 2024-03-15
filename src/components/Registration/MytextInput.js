@@ -12,19 +12,18 @@ const MyTextInput = ({ ...props }) => {
   };
 
   return (
-    <div style={{ }}> 
+    <div > 
       <input
-        className="text-input"
         {...field}
         {...props}
         type={props.type === "password" && showPassword ? "text" : props.type}
       />
       {props.type === "password" && (
-        <span 
+        <div  className="hide-show" 
           onClick={handleTogglePassword}
         >
           {showPassword ? "Hide" : "Show"}
-        </span>
+        </div>
       )}
       {meta.touched && meta.error  ? (
         <div className="error">{meta.error}</div>
