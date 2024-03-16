@@ -87,13 +87,9 @@ body {
 .profile-img-preview {
   max-width: 100%; /* Ensures the image width doesn't exceed the container width */
   height: auto; /* Keeps the aspect ratio of the image */
-  //display: block; /* Optional, for better control of layout */
   margin: 0 ;
-
   display: block; /* Ensure it's a block element */
 }
-
-
 
 .image-container button {
   position: absolute; /* Position the button absolutely within the container */
@@ -129,6 +125,49 @@ body {
   margin-bottom: 5px; /* Space between error messages */
 }
 
+/* =================== Info ======================== */
+
+.form-row {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center; /* This will center the children elements */
+  margin-right: -15px; /* Adjusting this might be necessary if you have negative margins */
+  margin-left: -15px; /* Adjusting this might be necessary if you have negative margins */
+}
+
+input[type="text"],
+input[type="email"],
+input[type="tel"] {
+  color: white;
+  font-weight: bold;
+  width: 70%;
+  border-radius: 20px;
+  padding: 10px 20px;
+  margin: 10px 0 0;
+  border: 2px solid white;
+  background: transparent;
+  transition: 0.3s;
+  outline: none;
+}
+input[type="date"] {
+  color: white;
+  font-weight: bold;
+  width: 80%;
+  border-radius: 20px; /* Matched with text input */
+  padding: 10px 20px; /* Matched with text input */
+  margin: 10px 0 0;
+  border: 2px solid white; /* Matched with text input */
+  background: transparent;
+  transition: 0.3s;
+  outline: none;
+  font-family: "Comic Sans MS", cursive, sans-serif; /* Matched with the body font-family */
+}
+
+::placeholder {
+  color: white;
+  text-transform: uppercase;
+  font-weight: bold;
+}
 
 
 @media screen and (max-width: 992px) {
@@ -453,48 +492,6 @@ p {
 }
 
 /* //NOTE for the box */
-
-.form-row {
-  display: flex;
-  flex-wrap: wrap;
-  justify-content: center; /* This will center the children elements */
-  margin-right: -15px; /* Adjusting this might be necessary if you have negative margins */
-  margin-left: -15px; /* Adjusting this might be necessary if you have negative margins */
-}
-
-input[type="text"],
-input[type="email"],
-input[type="tel"] {
-  color: white;
-  font-weight: bold;
-  width: 70%;
-  border-radius: 20px;
-  padding: 10px 20px;
-  margin: 10px 0 0;
-  border: 2px solid white;
-  background: transparent;
-  transition: 0.3s;
-  outline: none;
-}
-input[type="date"] {
-  color: white;
-  font-weight: bold;
-  width: 80%;
-  border-radius: 20px; /* Matched with text input */
-  padding: 10px 20px; /* Matched with text input */
-  margin: 10px 0 0;
-  border: 2px solid white; /* Matched with text input */
-  background: transparent;
-  transition: 0.3s;
-  outline: none;
-  font-family: "Comic Sans MS", cursive, sans-serif; /* Matched with the body font-family */
-}
-
-::placeholder {
-  color: white;
-  text-transform: uppercase;
-  font-weight: bold;
-}
 
 .btn-login {
   background: white;

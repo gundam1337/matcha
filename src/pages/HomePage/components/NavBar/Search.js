@@ -1,5 +1,6 @@
-import { useState, useRef } from "react";
+import { useState, useRef,useEffect } from "react";
 import useOutsideAlerter from "../../Hooks/useOutsideAlerter";
+import axios from "axios";
 
 const SuggestionsItem = ({ suggestion }) => {
   return (
@@ -19,9 +20,12 @@ const DropdownSuggestions = () => (
   </div>
 );
 
+
+
 const Search = () => {
   const [isDropdownVisible, setDropdownVisible] = useState(false);
   const [suggestions, setSuggestions] = useState([]);
+  const [searchQuery, setSearchQuery] = useState('');
   const wrapperRef = useRef(null); // Ref for the wrapper element
 
   const toggleDropdown = () => {
@@ -32,11 +36,37 @@ const Search = () => {
 
   useOutsideAlerter(wrapperRef, handleClose);
 
+  // Function to handle input change and update search query
+  const handleInputChange = (e) => {
+    setSearchQuery(e.target.value);
+  };
+
+  // useEffect to make a request when the search query changes
+  useEffect(() => {
+    const fetchSuggestions = async () => {
+      if (searchQuery.length > 0) {
+        try {
+          const response = await axios.get(`/search?query=${searchQuery}`);
+          console.log("data response ",response)
+          setSuggestions(response.data);
+        } catch (error) {
+          console.error('Error:', error);
+        }
+      }
+    };
+
+    fetchSuggestions();
+  }, [searchQuery]);
+
   return (
     <div className="search-bar" ref={wrapperRef} onClick={toggleDropdown}>
       <i className="uil uil-search"></i>
-      <input type="search" placeholder="Search for a Matcha" ></input>
-      {isDropdownVisible && <DropdownSuggestions></DropdownSuggestions>}
+      <input
+        type="search"
+        placeholder="Search ..."
+        onChange={handleInputChange}
+      ></input>
+      {isDropdownVisible && <DropdownSuggestions suggestions={suggestions} />}
     </div>
   );
 };

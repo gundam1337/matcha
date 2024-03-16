@@ -5,10 +5,10 @@ const bodyParser = require("body-parser");
 const helmet = require("helmet");
 const cookieParser = require("cookie-parser");
 
-//TODO : add a midllewar that check the access token and refrech token befor going to protectred route
 const app = express();
 const authRoutes = require("./routes/auth.routes");
 const profileRoute = require("./routes/profile.routes");
+const homeRoute = require("./routes/home.routes")
 
 app.use(cookieParser());
 app.use(helmet());
@@ -52,6 +52,8 @@ app.use(express.static(path.join(__dirname, "..", "build")));
 app.use("/", authRoutes);
 
 app.use("/", profileRoute);
+
+app.use("/",homeRoute)
 
 app.get("*", (req, res) => {
   res.sendFile(path.join(__dirname, "..", "build", "index.html"));

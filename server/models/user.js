@@ -5,6 +5,7 @@ var validateEmail = function (email) {
   var re = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/;
   return re.test(email);
 };
+
 const userSchema = new Schema({
   userID: {
     type: String,
@@ -98,6 +99,14 @@ const userSchema = new Schema({
     },
   },
 });
+
+userSchema.index({ "profile.firstName": 1 });
+
+// Create a single field index on profile.lastName
+userSchema.index({ "profile.lastName": 1 });
+
+// Optionally, create a compound index if you frequently search using both first and last names together
+userSchema.index({ "profile.firstName": 1, "profile.lastName": 1 });
 
 const User = mongoose.model("User", userSchema);
 

@@ -1,7 +1,6 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect } from "react";
 
 const Info = ({ setFieldValue, errors, touched, initialValues }) => {
-
   // const toYYYYMMDD = (isoString) => {
   //   if (isoString) {
   //     const date = new Date(isoString);
@@ -14,9 +13,9 @@ const Info = ({ setFieldValue, errors, touched, initialValues }) => {
   // };
 
   const [info, setInfo] = useState({
-    firstName: '',
-    lastName: '',
-    birthday: ''
+    firstName: "",
+    lastName: "",
+    birthday: "",
   });
 
   // useEffect(() => {
@@ -77,24 +76,24 @@ const Info = ({ setFieldValue, errors, touched, initialValues }) => {
             </>
           )}
         </div>
-      </div>
-      <div>
-        <label htmlFor="info.birthday">Birthday</label>
-        <input
-          type="date"
-          id="info.birthday"
-          name="info.birthday"
-          onChange={handleInputChange}
-          value={info.birthday}
-        />
-        {errors.info && touched.info && (
-          <>
-            <p className="infoError">
-              {errors.info.birthday && "⚠️ "}
-              {errors.info.birthday}
-            </p>
-          </>
-        )}
+        <div>
+          <label htmlFor="info.birthday">Birthday</label>
+          <input
+            type="date"
+            id="info.birthday"
+            name="info.birthday"
+            onChange={handleInputChange}
+            value={info.birthday}
+          />
+          {errors.info && touched.info && (
+            <>
+              <p className="infoError">
+                {errors.info.birthday && "⚠️ "}
+                {errors.info.birthday}
+              </p>
+            </>
+          )}
+        </div>
       </div>
     </>
   );

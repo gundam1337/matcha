@@ -5,6 +5,8 @@ import NavigationBar from "./components/NavBar/Navigation";
 import Connect from "./components/Connect/Connect";
 import BottomNavBar from "./components/BottomNavBar/BottomNavBar";
 
+
+//TODO the CSS for the loader is not working 
 function HomePage() {
   const [cssLoaded, setCssLoaded] = useState(false);
   const [currentView, setCurrentView] = useState("Home");
@@ -42,15 +44,21 @@ function HomePage() {
   }, []);
 
   return (
-    <div>
-      {!cssLoaded && <AnimatedLoader />}
-      <NavigationBar></NavigationBar>
-      <div className="container">
-       {currentView === 'Home' && <Cards />}
-        {(!isMobile || currentView === "Messages") && <Connect />}
-      </div>
-      <BottomNavBar onNavItemClicked={setCurrentView} />
-    </div>
+    // <div>
+    //   {cssLoaded ? (
+    //     <>
+    //       <NavigationBar />
+    //       <div className="container">
+    //         {currentView === 'Home' && <Cards />}
+    //         {(!isMobile || currentView === "Messages") && <Connect />}
+    //       </div>
+    //       <BottomNavBar onNavItemClicked={setCurrentView} />
+    //     </>
+    //   ) : (
+    //     <AnimatedLoader />
+    //   )}
+    // </div>
+    <AnimatedLoader />
   );
 }
 
