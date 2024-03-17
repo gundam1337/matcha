@@ -87,6 +87,18 @@ const userSchema = new Schema({
       ref: "User",
     },
   ],
+  likedBy: [
+    {
+      type: Schema.Types.ObjectId,
+      ref: "User",
+    }
+  ],
+  likes: [
+    {
+      type: Schema.Types.ObjectId,
+      ref: "User",
+    }
+  ],
   refreshToken: {
     type: String,
   },

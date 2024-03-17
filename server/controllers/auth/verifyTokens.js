@@ -1,12 +1,18 @@
 const jwt = require("jsonwebtoken");
 const User = require("../../models/user");
-const accessTokenSecret = "yourAccessTokenSecret"; // Replace with your actual secret
-const refreshTokenSecret = "yourRefreshTokenSecret"; // Replace with your actual secret
+require('dotenv').config({ path: './config.env' });
+
+const accessTokenSecret = process.env.ACCESS_TOKEN_SECRET;
+const refreshTokenSecret = process.env.REFRESH_TOKEN_SECRET;
+
 
 function verifyTokens(req, res, next) {
-  const accessToken = req.headers["x-access-token"];
+  // console.log("req headers : ",req.headers)
+  const accessToken = req.headers["authorization"];
   const refreshToken = req.cookies.refreshToken;
 
+  // console.log("accessToken = ",accessToken)
+  // console.log("accessToken =",refreshToken)
   //if the token is not there send error messages
   if (!accessToken) {
     return res.status(403).send({ message: "Access Token is required" });

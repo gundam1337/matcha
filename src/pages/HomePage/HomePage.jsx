@@ -44,21 +44,21 @@ function HomePage() {
   }, []);
 
   return (
-    // <div>
-    //   {cssLoaded ? (
-    //     <>
-    //       <NavigationBar />
-    //       <div className="container">
-    //         {currentView === 'Home' && <Cards />}
-    //         {(!isMobile || currentView === "Messages") && <Connect />}
-    //       </div>
-    //       <BottomNavBar onNavItemClicked={setCurrentView} />
-    //     </>
-    //   ) : (
-    //     <AnimatedLoader />
-    //   )}
-    // </div>
-    <AnimatedLoader />
+    <div>
+      {cssLoaded ? (
+        <>
+          <NavigationBar />
+          <div className="container">
+            {currentView === 'Home' && <Cards />}
+            {(!isMobile || currentView === "Messages") && <Connect />}
+          </div>
+          <BottomNavBar onNavItemClicked={setCurrentView} />
+        </>
+      ) : (
+        <AnimatedLoader />
+      )}
+    </div>
+   
   );
 }
 

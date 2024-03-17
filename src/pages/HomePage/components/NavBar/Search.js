@@ -1,6 +1,6 @@
 import { useState, useRef,useEffect } from "react";
 import useOutsideAlerter from "../../Hooks/useOutsideAlerter";
-import axios from "axios";
+import axiosInstance from "../../../../API/axiosConfig";
 
 const SuggestionsItem = ({ suggestion }) => {
   return (
@@ -11,20 +11,20 @@ const SuggestionsItem = ({ suggestion }) => {
 };
 
 
-const DropdownSuggestions = () => (
-  <div className="dropdownSuggestions">
-    <SuggestionsItem suggestion="Omar" />
-    <SuggestionsItem suggestion="Omari" />
-    <SuggestionsItem suggestion="Omaroui" />
-    <SuggestionsItem suggestion="Omarali" />
-  </div>
-);
-
+const DropdownSuggestions = ({ suggestions }) => {
+  return (
+    <div className="dropdownSuggestions">
+      {Object.values(suggestions).flat().map((suggestion, index) => (
+        <SuggestionsItem key={index} suggestion={suggestion} />
+      ))}
+    </div>
+  );
+};
 
 
 const Search = () => {
   const [isDropdownVisible, setDropdownVisible] = useState(false);
-  const [suggestions, setSuggestions] = useState([]);
+  const [suggestions, setSuggestions] = useState({});
   const [searchQuery, setSearchQuery] = useState('');
   const wrapperRef = useRef(null); // Ref for the wrapper element
 
@@ -41,33 +41,44 @@ const Search = () => {
     setSearchQuery(e.target.value);
   };
 
+
+
+
+
   // useEffect to make a request when the search query changes
   useEffect(() => {
     const fetchSuggestions = async () => {
       if (searchQuery.length > 0) {
         try {
-          const response = await axios.get(`/search?query=${searchQuery}`);
-          console.log("data response ",response)
-          setSuggestions(response.data);
+          const response = await axiosInstance.get(`/search?searchTerm=${searchQuery}`);
+          //I got the response from the server : 
+          //
+          // console.log("data response ",response)
+          const results = {
+            likes: ["user123", "coolUser", "traveler98"],
+            likedBy: ["chefLife", "mountainClimber", "techWizard"],
+            matches: ["artist42", "gamerPro", "natureLover"]
+          }
+          setSuggestions(results);
         } catch (error) {
+          console.log("there is an error ")
           console.error('Error:', error);
         }
       }
     };
-
     fetchSuggestions();
   }, [searchQuery]);
 
   return (
     <div className="search-bar" ref={wrapperRef} onClick={toggleDropdown}>
-      <i className="uil uil-search"></i>
-      <input
-        type="search"
-        placeholder="Search ..."
-        onChange={handleInputChange}
-      ></input>
-      {isDropdownVisible && <DropdownSuggestions suggestions={suggestions} />}
-    </div>
+    <i className="uil uil-search"></i>
+    <input
+      type="search"
+      placeholder="Search ..."
+      onChange={handleInputChange}
+    ></input>
+    {isDropdownVisible && <DropdownSuggestions suggestions={suggestions} />}
+  </div>
   );
 };
 

@@ -3,7 +3,7 @@ import { Formik, Field } from "formik";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
 
-import "./profile.css";
+
 
 import Images from "./componet/Images";
 import Info from "./componet/Info";

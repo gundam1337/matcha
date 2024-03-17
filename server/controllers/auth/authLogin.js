@@ -1,12 +1,12 @@
-require("dotenv").config({ path: "../config.env" }); //FIXME I am not using the .env variables
 const jwt = require("jsonwebtoken");
 const User = require("../../models/user");
 const bcrypt = require("bcrypt");
 const { body, validationResult } = require("express-validator");
 const { sendEmail } = require("../../utils/sendEmail");
+require('dotenv').config({ path: './config.env' });
 
-const accessTokenSecret = "yourAccessTokenSecret"; // Replace with your secret key for access token
-const refreshTokenSecret = "yourRefreshTokenSecret";
+const accessTokenSecret = process.env.ACCESS_TOKEN_SECRET;
+const refreshTokenSecret = process.env.REFRESH_TOKEN_SECRET;
 
 //FIXME : prvent login if the user is not have a verified email accout
 //NOTE: Validation inputs Middleware:

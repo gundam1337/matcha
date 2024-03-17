@@ -21,17 +21,17 @@ function App() {
         <Route
           path="/profile"
           element={
-            <Profile />
-          
+            <ProtectedRoute>
+              <Profile />
+            </ProtectedRoute>
           }
         />
         <Route
           path="/home"
           element={
-            <Homepage />
-            // <ProtectedRoute>
-            //   <Homepage />
-            // </ProtectedRoute>
+            <ProtectedRoute>
+              <Homepage />
+            </ProtectedRoute>
           }
         />
         {/* the not found page  */}
