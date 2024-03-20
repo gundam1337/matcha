@@ -1,7 +1,6 @@
 const User = require("../../models/user");
 
 const getSearchResults = async (req, res, next) => {
-  // console.log("Search Query:", req.query.searchTerm);
   try {
     const searchTerm = req.query.searchTerm;
 

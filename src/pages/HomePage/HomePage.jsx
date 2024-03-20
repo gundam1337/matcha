@@ -4,9 +4,14 @@ import Cards from "./components/Cards/Cards";
 import NavigationBar from "./components/NavBar/Navigation";
 import Connect from "./components/Connect/Connect";
 import BottomNavBar from "./components/BottomNavBar/BottomNavBar";
+import {
+  fetchUserProfile,
+  fetchUserProfileSuccess,
+  fetchUserProfileFailure,
+} from "../../Rudex/actions/userProfileActions.js";
+import axiosInstance from "../../API/axiosConfig.js";
+import { useDispatch} from 'react-redux';
 
-
-//TODO the CSS for the loader is not working 
 function HomePage() {
   const [cssLoaded, setCssLoaded] = useState(false);
   const [currentView, setCurrentView] = useState("Home");
@@ -43,13 +48,31 @@ function HomePage() {
     return () => window.removeEventListener("resize", handleResize);
   }, []);
 
+  const dispatch = useDispatch();
+
+  const fetchUserData = () => {
+    return async (dispatch) => {
+      dispatch(fetchUserProfile());
+      try {
+        const response = await axiosInstance.get("/getUserData");
+        dispatch(fetchUserProfileSuccess(response.data));
+      } catch (error) {
+        dispatch(fetchUserProfileFailure(error.message));
+      }
+    };
+  };
+
+ useEffect(() => {
+    dispatch(fetchUserData());
+  }, []);
+
   return (
     <div>
       {cssLoaded ? (
         <>
           <NavigationBar />
           <div className="container">
-            {currentView === 'Home' && <Cards />}
+            {currentView === "Home" && <Cards />}
             {(!isMobile || currentView === "Messages") && <Connect />}
           </div>
           <BottomNavBar onNavItemClicked={setCurrentView} />
@@ -58,8 +81,11 @@ function HomePage() {
         <AnimatedLoader />
       )}
     </div>
-   
   );
 }
 
 export default HomePage;
+
+
+
+//FIXME: the CSS for the loader is not working

@@ -15,10 +15,9 @@ axiosInstance.interceptors.request.use(
     // Retrieve the access token from local storage
 
     const accessToken = localStorage.getItem('accessToken');
-    console.log('accessToken = ',accessToken)
     if (accessToken) {
       // Set the Authorization header
-      config.headers['Authorization'] = `${accessToken}`;
+      config.headers['x-access-token'] = `${accessToken}`;
     }
     // Add more headers or configs if needed
     return config;

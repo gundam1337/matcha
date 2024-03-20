@@ -8,7 +8,7 @@ const refreshTokenSecret = process.env.REFRESH_TOKEN_SECRET;
 
 function verifyTokens(req, res, next) {
   // console.log("req headers : ",req.headers)
-  const accessToken = req.headers["authorization"];
+  const accessToken = req.headers["x-access-token"];
   const refreshToken = req.cookies.refreshToken;
 
   // console.log("accessToken = ",accessToken)

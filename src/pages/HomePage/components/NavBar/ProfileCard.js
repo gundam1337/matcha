@@ -1,6 +1,11 @@
 import { useState, useEffect, useRef } from "react";
+import { useSelector } from 'react-redux';
+
 
 const ProfileCardData = () => {
+  const data = useSelector((state) => state.data);
+
+  console.log("The data : ",data)
   return (
     <div id="card">
       <h1>User Name</h1>
