@@ -1,18 +1,18 @@
 import { useState, useEffect, useRef } from "react";
-import { useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 
 
 const ProfileCardData = () => {
-  const data = useSelector((state) => state.data);
+  const user = useSelector((state) => state.data);
+  console.log("user in the profile card = ", user);
 
-  console.log("The data : ",data)
   return (
     <div id="card">
       <h1>User Name</h1>
       <div className="image-crop">
         <img
           id="avatar"
-          src="https://drive.google.com/uc?id=1EVA3KUBLxCXF2EGmTf4LUB8F4yAvBrjl"
+          src="https://howsmydealing.com/wp-content/uploads/2016/12/anonymous-icon.jpg"
           alt="John Doe"
         />
       </div>

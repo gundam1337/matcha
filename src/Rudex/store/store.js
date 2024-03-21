@@ -1,16 +1,11 @@
-import { combineReducers } from "redux";
-import { configureStore } from "@reduxjs/toolkit";
+import { configureStore } from '@reduxjs/toolkit';
+import dataReducer from '../UserSlice/dataReducer';
 
-import { userProfileReducer } from "../reducers/UserProfileReducer";
-
-const rootReducer = combineReducers({
-  userProfile: userProfileReducer,
-  // auth: authReducer
+export const store = configureStore({
+  reducer: {
+    // Add the slice reducers here
+    data: dataReducer,
+  },
+  // Middleware can be customized here if needed
+  // middleware: (getDefaultMiddleware) => getDefaultMiddleware().concat(myCustomMiddleware),
 });
-
-const store = configureStore({
-  reducer: rootReducer,
-  // You can add more middleware and enhancers here
-});
-
-export default store;
