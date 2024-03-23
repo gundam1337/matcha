@@ -12,13 +12,10 @@ import BottomNavBar from "./components/BottomNavBar/BottomNavBar";
 
 function HomePage() {
   const dispatch = useDispatch();
-  const user = useSelector((state) => state.data);
 
   useEffect(() => {
     dispatch(fetchData());
   }, [dispatch]);
-
-  console.log("user = ", user);
 
   const cssLoaded = useDynamicCSSLoader("/Homepage.css", "auth-css");
   const isMobile = useWindowSize();

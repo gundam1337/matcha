@@ -1,37 +1,58 @@
 import { useState, useEffect, useRef } from "react";
-import { useDispatch, useSelector } from 'react-redux';
+import {useSelector } from 'react-redux';
+import { useNavigate } from 'react-router-dom';
+import { useAuth } from "../../../../context/AuthProvider";
+
 
 
 const ProfileCardData = () => {
   const user = useSelector((state) => state.data);
-  console.log("user in the profile card = ", user);
+  const navigate = useNavigate();
+  const { logout } = useAuth();
+
+  const showProfile = () => {
+    navigate('/profile');
+  };
+
+  const handleLogout = () => {
+    // Clear access token from local storage
+    //localStorage.removeItem('accessToken');
+
+    // Clear refresh token from cookies
+    
+
+    // Update global state if necessary (e.g., using context or Redux)
+    logout();
+    // Redirect to the login page or home page
+    navigate('/');
+  };
 
   return (
     <div id="card">
-      <h1>User Name</h1>
+      <h1>{user.data.profile.firstName+" "+ user.data.profile.lastName}</h1>
       <div className="image-crop">
         <img
           id="avatar"
-          src="https://howsmydealing.com/wp-content/uploads/2016/12/anonymous-icon.jpg"
+          src={user.data.profile.profilePicture[0]}
           alt="John Doe"
         />
       </div>
       <div id="bio">
-        <p>Hello, my name is John!</p>
+        <p>{user.data.profile.bio}</p>
       </div>
       <div id="stats">
         <div className="col">
-          <p className="stat">10</p>
+          <p className="stat">{user.data.likedBy.length}</p>
           <p className="label">Likes</p>
         </div>
         <div className="col">
-          <p className="stat">50</p>
+          <p className="stat">{user.data.matches.length}</p>
           <p className="label">Matches</p>
         </div>
       </div>
       <div id="buttons">
-        <button>Profile</button>
-        <button id="msg">Log out</button>
+        <button onClick={showProfile}>Profile</button>
+        <button id="msg" onClick={handleLogout}>Log out</button>
       </div>
     </div>
   );
@@ -76,6 +97,8 @@ const Modal = ({ show, children, onClose }) => {
 
 const UserProfileCard = () => {
   const [showModal, setShowModal] = useState(false);
+  const user = useSelector((state) => state.data);
+
 
   const openModal = () => setShowModal(true);
   const closeModal = () => setShowModal(false);
@@ -83,7 +106,7 @@ const UserProfileCard = () => {
     <>
       <div className="profile" onClick={openModal}>
         <label className="btn btn-primary" htmlFor="create-post">
-          UserName
+          {user.data.username}
         </label>
       </div>
 

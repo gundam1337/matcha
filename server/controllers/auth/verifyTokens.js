@@ -7,12 +7,11 @@ const refreshTokenSecret = process.env.REFRESH_TOKEN_SECRET;
 
 
 function verifyTokens(req, res, next) {
-  console.log("req headers : ",req.headers)
   const accessToken = req.headers["x-access-token"];
   const refreshToken = req.cookies.refreshToken;
 
-  console.log("accessToken = ",accessToken)
-  console.log("accessToken =",refreshToken)
+  // console.log("accessToken = ",accessToken)
+  // console.log("accessToken =",refreshToken)
   //if the token is not there send error messages
   if (!accessToken) {
     return res.status(403).send({ message: "Access Token is required" });
@@ -54,7 +53,6 @@ function verifyTokens(req, res, next) {
           req.userID = foundUser.userID;
           next();
         } catch (error) {
-          console.log("Internal Server Error 1")
           return res.status(500).send({ message: "Internal Server Error" });
         }
       });
@@ -71,11 +69,9 @@ function verifyTokens(req, res, next) {
         }
 
         req.user = user;
-        console.log("user : ",user)
         req.userID = foundUser.userID;
         next();
       } catch (error) {
-        console.log("Internal Server Error 2")
         return res.status(500).send({ message: "Internal Server Error" });
       }
     }

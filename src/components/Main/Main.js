@@ -86,6 +86,7 @@ export default function Main() {
             <span className="slogan-app"></span>
           </h2>
          
+          <div>
           <ModalButton
             label="Create account"
             handleOpen={handleModal(setRegistrationModalOpen)}
@@ -97,9 +98,9 @@ export default function Main() {
             <Registration onClick={handleModal(setRegistrationModalOpen)} />
             
           </AppModal>
+          </div>
           <br></br>
-          <br></br>
-
+          <div>
           <ModalButton
             label="login"
             handleOpen={handleModal(setLoginModalOpen)}
@@ -113,6 +114,7 @@ export default function Main() {
               isVerified={isVerified}
             />
           </AppModal>
+          </div>
 
           {/* NOTE : rest password  */}
           <AppModal

@@ -24,6 +24,9 @@ export const AuthProvider = ({ children }) => {
   // Function to clear authentication state and local storage when the user logs out
   const logout = () => {
     localStorage.removeItem('accessToken');
+    //To delete an HttpOnly cookie, I need to do it from the server-side
+    //but I think if only delete the access token from the browse is enough
+    
     setAuthState({
       accessToken: null,
       isAuthenticated: false,

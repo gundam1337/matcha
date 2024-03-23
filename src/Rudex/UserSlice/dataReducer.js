@@ -1,6 +1,7 @@
 import { createSlice } from '@reduxjs/toolkit';
 import { fetchData } from './fetchUserData';
 
+//make the the data state more inofrmal for best access
 const initialState = {
   data: {},
   loading: false,

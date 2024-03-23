@@ -1,20 +1,20 @@
 const User = require("../../models/user");
-
+//TOADD : send just some specifc data
 const getUserData = async (req, res, next) => {
-  
   try {
-    
     const userId = req.userID;
-    console.log("userID ",userId)
-    const user = await User.findOne({ userID: userId });
+    const user = await User.findOne({ userID: userId })
+    .select('username profile.profilePicture profile.firstName profile.lastName profile.bio likedBy matches -_id')
+    .populate('likedBy', 'username') 
+    .populate('matches', 'username') 
+    .lean(); 
 
     if (!user) {
-      console.log("user == ",user)
       return res.status(404).send("User not found");
     }
-    
-    req.user = user; // Add the user data to the req object
-    console.log("user is = ", user);
+
+    req.user = user;
+    console.log(user)
     res.json(req.user);
   } catch (error) {
     res.status(500).send("Server error");
