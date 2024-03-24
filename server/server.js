@@ -1,28 +1,55 @@
 const mongoose = require('mongoose');
 const config = require('./config/database');
 const app = require('./app');
-const logger = require('./utils/logger'); // hypothetical utility for logging
-//
+const logger = require('./utils/logger');
+const http = require('http'); // Required for Socket.IO
+const socketIo = require('socket.io'); // Import Socket.IO
 
-//TODO : if the connection get lost , send a message to frontend
-//TODO : reload the server after 20 seconde to check if the connection get back 
-//
 const startServer = async () => {
   try {
     await mongoose.connect(config.uri, {
       useNewUrlParser: true,
       useUnifiedTopology: true,
-     
     });
     logger.info('Connected to MongoDB');
 
-    const server = app.listen(config.port, () => {
+    // Create HTTP server from the Express app
+    const httpServer = http.createServer(app);
+    // Initialize Socket.IO server
+    const io = socketIo(httpServer, {
+      cors: {
+        origin: [
+          "http://localhost:3000",
+          "http://localhost:3001",
+        ], // Adjust according to your security requirements
+        methods: ["GET", "POST"]
+      }
+    });
+
+    // Socket.IO connection handler
+    io.on('connection', (socket) => {
+      logger.info(`New client connected: ${socket.id}`);
+
+      // Example of handling a custom event
+      socket.on('customEvent', (data) => {
+        logger.info(`Received data: ${data}`);
+        // Broadcast or emit events, etc.
+      });
+
+      socket.on('disconnect', () => {
+        logger.info(`Client disconnected: ${socket.id}`);
+      });
+    });
+
+    // Listen on the created HTTP server
+    httpServer.listen(config.port, () => {
       logger.info(`Server is listening at port ${config.port}`);
     });
 
+    // Graceful shutdown logic
     const handleExit = (signal) => {
       logger.info(`Received ${signal}. Closing server and database connection...`);
-      server.close(() => {
+      httpServer.close(() => {
         logger.info('Server closed');
         mongoose.disconnect().then(() => {
           logger.info('Database connection closed');
