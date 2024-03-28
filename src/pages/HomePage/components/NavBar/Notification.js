@@ -1,7 +1,7 @@
 //Notification dorp down
 import { useState,useEffect,useRef } from "react";
 import useOutsideAlerter from "../../Hooks/useOutsideAlerter";
-
+import socketService from "../../../../API/SocketService"
 //NOTE : Notification Types : matches,messages,likes,visitors
 
 //Match : New Match Alert!
@@ -40,15 +40,36 @@ const DropdownNotifications = () => (
 
 const Notification = () => {
   const [isDropdownVisible, setDropdownVisible] = useState(false);
+  const [notifications, setNotifications] = useState([]);
   const wrapperRef = useRef(null); // Ref for the wrapper element
+
+  //get the user data 
+
+  useEffect(() => {
+    // Connect to the socket server
+    //socketService.connect();
+
+    // Request notifications from the server
+    socketService.emit('getNotifications',{});
+
+    // Listen for incoming notifications
+    socketService.on('newNotification', (notification) => {
+      setNotifications([...notifications, notification]);
+    });
+
+    // Cleanup (handle disconnections)
+    return () => {
+      socketService.off('newNotification');
+      socketService.disconnect();
+    };
+  }, []);
+
 
 
   const toggleDropdown = () => {
     setDropdownVisible(!isDropdownVisible);
   };
-  
   const handleClose = () => setDropdownVisible(false);
-
   useOutsideAlerter(wrapperRef, handleClose);
 
 

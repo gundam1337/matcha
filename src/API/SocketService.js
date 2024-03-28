@@ -1,6 +1,7 @@
-import io from 'socket.io-client';
+import io from "socket.io-client";
 
-const SOCKET_URL = 'http://localhost:3001';
+const SOCKET_URL = "http://localhost:3001";
+const accessToken = localStorage.getItem("accessToken");
 
 class SocketService {
   constructor() {
@@ -8,8 +9,12 @@ class SocketService {
   }
 
   connect() {
-    this.socket = io(SOCKET_URL);
-    this.socket.on('connect', () => console.log('Connected to server'));
+    this.socket = io(SOCKET_URL, {
+      auth: {
+        token: accessToken,
+      },
+    });
+    this.socket.on("connect", () => console.log("Connected to server"));
   }
 
   disconnect() {
@@ -34,4 +39,5 @@ class SocketService {
 }
 
 const socketService = new SocketService();
+
 export default socketService;

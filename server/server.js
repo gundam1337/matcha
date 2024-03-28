@@ -4,6 +4,13 @@ const app = require('./app');
 const logger = require('./utils/logger');
 const http = require('http'); // Required for Socket.IO
 const socketIo = require('socket.io'); // Import Socket.IO
+const handleSocketConnection = require("./routes/handleSocketConnection")
+
+
+const jwt = require("jsonwebtoken");
+require("dotenv").config({ path: "./config.env" });
+const accessTokenSecret = process.env.ACCESS_TOKEN_SECRET;
+
 
 const startServer = async () => {
   try {
@@ -15,6 +22,7 @@ const startServer = async () => {
 
     // Create HTTP server from the Express app
     const httpServer = http.createServer(app);
+
     // Initialize Socket.IO server
     const io = socketIo(httpServer, {
       cors: {
@@ -26,18 +34,29 @@ const startServer = async () => {
       }
     });
 
+    io.use((socket, next) => {
+      const token = socket.handshake.auth.token;
+      console.log("access token is = ",token)
+
+      jwt.verify(token, accessTokenSecret,{ ignoreExpiration: true }, (err, decoded) => {
+        if (err) 
+        {
+          console.log("err",err)
+          return next(new Error("Authentication error"));}
+    
+        // The decoded token is available in the rest of your socket code
+        socket.decoded = decoded;
+        console.log("decode is = ",decoded)
+        next();
+      });
+    });
+
     // Socket.IO connection handler
     io.on('connection', (socket) => {
       logger.info(`New client connected: ${socket.id}`);
 
-      // Example of handling a custom event
-      socket.on('customEvent', (data) => {
-        logger.info(`Received data: ${data}`);
-        // Broadcast or emit events, etc.
-      });
-
+      handleSocketConnection(socket);
       socket.on('disconnect', () => {
-        logger.info(`Client disconnected: ${socket.id}`);
       });
     });
 

@@ -25,7 +25,6 @@ const getSearchResults = async (req, res, next) => {
       likedBy: user.likedBy,
       matches: user.matches,
     };
-    console.log("results = ", results);
 
     res.status(200).json(results);
   } catch (error) {

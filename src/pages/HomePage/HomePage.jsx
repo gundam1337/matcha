@@ -10,8 +10,15 @@ import NavigationBar from "./components/NavBar/Navigation";
 import Connect from "./components/Connect/Connect";
 import BottomNavBar from "./components/BottomNavBar/BottomNavBar";
 
+import socketService from "../../API/SocketService"
+
 function HomePage() {
   const dispatch = useDispatch();
+ 
+  useEffect(()=>{
+    socketService.connect();
+  },[])
+
 
   useEffect(() => {
     dispatch(fetchData());
