@@ -1,40 +1,41 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect } from 'react';
 
 const Info = ({ setFieldValue, errors, touched, initialValues }) => {
-  // const toYYYYMMDD = (isoString) => {
-  //   if (isoString) {
-  //     const date = new Date(isoString);
-  //     const year = date.getFullYear();
-  //     const month = (date.getMonth() + 1).toString().padStart(2, '0');
-  //     const day = date.getDate().toString().padStart(2, '0');
-  //     return `${year}-${month}-${day}`;
-  //   }
-  //   return '';
-  // };
+
+  const toYYYYMMDD = (isoString) => {
+    if (isoString) {
+      const date = new Date(isoString);
+      const year = date.getFullYear();
+      const month = (date.getMonth() + 1).toString().padStart(2, '0');
+      const day = date.getDate().toString().padStart(2, '0');
+      return `${year}-${month}-${day}`;
+    }
+    return '';
+  };
 
   const [info, setInfo] = useState({
-    firstName: "",
-    lastName: "",
-    birthday: "",
+    firstName: '',
+    lastName: '',
+    birthday: initialValues?.birthday ? toYYYYMMDD(initialValues.birthday) : ''
   });
 
-  // useEffect(() => {
-  //   if (initialValues) {
-  //     setInfo(prevState => ({
-  //       ...prevState,
-  //       ...initialValues,
-  //       birthday: initialValues.birthday ? toYYYYMMDD(initialValues.birthday) : prevState.birthday
-  //     }));
-  //   }
-  // }, [initialValues]);
+  useEffect(() => {
+    if (initialValues) {
+      setInfo(prevState => ({
+        ...prevState,
+        ...initialValues,
+        birthday: initialValues.birthday ? toYYYYMMDD(initialValues.birthday) : prevState.birthday
+      }));
+    }
+  }, [initialValues]);
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
     setFieldValue(name, value);
-    // setInfo(prevState => ({
-    //   ...prevState,
-    //   [name.split('.')[1]]: value
-    // }));
+    setInfo(prevState => ({
+      ...prevState,
+      [name.split('.')[1]]: value
+    }));
   };
 
   return (
@@ -76,24 +77,24 @@ const Info = ({ setFieldValue, errors, touched, initialValues }) => {
             </>
           )}
         </div>
-        <div>
-          <label htmlFor="info.birthday">Birthday</label>
-          <input
-            type="date"
-            id="info.birthday"
-            name="info.birthday"
-            onChange={handleInputChange}
-            value={info.birthday}
-          />
-          {errors.info && touched.info && (
-            <>
-              <p className="infoError">
-                {errors.info.birthday && "⚠️ "}
-                {errors.info.birthday}
-              </p>
-            </>
-          )}
-        </div>
+      </div>
+      <div>
+        <label htmlFor="info.birthday">Birthday</label>
+        <input
+          type="date"
+          id="info.birthday"
+          name="info.birthday"
+          onChange={handleInputChange}
+          value={info.birthday}
+        />
+        {errors.info && touched.info && (
+          <>
+            <p className="infoError">
+              {errors.info.birthday && "⚠️ "}
+              {errors.info.birthday}
+            </p>
+          </>
+        )}
       </div>
     </>
   );

@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import Modal from "react-modal";
 import { MapContainer, TileLayer, Marker, useMapEvents } from "react-leaflet";
-//import "../style/location.css";
+import "../style/location.css";
 
 const URL =
   "https://assets-global.website-files.com/620d42e86cb8ec4d0839e59d/6230e9244963aa3b684c5ed2_61cb6723e4c8112dbd440616_Location-Based-Services-Example.jpeg";
