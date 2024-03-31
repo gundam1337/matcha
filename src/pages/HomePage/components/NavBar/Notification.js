@@ -8,34 +8,39 @@ import socketService from "../../../../API/SocketService"
 //likes : [Username] has liked your profile! See who's interested in you."
 //visitors "Someone's checking you out! [Username] recently visited your profile."
 
-const NotificationItem = ({ imageUrl, mainText, subText, time }) => (
+const NotificationItem = ({ imageUrl, mainText,time }) => (
   <div className="notify_item">
     <div className="notify_img">
       <img src={imageUrl} alt="profile_pic" style={{ width: '50px' }} />
     </div>
     <div className="notify_info">
-      <p>{mainText}<span>{subText}</span></p>
       <span className="notify_time">{time}</span>
     </div>
   </div>
 );
 
-const DropdownNotifications = () => (
-  <div className="dropdown">
-    <NotificationItem
-      imageUrl="./not_1.png"
-      mainText="Alex commented on"
-      subText="Timeline Share"
-      time="10 minutes ago"
-    />
-    <NotificationItem
-      imageUrl="./not_2.png"
-      mainText="Ben hur commented on your"
-      subText="Timeline Share"
-      time="55 minutes ago"
-    />
-  </div>
-);
+const DropdownNotifications = ({ notifications }) => {
+  // Check if notifications array is empty
+  if (notifications.length === 0) {
+    return <div className="dropdown">No new notifications.</div>;
+  }
+
+  // Render notifications if the array is not empty
+  return (
+    <div className="dropdown">
+      {notifications.map((notification, index) => (
+        <NotificationItem
+          key={index}
+          imageUrl={notification.imageUrl}
+          mainText={notification.mainText}
+          subText={notification.subText}
+          time={notification.time}
+        />
+      ))}
+    </div>
+  );
+};
+
 
 
 const Notification = () => {
@@ -49,10 +54,13 @@ const Notification = () => {
     // Connect to the socket server
     //socketService.connect();
 
-    // Request notifications from the server
-    socketService.emit('getNotifications',{});
+    //  Listen for initial notifications
+    socketService.on('getNotifications',(notification)=>{
+      console.log("notifcation",notification)
+      setNotifications(notification);
+    });
 
-    // Listen for incoming notifications
+    // Listen for incoming new notifications
     socketService.on('newNotification', (notification) => {
       setNotifications([...notifications, notification]);
     });
@@ -76,10 +84,10 @@ const Notification = () => {
   return (
     <div className="notification" ref={wrapperRef}>
       <i className="uil uil-bell" onClick={toggleDropdown}></i>
-      <small className="notification-count">9+</small>
+      <small className="notification-count">{notifications.length}</small>
 
       {isDropdownVisible && (
-        <DropdownNotifications></DropdownNotifications>
+        <DropdownNotifications notifications={notifications} />
       )}
     </div>
   );

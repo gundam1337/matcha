@@ -1,29 +1,49 @@
-//TODO if the notification DOC is empty send an empty obj
+//FIXME : this code is not tested
+//the logic is look good
+
+//NOTE : messages 
+//Match : New Match Alert!
+//likes : [Username] has liked your profile! See who's interested in you."
+//visitors "Someone's checking you out! [Username] recently visited your profile."
+
+//TODO : 
+
 const Notification = require("../models/notificationSchema");
-const User = require("../models/user")
 
 const handleSocketConnection = (socket) => {
 
-  /* -------------------- Notifications -------------------*/
-  socket.on("getNotifications", async (data) => {
+  //TODO use the token to for getting the data from the database
+  const fetchAndEmitNotifications = async (userId) => {
     try {
-      //how to get the user ID
-      const current_user = socket.decoded;
-
-      const user = await User.findOne({ username: current_user.username, email: current_user.email }).exec();;
-      if (!user) {
-        console.log("User not found");
-        return;
-      }
-  
-      const notifications = await Notification.find({ recipient: user._id }).exec();
-      
+      const notifications = await Notification.find({ recipient: userId }).sort(
+        { date: -1 }
+      );
       socket.emit("notificationResponse", notifications);
     } catch (error) {
       console.error("Error fetching notifications:", error);
       socket.emit("notificationResponse", {
         error: "An error occurred while fetching notifications.",
       });
+    }
+  };
+
+  socket.on("getNotifications", async (data) => {
+    // Reuse the refactored function
+    await fetchAndEmitNotifications(data.userId);
+  });
+
+  // Change stream setup
+  const changeStream = Notification.watch();
+
+  changeStream.on("change", async (change) => {
+    if (change.operationType === "insert") {
+      const newNotification = change.fullDocument;
+      const userId = socket.userId; // Assuming the user's ID is stored in the socket
+
+      if (newNotification.recipient === userId) {
+        // Reuse the refactored function instead of emitting directly
+        await fetchAndEmitNotifications(userId);
+      }
     }
   });
 
