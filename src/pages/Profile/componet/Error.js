@@ -1,4 +1,4 @@
-import '../style/error.css'
+// import '../style/error.css'
 
 const Error = ({ message ,onRetry}) => {
   let content;

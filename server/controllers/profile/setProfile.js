@@ -1,7 +1,6 @@
 const User = require("../../models/user");
 const Yup = require("yup");
 const multer = require("multer");
-//const { v4: uuidv4 } = require("uuid");
 const MAX_FILE_SIZE = 5 * 1024 * 1024; // Max file size in bytes (e.g., 5MB)
 const urlPattern =
   /^https:\/\/storage\.googleapis\.com\/matcha-406014\.appspot\.com\/.*/;
@@ -66,11 +65,11 @@ const validationSchema = Yup.object({
       ),
   }),
   phoneNumber: Yup.string().required("Phone number is required"),
-  // gender: Yup.string().required("Gender is required"),
-  // location: Yup.object().shape({
-  //   city: Yup.string().required("City is required"),
-  //   country: Yup.string().required("Country is required"),
-  // }),
+  gender: Yup.string().required("Gender is required"),
+  location: Yup.object().shape({
+    city: Yup.string().required("City is required"),
+    country: Yup.string().required("Country is required"),
+  }),
 });
 
 const storage = multer.memoryStorage();

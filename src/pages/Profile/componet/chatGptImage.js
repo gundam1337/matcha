@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import "../style/Images.css";
+// import "../style/Images.css";
 
 //DONE : style the buton, make a the bottom of the picture
 //TODO : access to the error box and put error message in it

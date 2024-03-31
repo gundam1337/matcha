@@ -3,7 +3,7 @@ import { Formik, Field } from "formik";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
 
-import "./profile.css";
+// import "./profile.css";
 
 import Images from "./componet/Images";
 import Info from "./componet/Info";
@@ -22,6 +22,7 @@ const Profile = () => {
   const [errorGET, setErrorGET] = useState(null);
   const [isFetchingComplete, setIsFetchingComplete] = useState(false);
   const [isLoading, setIsLoading] = useState(false); //I should use this
+  const [cssLoaded, setCssLoaded] = useState(false);
   const navigate = useNavigate();
 
   const [profileData, setProfileData] = useState({
@@ -145,6 +146,29 @@ const Profile = () => {
     fetchProfileData();
   }, []);
 
+  //NOTE : this for loading the css
+  useEffect(() => {
+    // Create a link element for the CSS file
+    const cssLink = document.createElement("link");
+    cssLink.href = "/profile.css"; // Adjust the path as needed
+    cssLink.rel = "stylesheet";
+    cssLink.type = "text/css";
+    cssLink.id = "auth-css"; // An ID to easily locate the element
+
+    cssLink.onload = () => setCssLoaded(true);
+
+    // Append the link element to the head
+    document.head.appendChild(cssLink);
+
+    // Cleanup function to remove the link element when the component unmounts
+    return () => {
+      const existingLink = document.getElementById("auth-css");
+      if (existingLink) {
+        existingLink.remove();
+      }
+    };
+  }, []);
+
   //NOTE : this function submit the inputs value to the endpoint
   const handleSubmit = async (values) => {
     setIsLoading(true);
@@ -234,7 +258,7 @@ const Profile = () => {
 
 
   //NOTE : the rendring
-  if (isLoading) return <AnimatedLoader />;
+  if (isLoading && cssLoaded) return <AnimatedLoader />;
   if (!isFetchingComplete) {
     //console.log("errorGET = ", errorGET);
     const errorActions = {
