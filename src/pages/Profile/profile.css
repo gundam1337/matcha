@@ -158,6 +158,397 @@ input[type="date"] {
   }
 }
 
+/* -------------------- slide ------------------  */
+
+/* Styles for the slider container */
+.slider-container {
+  font-family: 'Arial', sans-serif;
+  padding: 20px;
+  background-color: #fff; /* White background for the box */
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2); /* subtle shadow for depth */
+  border-radius: 10px; /* Rounded corners for the white box */
+  max-width: 600px; /* Adjust the max-width as needed */
+  margin: auto; /* Center the box */
+  position: relative; /* Needed for absolute positioning of children */
+}
+  
+  /* Styles for the label */
+  .slider-container label {
+    display: block;
+    margin-bottom: 10px;
+    color: #000; /* Black color for the text */
+    text-align: center; /* Center the label text */
+  }
+  
+  /* Generic styles for the slider */
+  .slider-container input[type="range"] {
+    -webkit-appearance: none;
+    width: 100%;
+    margin: 15px 0;
+  }
+  
+  /* Styles for the thumb */
+.slider-container input[type="range"]::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    appearance: none;
+    width: 25px; /* Thumb size */
+    height: 25px; /* Thumb size */
+    border-radius: 50%;
+    background: #ff0000; /* Thumb color */
+    cursor: pointer;
+    margin-top: -10px; /* Adjust this value to align the thumb with the track */
+  }
+  .slider-container input[type="range"]::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    appearance: none;
+    width: 25px; /* Thumb size */
+    height: 25px; /* Thumb size */
+    border-radius: 50%;
+    background: #ff0000; /* Thumb color */
+    cursor: pointer;
+    margin-top: -10px; /* Adjust this value to align the thumb with the track */
+  }
+  .slider-container input[type="range"]::-moz-range-thumb {
+    width: 25px;
+    height: 25px;
+    border-radius: 50%;
+    background: #ff0000;
+    cursor: pointer;
+    position: relative;
+    top: -10px; /* Adjust this value to align the thumb with the track for Firefox */
+  }
+  
+  /* Styles for the track */
+  .slider-container input[type="range"]::-webkit-slider-runnable-track {
+    width: 100%;
+    height: 8px; /* Track height */
+    background: #ddd; /* Track color */
+    border-radius: 5px;
+    position: relative;
+  }
+  
+  .slider-container input[type="range"]::-moz-range-track {
+    width: 100%;
+    height: 8px;
+    background: #ddd;
+    border-radius: 5px;
+    position: relative;
+  }
+
+  /* //NOTE THIS FOR THE DUAL SLIDE */
+  .dual-slider-container {
+    font-family: 'Arial', sans-serif;
+    padding: 20px;
+    background-color: #fff; /* White background for the box */
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2); /* subtle shadow for depth */
+    border-radius: 10px; /* Rounded corners for the white box */
+    max-width: 600px; /* Adjust the max-width as needed */
+    margin: auto; /* Center the box */
+    position: relative; /* Needed for absolute positioning of children */
+    width: 60%;
+    height: 80px;
+  }
+  
+  
+  .dual-slider-container label {
+    display: block;
+    margin-bottom: 10px;
+    color: #000;
+    text-align: center;
+  }
+  
+  .dual-slider-container input[type="range"] {
+    -webkit-appearance: none;
+  }
+  
+  /* Styles for the thumb */
+  .dual-slider-container input[type="range"]::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    appearance: none;
+    width: 25px;
+    height: 25px;
+    border-radius: 50%;
+    background: #ff0000 ;
+    cursor: pointer;
+    pointer-events: all;
+    position: relative;
+    top: -10px;
+    z-index: 2;
+  }
+  
+  .dual-slider-container input[type="range"]::-moz-range-thumb {
+    width: 20px;
+    height: 20px;
+    border-radius: 50%;
+    background: #ff0000 ;
+    position: relative;
+  }
+  
+  /* Styles for the track */
+  .dual-slider-container input[type="range"]::-webkit-slider-runnable-track {
+    width: 100%;
+    height: 8px;
+    background: #ddd;
+    border-radius: 5px;
+    position: relative;
+  }
+  
+  .dual-slider-container input[type="range"]::-moz-range-track {
+    width: 100%;
+    height: 8px;
+    background: #ddd;
+    border-radius: 5px;
+    position: relative;
+  }
+  
+  /* ---------------location -------------------- */
+  .modal-content {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+.location-box {
+    border-radius: 10px;
+    background-color: #f3f3f3;
+    width: 70%;
+    height: 12%;
+    border: none; /* Removing border as it's not visible in the image */
+    color: #ffffff; /* White text color */
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+  }
+
+.btn-save {
+    background-color: #ff6f63; /* Bootstrap primary color */
+    color: white;
+    font-size: 20px;
+    font-weight: bold;
+    box-shadow: 0px 0px 10px white;
+    border-radius: 30px;
+    border: 2px solid white;
+    margin: 20px 0px 20px 0;
+    transition: 0.5s;
+    padding: 10px 20px;
+    width: 80%;
+  }
+.locationInfo{
+  color : black;
+  font-size: 20px;
+
+}
+
+.modal-container {
+  padding: 20px;
+  background-color: #f9f9f9; /* Light grey background */
+  border-radius: 5px; /* Rounded corners */
+  box-shadow: 0 2px 5px rgba(0,0,0,0.2); /* subtle shadow for depth */
+  max-width: 400px; /* Max width with some space from screen edges */
+  margin: auto; /* Center the modal on the screen */
+}
+
+
+.location-info {
+  color: #333; /* Dark grey color for text */
+  font-size: 1em; /* Standard font size */
+  line-height: 1.5; /* More readable line spacing */
+  font-weight: bold; /* Bold font for emphasis */
+  text-align: left; /* Align text to the left */
+  margin-bottom: 15px; /* Space below the paragraph */
+}
+
+/* -----------------Image --------------------- */
+.profile-photo-upload { 
+  font-family: Arial, sans-serif; /* Use a common sans-serif font */
+  background-color: #f3f3f3; /* Light grey background */
+  padding: 20px; /* Add some padding around the content */
+  border-radius: 10px; /* Rounded corners */
+  //width: 400px; /* Set a fixed width */
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); /* Add a subtle shadow */
+  text-align: center; /* Center-align the text */
+  margin: auto; /* Add margin around the div */
+}
+.form-group.profile-photo-upload label[for="profilePhoto"] {
+  font-weight: bold; /* Makes the text bold */
+  font-size: 20px; /* Increases the size of the text, you can adjust the value as needed */
+  color: black;
+}
+.profile-img-container {
+  border: 1px solid #ccc; /* Light grey border */
+  padding: 5px; /* Padding around the image */
+  margin-bottom: 20px; /* Space below the image container */
+ 
+  display: flex;   /* Enables Flexbox */
+  flex-wrap: nowrap; /* Prevents wrapping, keeping items in one row */
+  justify-content: space-between; /* Adds space between the images */
+  overflow-x: auto; /* Adds horizontal scrolling if images overflow */
+  width: 80%
+
+}
+.profile-img-preview {
+  max-width: 100%; /* Ensures the image width doesn't exceed the container width */
+  height: auto; /* Keeps the aspect ratio of the image */
+  //display: block; /* Optional, for better control of layout */
+  margin: 0 10px;
+  
+  display: block; /* Ensure it's a block element */
+ 
+}
+
+
+
+.image-container {
+  position: relative; /* Set the container to relative positioning */
+  display: inline-block; /* Align containers side by side */
+  margin: 10px; /* Space around each image container */
+}
+
+.image-container button {
+  position: absolute; /* Position the button absolutely within the container */
+  top: 0; /* Align to the top of the container */
+  right: 0; /* Align to the right of the container */
+  background-color: red; /* Example background color */
+  color: white; /* Text color */
+  border: none; /* No border */
+  border-radius: 0 0 0 5px; /* Rounded bottom-left corner */
+  padding: 5px 10px; /* Padding inside the button */
+  cursor: pointer; /* Change cursor to pointer on hover */
+}
+
+
+.profile-img {
+  width: 100%; /* Make the image expand to cover the container */
+  height: auto; /* Keep the image aspect ratio */
+  border-radius: 5px; /* Slightly rounded corners for the image */
+}
+
+.file-type-info {
+  color: #666; /* Medium grey for the info text */
+  font-size: 0.5rem; /* Smaller font size for the info text */
+  margin-bottom: 20px; /* Space below the info text */
+}
+
+.btn-upload {
+  background-color: #ff6f63; /* Bootstrap primary color */
+  color: white;
+  font-size: 20px;
+  font-weight: bold;
+  box-shadow: 0px 0px 10px white;
+  border-radius: 30px;
+  border: 2px solid white;
+  margin: 20px 0px 20px 0;
+  transition: 0.5s;
+  padding: 10px 20px;
+  width: 80%;
+}
+
+.btn-upload:hover {
+  background-color: #0056b3; /* Darker blue on hover */
+}
+
+.errorImage-messages {
+  margin-top: 10px;
+  padding: 10px;
+  border: 1px solid #ff0000; /* Red border to indicate errors */
+  background-color: #ffe6e6; /* Light red background for visibility */
+  border-radius: 5px; /* Rounded corners */
+  height : auto;
+  width : auto;
+}
+
+.errorImage {
+  color: #ff0000; /* Red text for errors */
+  font-size: 14px; /* Adjust the font size as needed */
+  margin-bottom: 5px; /* Space between error messages */
+}
+
+/* ------------error ------------------ */
+.error-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  height: 100vh;
+  width: 100vw;
+  background-color: #f4f4f4;
+  text-align: center;
+  padding: 20px;
+  box-sizing: border-box;
+}
+
+h1 {
+  color: #000;
+  font-size: 5em;
+  margin: 0;
+}
+
+p {
+  color: #333;
+  font-size: 1.2em;
+}
+
+.error-message {
+  margin: 20px 0;
+}
+
+.retry-button {
+  background-color: #007bff;
+  color: white;
+  padding: 10px 20px;
+  border: none;
+  border-radius: 5px;
+  font-size: 1em;
+  cursor: pointer;
+  outline: none;
+}
+
+.bioStyles {
+  font-family: Arial, sans-serif; /* Use a common sans-serif font */
+  background-color: #f3f3f3; /* Light grey background */
+  padding: 20px; /* Add some padding around the content */
+  border-radius: 10px; /* Rounded corners */
+  width: 80%; /* Set a fixed width */
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); /* Add a subtle shadow */
+  text-align: center; /* Center-align the text */
+  margin: auto; /* Add margin around the div */
+  display: block;
+}
+.bioStyles textarea{
+    width: 100%;
+    height: 150px;
+    border: none;
+    color : black; 
+
+}
+
+.countStyles {
+  //position: absolute;
+  bottom: 10px;
+  color : black; 
+  right: 10px;
+  fontsize: 0.8em;
+}
+
+
+/* Responsive styling */
+@media (max-width: 600px) {
+  h1 {
+    font-size: 3em;
+  }
+
+  p {
+    font-size: 1em;
+  }
+
+  .retry-button {
+    padding: 8px 16px;
+    font-size: 0.9em;
+  }
+}
+
+
+
 @media (max-width: 600px) {
   .file-type-info {
     font-size: 4vw;
