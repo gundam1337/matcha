@@ -3,7 +3,6 @@ import { Formik, Field } from "formik";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
 
-// import "./profile.css";
 
 import Images from "./componet/Images";
 import Info from "./componet/Info";
@@ -197,15 +196,6 @@ const Profile = () => {
         setIsLoading(false);
         return;
       }
-      // Check if refreshToken cookie is available
-      // const refreshToken = document.cookie
-      //   .split(";")
-      //   .find((cookie) => cookie.trim().startsWith("refreshToken="));
-      // if (!refreshToken) {
-      //   setErrorSUB("Refresh token is missing. Please log in again.");
-      //   setIsLoading(false);
-      //   return;
-      // }
       const response = await axios.post(
         "http://localhost:3001/profile",
         formData,

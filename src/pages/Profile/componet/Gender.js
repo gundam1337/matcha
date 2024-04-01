@@ -1,18 +1,14 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState } from "react";
 
-const Gender = ({ setFieldValue ,errors, touched ,initialValues}) => {
-  
-  const [gender,setGender] = useState('');
-  useEffect(()=>{
-    //console.log(initialValues)
-
-    if (initialValues)
-    {
-      setGender(initialValues)
+const Gender = ({ setFieldValue, errors, touched, initialValues }) => {
+  const [gender, setGender] = useState("");
+  useEffect(() => {
+    if (initialValues) {
+      setGender(initialValues);
     }
-  },[initialValues])
+  }, [initialValues]);
   const handleGenderChange = (e) => {
-    setFieldValue('gender', e.target.value);
+    setFieldValue("gender", e.target.value);
   };
 
   return (
@@ -20,12 +16,12 @@ const Gender = ({ setFieldValue ,errors, touched ,initialValues}) => {
       <h4>Your gender :</h4>
       <div>
         <label>
-          <input 
-            type="radio" 
-            name="gender" 
-            value="man" 
-            checked={gender === 'man'}
-            onChange={handleGenderChange} 
+          <input
+            type="radio"
+            name="gender"
+            value="man"
+            checked={gender === "man"}
+            onChange={handleGenderChange}
           />
           <span>Man</span>
         </label>
@@ -33,12 +29,12 @@ const Gender = ({ setFieldValue ,errors, touched ,initialValues}) => {
 
       <div>
         <label>
-          <input 
-            type="radio" 
-            name="gender" 
-            value="woman" 
-            checked={gender === 'woman'}
-            onChange={handleGenderChange} 
+          <input
+            type="radio"
+            name="gender"
+            value="woman"
+            checked={gender === "woman"}
+            onChange={handleGenderChange}
           />
           <span>Woman</span>
         </label>

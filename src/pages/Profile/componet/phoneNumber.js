@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import PhoneInput from "react-phone-number-input";
-// import "react-phone-number-input/style.css";
+import "react-phone-number-input/style.css";
 
 function PhoneNumber({ setFieldValue, errors, touched,initialValues }) {
   const [phone, setPhone] = useState("");
@@ -17,7 +17,8 @@ function PhoneNumber({ setFieldValue, errors, touched,initialValues }) {
   };
 
   return (
-    <>
+    <div className="form-row">
+      <h4>Your phone :</h4>
       <PhoneInput
         placeholder="Enter phone number"
         value={phone}
@@ -31,7 +32,7 @@ function PhoneNumber({ setFieldValue, errors, touched,initialValues }) {
           </p>
         </>
       )}
-    </>
+    </div>
   );
 }
 

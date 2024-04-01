@@ -1,7 +1,5 @@
 import React, { useState, useEffect } from "react";
-// import "../style/Images.css";
 
-//TODO : study the state to see if you can use one state in the hole app
 const Images = ({ setFieldValue, errors, touched, initialValues }) => {
   const [images, setImages] = useState([]); // this is for the sending
   const [selectedImage, setSelectedImage] = useState([]); // this is for displaying
@@ -9,7 +7,6 @@ const Images = ({ setFieldValue, errors, touched, initialValues }) => {
 
   useEffect(() => {
     if (initialValues && initialValues.length > 0) {
-      // console.log("initial values", initialValues);
       const imageUrls = initialValues
         .map((image) =>
           typeof image === "string" ? image : URL.createObjectURL(image)
@@ -23,7 +20,7 @@ const Images = ({ setFieldValue, errors, touched, initialValues }) => {
   useEffect(() => {
     if (images.length > 0) {
       //console.log("here is the image", images);
-      const newFiles = images.filter(item => item instanceof File);
+      const newFiles = images.filter((item) => item instanceof File);
       //console.log(newFiles)
     }
     setFieldValue("image", images);
@@ -58,7 +55,6 @@ const Images = ({ setFieldValue, errors, touched, initialValues }) => {
       }
     });
   };
-
 
   const handleDeleteImage = (imageIndex) => {
     const updatedselectedImage = selectedImage.filter(
