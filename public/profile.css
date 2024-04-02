@@ -163,9 +163,8 @@ input[type="date"] {
   margin: 10px 0 0;
   border: 2px solid white; /* Matched with text input */
   background: transparent;
-  transition: 0.3s;
   outline: none;
-  font-family: "Comic Sans MS", cursive, sans-serif; /* Matched with the body font-family */
+  font-family:  sans-serif; /* Matched with the body font-family */
 }
 
 ::placeholder {

@@ -1,40 +1,62 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect } from "react";
 
 const Info = ({ setFieldValue, errors, touched, initialValues }) => {
 
-  const toYYYYMMDD = (isoString) => {
+  const toMMDDYY = (isoString) => {
     if (isoString) {
       const date = new Date(isoString);
-      const year = date.getFullYear();
-      const month = (date.getMonth() + 1).toString().padStart(2, '0');
-      const day = date.getDate().toString().padStart(2, '0');
-      return `${year}-${month}-${day}`;
+      const year = date.getFullYear().toString(); // Get last 2 digits of year
+      const month = (date.getMonth() + 1).toString().padStart(2, "0");
+      const day = date.getDate().toString().padStart(2, "0");
+      return `${month}/${day}/${year}`;
     }
-    return '';
+    return "";
   };
+  
+  const toISOFormat = (dateString) => {
+    if (dateString) {
+      const parts = dateString.split('/');
+      if (parts.length === 3) {
+        let year = parseInt(parts[2], 10);
+        year += (year < 50 ? 2000 : 1900); // Adjusting YY to YYYY
+        const month = parts[0].padStart(2, "0");
+        const day = parts[1].padStart(2, "0");
+        return `${year}-${month}-${day}`;
+      }
+    }
+    return "";
+  };
+  
+  
 
   const [info, setInfo] = useState({
-    firstName: '',
-    lastName: '',
-    birthday: initialValues?.birthday ? toYYYYMMDD(initialValues.birthday) : ''
-  });
+    firstName: "",
+    lastName: "",
+    birthday: initialValues?.birthday ? toMMDDYY(initialValues.birthday) : "",
+    });
 
   useEffect(() => {
     if (initialValues) {
-      setInfo(prevState => ({
+      setInfo((prevState) => ({
         ...prevState,
         ...initialValues,
-        birthday: initialValues.birthday ? toYYYYMMDD(initialValues.birthday) : prevState.birthday
       }));
     }
   }, [initialValues]);
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
-    setFieldValue(name, value);
-    setInfo(prevState => ({
+    let formattedValue = value;
+  
+    if (name === "info.birthday") {
+      // Convert the entered MM/DD/YY format to YYYY-MM-DD for internal use
+      formattedValue = toISOFormat(value);
+    }
+  
+    setFieldValue(name, formattedValue);
+    setInfo((prevState) => ({
       ...prevState,
-      [name.split('.')[1]]: value
+      [name.split(".")[1]]: name === "info.birthday" ? value : formattedValue,
     }));
   };
 
@@ -78,6 +100,7 @@ const Info = ({ setFieldValue, errors, touched, initialValues }) => {
           )}
         </div>
       </div>
+
       <div>
         <label htmlFor="info.birthday">Birthday</label>
         <input
