@@ -17,7 +17,7 @@ function PhoneNumber({ setFieldValue, errors, touched,initialValues }) {
   };
 
   return (
-    <div >
+    <div className="phoneInput">
       <h4>Your phone :</h4>
       <PhoneInput
         placeholder="Enter phone number"

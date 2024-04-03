@@ -171,9 +171,10 @@ const Profile = () => {
   //NOTE : this function submit the inputs value to the endpoint
   const handleSubmit = async (values) => {
     setIsLoading(true);
-    setErrorSUB(null); // Reset error state on new submission
+    setErrorSUB(null); 
 
     const formData = new FormData();
+    // console.log(values)
 
     values.image.forEach((file) => {
       formData.append("image", file);
@@ -196,6 +197,7 @@ const Profile = () => {
         setIsLoading(false);
         return;
       }
+      
       const response = await axios.post(
         "http://localhost:3001/profile",
         formData,
@@ -207,14 +209,12 @@ const Profile = () => {
           },
         }
       );
-      //TODO : update the access token from the user user
 
       if (response.accessToken) {
         // Update the access token in local storage
         localStorage.setItem('accessToken', response.accessToken);
       }
       navigate("/home")
-      //console.log(response);
     } catch (error) {
       if (!error.response) {
         // Network or other error, not a response from the server
@@ -247,7 +247,6 @@ const Profile = () => {
   };
 
 
-  //NOTE : the rendring
   if (isLoading && cssLoaded) return <AnimatedLoader />;
   if (!isFetchingComplete) {
     //console.log("errorGET = ", errorGET);
@@ -348,7 +347,7 @@ const Profile = () => {
                     setFieldValue={setFieldValue}
                   />
 
-                  <input className="btn-login" type="submit" value="Submit" />
+                  <input className="btn-save" type="submit" value="Submit" />
                 </div>
               </div>
             </form>

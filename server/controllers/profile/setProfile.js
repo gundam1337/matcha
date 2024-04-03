@@ -56,13 +56,18 @@ const validationSchema = Yup.object({
   info: Yup.object({
     firstName: nameValidationSchema,
     lastName: nameValidationSchema,
-    birthday: Yup.date()
-      .required("Birthday is required")
-      .test(
-        "age",
-        "You must be at least 18 years old",
-        (value) => calculateAge(value) >= 18
-      ),
+    // birthday: Yup.string()
+    //   .required("Birthday is required")
+    //   .matches(
+    //     /^(0[1-9]|1[0-2])\/(0[1-9]|[12]\d|3[01])\/(19|20)\d{2}$/,
+    //     "Birthday must be in the format mm/dd/yyyy"
+    //   )
+    //   .test("age", "You must be at least 18 years old", (value) => {
+    //     if (value) {
+    //       return calculateAge(value) >= 18;
+    //     }
+    //     return false;
+    //   }),
   }),
   phoneNumber: Yup.string().required("Phone number is required"),
   gender: Yup.string().required("Gender is required"),
@@ -310,6 +315,7 @@ const setProfile = async (req, res, next) => {
       return res.status(404).send({ error: "User not found" });
     }
     const userInfo = req.body;
+    console.log("userInfo",userInfo)
     const targetGender = req.body.gender === "man" ? "woman" : "man";
     const targetAgeMin = !req.body.targetAge.minAge
       ? 18
@@ -318,6 +324,7 @@ const setProfile = async (req, res, next) => {
       ? 18
       : parseInt(req.body.targetAge.maxAge, 10);
 
+    
     // Update the user's profile
     const pulicURLs = await getUserURLsFiles(userID);
     user.profile = {
@@ -352,7 +359,7 @@ const setProfile = async (req, res, next) => {
     // Save the updated user
     await user.save();
 
-    //send the OK and the access token 
+    //send the OK and the access token
     res.json({
       message: "Profile updated successfully",
       accessToken: req.newAccessToken,
@@ -363,7 +370,6 @@ const setProfile = async (req, res, next) => {
 
   // res.send("FormData received");
 };
-
 
 const profileSetup = [
   upload.any(),

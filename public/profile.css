@@ -1,4 +1,4 @@
-@import "~leaflet/dist/leaflet.css";
+/* @import "~leaflet/dist/leaflet.css"; */
 
 body {
   font-family: "Readex Pro", sans-serif;
@@ -174,8 +174,9 @@ input[type="date"] {
 }
 
 /* =================== phone number ======================== */
-.form-row h4{
-  margin: 5px;
+.phoneInput h4{
+  margin-top : 15px;
+  margin-bottom : 0px;
 }
 
 
