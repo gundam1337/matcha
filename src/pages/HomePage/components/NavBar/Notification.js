@@ -67,7 +67,7 @@ const Notification = () => {
 
     // Cleanup (handle disconnections)
     return () => {
-      socketService.off('newNotification');
+     // socketService.off('newNotification');
       socketService.disconnect();
     };
   }, []);
