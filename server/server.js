@@ -39,7 +39,7 @@ const startServer = async () => {
           if (err) return next(new Error("Authentication error"));
 
           socket.decoded = decoded;
-          console.log("decode is = ", decoded);
+          // console.log("decode is = ", decoded);
           next();
         }
       );
