@@ -35,14 +35,11 @@ const Search = () => {
   const toggleDropdown = () => {
     setDropdownVisible(!isDropdownVisible);
   };
-
   const handleClose = () => setDropdownVisible(false);
-
   useOutsideAlerter(wrapperRef, handleClose);
 
   // Function to handle input change and update search query
   const handleInputChange = (e) => {
-    console.log(e.target.value)
     setSearchQuery(e.target.value);
   };
 
@@ -54,7 +51,6 @@ const Search = () => {
           const response = await axiosInstance.get(
             `/search?searchTerm=${searchQuery}`
           );
-       
           console.log(response.data)
           setSuggestions(response.data);
         } catch (error) {
@@ -66,9 +62,11 @@ const Search = () => {
     fetchSuggestions();
   }, [searchQuery]);
 
+  //this function for fetching more data about the searched user
+  //TODO push the user selected user to redux
   const handleSuggestionClick = (suggestion) => {
     console.log("Selected suggestion:", suggestion);
-    //TODO push the user selected to redux
+    
     // You can add additional logic here if needed
   };
 

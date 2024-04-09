@@ -1,7 +1,8 @@
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faTimes, faStar, faHeart } from "@fortawesome/free-solid-svg-icons";
+import { useState } from "react";
 
-//TODO : add a  javscript code that can change the images 
+//TODO : add a  javscript code that can change the images
 //TODO : make each section as separted compont
 const Cards = () => {
   return (
@@ -16,13 +17,15 @@ const Cards = () => {
           <div className="photo-text">
             <div className="photo-name-and-age">
               <h2>Lorem</h2>
-              <h2>21</h2>
+              <h3>21</h3>
+              <p>
+                Morocco,
+                beni mellal
+              </p>
             </div>
 
             <div className="photo-bio">
-              Lorem ipsum dolor sit amet consectetur adipisicing elit. Illum
-              quos, doloribus officiis molestias quo magni earum quaerat nemo
-              eius dolor!
+              chess player
             </div>
           </div>
         </div>

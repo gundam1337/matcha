@@ -72,8 +72,8 @@ async function createFakeUsers() {
       },
       gender: secondConst,
       ageRange: {
-        min: faker.datatype.number({ min: 18, max: 25 }),
-        max: faker.datatype.number({ min: 26, max: 40 })
+        min: faker.number.int({ min: 18, max: 25 }),
+        max: faker.number.int({ min: 45, max: 50 })
       }
     });
 

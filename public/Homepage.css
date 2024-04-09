@@ -498,20 +498,25 @@ main {
   bottom: 0; /* Align to the bottom of the .photo container */
   left: 0; /* Align to the left of the .photo container */
   width: 100%; /* Take the full width of the .photo container */
-  padding: 15px; /* Padding inside the text container */
+  padding: 20px; /* Padding inside the text container */
   background: linear-gradient(
-    180deg,
-    rgba(2, 0, 36, 0) 0%,
-    rgba(0, 0, 0, 0.7) 100%
+    to top, /* Gradient going from bottom to top */
+    rgba(0, 0, 0, 1) 0%, /* More solid black at the bottom */
+    rgba(0, 0, 0, 0) 40% /* Transparent half-way up */
   ); /* Gradient background */
   border-radius: 0 0 10px 10px; /* Rounded corners at the bottom */
   color: white; /* Text color */
 }
 
 .photo-name-and-age {
-  display: flex;
   align-items: baseline;
-  font-size: 1.4rem;
+  font-size: 1rem;
+}
+
+.photo-name, .photo-age {
+  font-weight: bold; /* Name and age both bold */
+  color: white;
+  margin-right: 5px; /* Smaller margin */
 }
 
 .photo-name {
