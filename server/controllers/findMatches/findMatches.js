@@ -1,6 +1,6 @@
 
 
-const findMatches = (req, res) =>{
+const findMatches = () =>{
     console.log("I am working ")
     // let potentialMatches = allUsers.filter(otherUser => 
     //   otherUser.preferences.gender === user.profile.gender &&
