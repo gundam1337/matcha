@@ -4,7 +4,7 @@ import { useState, useEffect } from "react";
 import axiosInstance from "../../../../API/axiosConfig";
 
 //DONE : make each section as separted compont
-//TODO : send a request to the server 
+//DONE : send a request to the server
 
 const UserProfileCard = ({ users }) => {
   return (
@@ -55,10 +55,22 @@ const Cards = () => {
     setSwipeCount(0); // Reset swipe count after fetching new users
   };
 
-  const handleSwipe = (swipeType) => {
+  const handleSwipe = async (action) => {
+    // action parameter will be 'left' or 'right'
     // Increment swipe count
     setSwipeCount((prev) => prev + 1);
-    // Here you would also send the swipe to the server
+
+    try {
+      // "userId",
+      // "targetUserId",
+
+      const response = await axiosInstance.post("/swipe", {
+        action,
+      });
+      console.log("Swipe successful:", response.data);
+    } catch (error) {
+      console.error("Error during swipe:", error);
+    }
   };
 
   return (
