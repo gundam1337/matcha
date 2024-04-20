@@ -3,10 +3,26 @@ import { faTimes, faStar, faHeart } from "@fortawesome/free-solid-svg-icons";
 import { useState, useEffect } from "react";
 import axiosInstance from "../../../../API/axiosConfig";
 
-//DONE : make each section as separted compont
-//DONE : send a request to the server
+//THIS IS JUST FOR RENDRING THE USERS DATA
+
+// const UserProfileCard = ({ user }) => (
+//   <div className="photo">
+//     <img src={user.photoUrl} alt={`${user.name} profile`} />
+
+//     <div className="photo-text">
+//       <div className="photo-name-and-age">
+//         <h2>{user.name}</h2>
+//         <h3>{user.age}</h3>
+//         <p>{user.location}</p>
+//       </div>
+
+//       <div className="photo-bio">{user.bio}</div>
+//     </div>
+//   </div>
+// );
 
 const UserProfileCard = ({ users }) => {
+  //destruct the user
   return (
     <div className="photo">
       <img
@@ -45,28 +61,36 @@ const Cards = () => {
   const [users, setUsers] = useState([]);
   const [swipeCount, setSwipeCount] = useState(0);
 
-  useEffect(() => {
-    fetchUsers();
-  }, [swipeCount]); // Fetch new users whenever swipe count is a multiple of 10
-
   const fetchUsers = async () => {
-    const res = await axiosInstance.get(`/matches/`);
-    setUsers(res.data);
-    setSwipeCount(0); // Reset swipe count after fetching new users
+    try {
+      const res = await axiosInstance.get("/findMatches");
+      if (res && res.data) {
+        setUsers(res.data);
+        setSwipeCount(0); // Reset swipe count after fetching new users
+      } else {
+        console.error("Fetch failed: Empty response");
+      }
+    } catch (error) {
+      console.error("Error fetching new users:", error);
+    }
   };
 
   const handleSwipe = async (action) => {
-    // action parameter will be 'left' or 'right'
-    // Increment swipe count
-    setSwipeCount((prev) => prev + 1);
+    setSwipeCount((prev) => {
+      const newCount = prev + 1;
+
+      if (newCount % 10 === 0) {
+        fetchUsers(); // Fetch new users after every 10 swipes
+      }
+
+      return newCount;
+    });
 
     try {
-      // "userId",
-      // "targetUserId",
-
       const response = await axiosInstance.post("/swipe", {
         action,
       });
+
       console.log("Swipe successful:", response.data);
     } catch (error) {
       console.error("Error during swipe:", error);

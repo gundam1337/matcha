@@ -3,8 +3,13 @@
 //TODO : creat a stack 
 
 
+//->Matching Algorithm : 
+//Gender and Age Filters
+//Location Filtering
+
+
 const findMatches = () =>{
-    console.log("I am working ")
+    console.log("send new suggestion")
     // let potentialMatches = allUsers.filter(otherUser => 
     //   otherUser.preferences.gender === user.profile.gender &&
     //   otherUser.profile.gender === user.preferences.gender &&

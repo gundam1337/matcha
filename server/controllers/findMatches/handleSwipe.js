@@ -6,14 +6,16 @@ async function handleSwipe(req, res) {
   console.log("req body ->:", req.body);
   try {
     if (action === "like") {
-      //await User.findByIdAndUpdate(userId, { $addToSet: { likes: targetUserId } });
+      await User.findByIdAndUpdate(userId, { $addToSet: { likes: targetUserId } });
       // Optionally, check for match here
       console.log("like");
     } else if (action === "dislike") {
       console.log("dislike");
 
-      //await User.findByIdAndUpdate(userId, { $addToSet: { dislikes: targetUserId } });
+      await User.findByIdAndUpdate(userId, { $addToSet: { dislikes: targetUserId } });
     } else if (action === "superlike") {
+
+      await User.findByIdAndUpdate(userId, { $addToSet: { superlike: targetUserId } });
       console.log("superlike");
     } else {
       return res.status(400).send("Invalid swipe action");

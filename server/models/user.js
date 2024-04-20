@@ -105,6 +105,12 @@ const userSchema = new Schema({
       ref: "User",
     },
   ],
+  superlike: [
+    {
+      type: Schema.Types.ObjectId,
+      ref: "User",
+    },
+  ],
   refreshToken: {
     type: String,
   },
