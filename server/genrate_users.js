@@ -43,7 +43,7 @@ async function createFakeUsers() {
   for (let i = 0; i < TOTAL_USERS; i++) {
     const hashedPassword = await bcrypt.hash('123456789', 10);
     const profilePicture = await fetchUnsplashImage();
-    const userGender = getRandomElement(['male', 'female']);
+    const userGender = getRandomElement(['man', 'woman']);
     const secondConst = userGender === 'man' ? 'woman' : 'man';
 
     const newUser = new User({

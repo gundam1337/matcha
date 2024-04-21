@@ -1,31 +1,44 @@
+//TODO : creat a stack
+const User = require("../../models/user");
 
-
-//TODO : creat a stack 
-
-
-//->Matching Algorithm : 
+//->Matching Algorithm :
 //Gender and Age Filters
 //Location Filtering
+//NOTE : run the quary using the usrname
+const findMatches = async (req, res, next) => {
+  try {
+    const username = req.body.username;
+    const currentUser = await User.findOne({ username: username });
 
+    if (!currentUser) {
+      return res.status(404).send("User not found");
+    }
+    console.log("currentUser",currentUser)
 
-const findMatches = () =>{
-    console.log("send new suggestion")
-    // let potentialMatches = allUsers.filter(otherUser => 
-    //   otherUser.preferences.gender === user.profile.gender &&
-    //   otherUser.profile.gender === user.preferences.gender &&
-    //   isWithinAgeRange(otherUser, user.preferences.ageRange) &&
-    //   isWithinDistance(otherUser, user.profile.location, user.preferences.distance)
-    // );
-  
-    // let interestMatches = potentialMatches.filter(otherUser =>
-    //   hasCommonInterests(user.profile.interests, otherUser.profile.interests)
-    // );
-  
-    // let mutualLikes = interestMatches.filter(otherUser =>
-    //   user.likes.includes(otherUser.userID) && otherUser.likes.includes(user.userID)
-    // );
-  
-    // return mutualLikes;
+    const potentialMatches = await User.find({
+      username: { $ne: username }, // Exclude the current user
+      "profile.gender": "female", // Match preferred gender
+      // "profile.birthdate": {
+      //   $gte: new Date(
+      //     new Date().setFullYear(
+      //       new Date().getFullYear() - currentUser.preferences.ageRange.max
+      //     )
+      //   ),
+      //   $lte: new Date(
+      //     new Date().setFullYear(
+      //       new Date().getFullYear() - currentUser.preferences.ageRange.min
+      //     )
+      //   ),
+      // },
+    })
+      .limit(10) // Limit to 10 records
+      .exec(); // Execute the query
+    
+    console.log("potentialMatches",potentialMatches)
+    res.status(200).json(potentialMatches);
+  } catch (error) {
+    res.status(500).send("Internal server error");
   }
-  
-  module.exports = findMatches  
+};
+
+module.exports = findMatches;

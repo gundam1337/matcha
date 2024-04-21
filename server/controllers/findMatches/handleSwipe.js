@@ -1,5 +1,4 @@
-// controllers/findMatches/handleSwipe.js
-const User = require("../../models/user"); // Assuming you have a User model
+const User = require("../../models/user");
 
 async function handleSwipe(req, res) {
   const { userId, targetUserId, action } = req.body;
