@@ -1,10 +1,13 @@
-//TODO : creat a stack
 const User = require("../../models/user");
 
 //->Matching Algorithm :
 //Gender and Age Filters
 //Location Filtering
-//NOTE : run the quary using the usrname
+
+//TODO : remove the duplicate
+//TODO : just send the necessary data to the server
+//TODO : to calculate the user age
+
 const findMatches = async (req, res, next) => {
   try {
     const username = req.body.username;
@@ -13,7 +16,6 @@ const findMatches = async (req, res, next) => {
     if (!currentUser) {
       return res.status(404).send("User not found");
     }
-    console.log("currentUser",currentUser)
 
     const potentialMatches = await User.find({
       username: { $ne: username }, // Exclude the current user
@@ -33,8 +35,7 @@ const findMatches = async (req, res, next) => {
     })
       .limit(10) // Limit to 10 records
       .exec(); // Execute the query
-    
-    console.log("potentialMatches",potentialMatches)
+
     res.status(200).json(potentialMatches);
   } catch (error) {
     res.status(500).send("Internal server error");

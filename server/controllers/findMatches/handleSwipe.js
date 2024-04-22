@@ -1,27 +1,59 @@
 const User = require("../../models/user");
 
 async function handleSwipe(req, res) {
-  const { userId, targetUserId, action } = req.body;
-  console.log("req body ->:", req.body);
+  const { username: currentUsername, targetUsername: swipedUsername, action } = req.body;
+
   try {
+    const swipedUser = await User.findOne({ username: swipedUsername });
+    const currentUser = await User.findOne({ username: currentUsername });
+
+    if (!swipedUser || !currentUser) {
+      return res.status(404).send("User(s) not found");
+    }
+
     if (action === "like") {
-      await User.findByIdAndUpdate(userId, { $addToSet: { likes: targetUserId } });
-      // Optionally, check for match here
-      console.log("like");
+      // The current user likes the swiped user
+      await User.findByIdAndUpdate(currentUser._id, {
+        $addToSet: { likes: swipedUser._id },
+      });
+
+      // Check if the swiped user also likes the current user (mutual liking)
+      const doesSwipedUserLikeCurrent = swipedUser.likes.some(
+        (likeId) => likeId.toString() === currentUser._id.toString()
+      );
+
+      if (doesSwipedUserLikeCurrent) {
+        // Mutual like - create a match
+        await User.findByIdAndUpdate(swipedUser._id, {
+          $addToSet: { matches: currentUser._id },
+        });
+
+        await User.findByIdAndUpdate(currentUser._id, {
+          $addToSet: { matches: swipedUser._id },
+        });
+
+        console.log("Match created!");
+      }
+
     } else if (action === "dislike") {
-      console.log("dislike");
+      await User.findByIdAndUpdate(currentUser._id, {
+        $addToSet: { dislikes: swipedUser._id },
+      });
 
-      await User.findByIdAndUpdate(userId, { $addToSet: { dislikes: targetUserId } });
     } else if (action === "superlike") {
+      await User.findByIdAndUpdate(currentUser._id, {
+        $addToSet: { superlike: swipedUser._id },
+      });
 
-      await User.findByIdAndUpdate(userId, { $addToSet: { superlike: targetUserId } });
-      console.log("superlike");
     } else {
       return res.status(400).send("Invalid swipe action");
     }
-    res.send(`Swiped ${action} on user ${targetUserId} by user ${userId}`);
+
+    res.status(200).send("Action completed successfully");
+
   } catch (error) {
-    res.status(500).send(error.toString());
+    console.error("Error during swipe handling:", error);
+    res.status(500).send("Internal Server Error");
   }
 }
 
