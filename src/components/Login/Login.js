@@ -59,15 +59,15 @@ const Login = (props) => {
           }}
           validationSchema={Yup.object({
             name: Yup.string()
-              .max(15, "Must be 15 characters or less")
+              // .max(15, "Must be 15 characters or less")
               .required("Required"),
             password: Yup.string()
               .required("Password is required")
-              .min(8, "Password must be at least 8 characters")
-              .matches(
-                /^(?=.*[a-z])(?=.*[0-9])/,
-                "Must contain 8 characters and one number"
-              ),
+              // .min(8, "Password must be at least 8 characters")
+              // .matches(
+              //   /^(?=.*[a-z])(?=.*[0-9])/,
+              //   "Must contain 8 characters and one number"
+              // ),
           })}
           onSubmit={handleSubmit}
         >

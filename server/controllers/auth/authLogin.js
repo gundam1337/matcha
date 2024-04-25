@@ -12,16 +12,16 @@ const refreshTokenSecret = process.env.REFRESH_TOKEN_SECRET;
 //NOTE: Validation inputs Middleware:
 const validate = [
   body("name")
-    .isLength({ max: 15 })
-    .withMessage("Must be 15 characters or less")
+    // .isLength({ max: 15 })
+    // .withMessage("Must be 15 characters or less")
     .notEmpty()
     .withMessage("Required"),
 
   body("password")
     .isLength({ min: 8 })
     .withMessage("Password must be at least 8 characters")
-    .matches(/^(?=.*[a-z])(?=.*[0-9])/)
-    .withMessage("Must contain 8 characters and one number"),
+    // .matches(/^(?=.*[a-z])(?=.*[0-9])/)
+    // .withMessage("Must contain 8 characters and one number"),
 ];
 
 const handleValidationErrors = (req, res, next) => {

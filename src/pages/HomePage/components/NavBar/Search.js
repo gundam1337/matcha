@@ -1,6 +1,8 @@
 import { useState, useRef, useEffect } from "react";
 import useOutsideAlerter from "../../Hooks/useOutsideAlerter";
 import axiosInstance from "../../../../API/axiosConfig";
+import { useSelector, useDispatch } from "react-redux";
+import fetchUserSearch from "../../../../Rudex/SearchResultSlice/fetchingUserSearch";
 
 const SuggestionsItem = ({ suggestion, onClick }) => {
   return (
@@ -31,6 +33,24 @@ const Search = () => {
   const [suggestions, setSuggestions] = useState({});
   const [searchQuery, setSearchQuery] = useState("");
   const wrapperRef = useRef(null); // Ref for the wrapper element
+  const dispatch = useDispatch();
+
+  // Selecting user data from Redux store
+  const userData = useSelector((state) => state.user.userData);
+  // const status = useSelector((state) => state.user.status);
+  // const error = useSelector((state) => state.user.error);
+
+  const [username, setUsername] = useState();
+  
+  useEffect(() => {
+    if (username) {
+      dispatch(fetchUserSearch(username)); // Fetch user data when component mounts
+    }
+    console.log("the searched username ", userData.name);
+    return () => {
+      dispatch(fetchUserSearch()); // Clean up when component unmounts
+    };
+  }, [dispatch, username]);
 
   const toggleDropdown = () => {
     setDropdownVisible(!isDropdownVisible);
@@ -51,7 +71,7 @@ const Search = () => {
           const response = await axiosInstance.get(
             `/search?searchTerm=${searchQuery}`
           );
-          console.log(response.data)
+          console.log(response.data);
           setSuggestions(response.data);
         } catch (error) {
           console.log("there is an error ");
@@ -66,7 +86,7 @@ const Search = () => {
   //TODO push the user selected user to redux
   const handleSuggestionClick = (suggestion) => {
     console.log("Selected suggestion:", suggestion);
-    
+
     // You can add additional logic here if needed
   };
 

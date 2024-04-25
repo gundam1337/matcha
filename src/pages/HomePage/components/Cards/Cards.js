@@ -2,7 +2,11 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faTimes, faStar, faHeart } from "@fortawesome/free-solid-svg-icons";
 import { useState, useEffect } from "react";
 import axiosInstance from "../../../../API/axiosConfig";
-import { useSelector } from "react-redux";
+import { useSelector,useDispatch } from "react-redux";
+//import fetchUserSearch from "../../../../Rudex/SearchResultSlice/fetchingUserSearch"
+
+//TODO : display the user search in the card 
+
 
 //THIS IS JUST FOR RENDRING THE USERS DATA
 
@@ -11,19 +15,20 @@ const UserProfileCard = ({ matches }) => {
     return <div>Loading...</div>; // Show loading or some other placeholder
   }
 
-  // console.log("inside the card",matches)
+  console.log("inside the card",matches)
   return (
     <div className="photo">
       <img
-        src={matches.profile.profilePicture}
-        alt={`${matches.username} profile`}
+        src={matches.profilePicture}
+        alt={ "profile_picture"}
       />
 
       <div className="photo-text">
         <div className="photo-name-and-age">
           <h2>{matches.username}</h2>
-          <h3>22</h3>
-          <p>{matches.profile.location.city}</p>
+          <h3>{matches.age}</h3>
+          <p>{matches.city} </p>
+          <p>{matches.country} </p>
         </div>
 
         <div className="photo-bio">{matches.bio}</div>
