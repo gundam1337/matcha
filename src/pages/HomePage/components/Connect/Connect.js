@@ -1,3 +1,27 @@
+
+//TODO : give each part a propre name 
+
+const Primary = ()=>{
+
+  //this will contain two box 
+  //one that display the ConversationList
+  //one that display the chatBox
+}
+
+const Matches = ()=>{
+  //this will contain the just a list of all the users that match with the current user 
+
+} 
+
+const Likes = ()=>{
+  //the same the as the matches 
+}
+
+const SearchBar =()=>{
+}
+
+
+
 const Connect = () => {
   return (
     <div className="connect">
@@ -15,6 +39,7 @@ const Connect = () => {
             id="message-search"
           />
         </div>
+
         {/* MESSAGES CATEGORY */}
         <div className="category">
           <h6 className="active">Primary</h6>
@@ -22,6 +47,7 @@ const Connect = () => {
           <h6 className="message-requests">Likes (7)</h6>
         </div>
         {/* MESSAGES */}
+
         <div>
         <div className="message">
           <div className="profile-photo">
@@ -32,6 +58,7 @@ const Connect = () => {
             <p className="text-muted">Just woke up bruh</p>
           </div>
         </div>
+
         {/* MESSAGES */}
         <div className="message">
           <div className="profile-photo">
@@ -50,5 +77,6 @@ const Connect = () => {
     </div>
   );
 };
+
 
 export default Connect;
