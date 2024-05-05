@@ -2,7 +2,7 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faTimes, faStar, faHeart } from "@fortawesome/free-solid-svg-icons";
 import { useState, useEffect } from "react";
 import axiosInstance from "../../../../API/axiosConfig";
-import { useSelector,useDispatch } from "react-redux";
+import { useSelector } from "react-redux";
 //import fetchUserSearch from "../../../../Rudex/SearchResultSlice/fetchingUserSearch"
 
 //TODO : display the user search in the card 

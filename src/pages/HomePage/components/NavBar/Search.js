@@ -40,7 +40,7 @@ const Search = () => {
   // const status = useSelector((state) => state.user.status);
   // const error = useSelector((state) => state.user.error);
 
-  const [username, setUsername] = useState();
+  //const [username, setUsername] = useState();
   
   // useEffect(() => {
   //   if (username) {
@@ -55,6 +55,7 @@ const Search = () => {
   const toggleDropdown = () => {
     setDropdownVisible(!isDropdownVisible);
   };
+  
   const handleClose = () => setDropdownVisible(false);
   useOutsideAlerter(wrapperRef, handleClose);
 
