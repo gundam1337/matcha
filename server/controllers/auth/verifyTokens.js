@@ -14,6 +14,7 @@ function verifyTokens(req, res, next) {
   // console.log("accessToken =",refreshToken)
   //if the token is not there send error messages
   if (!accessToken) {
+    console.log("I am here ");
     return res.status(403).send({ message: "Access Token is required" });
   }
   if (!refreshToken) {

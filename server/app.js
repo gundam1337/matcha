@@ -4,7 +4,7 @@ const path = require("path");
 const bodyParser = require("body-parser");
 const helmet = require("helmet");
 const cookieParser = require("cookie-parser");
-const cors = require('cors');//this is for the 
+//const cors = require('cors');//this is for the 
 
 const app = express();
 const authRoutes = require("./routes/auth.routes");
@@ -17,7 +17,7 @@ app.use(helmet());
 app.use(express.json());
 app.use(bodyParser.json());
 app.use(express.urlencoded({ extended: false }));
-app.use(cors());
+//app.use(cors());
 app.use(function (req, res, next) {
   var allowedOrigins = [
     "http://localhost:3000",
