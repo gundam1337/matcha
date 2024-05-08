@@ -7,19 +7,33 @@ const getUserMatches = async (req, res, next) => {
 
   //the userId is undifiend at this point
 
-  const userId = req.query.username;
-  console.log("user ID ",userId)
-  if (!userId) {
+  const username = req.query.username;
+  console.log("user ID ", username);
+  if (!username) {
     res.status(400).send("User ID is required");
     return;
   }
 
   try {
     // Send initial match data
-    //TODO modify the format that I should send the end client 
-    const user = await User.findById(userId).populate("matches").exec();
+    //DONE modify the format that I should send the end client
+    const user = await User.findOne({ username: username })
+      .populate({
+        path: "matches",
+        select:
+          "username profile.firstName profile.lastName profile.profilePicture",
+      })
+      .exec();
+
     if (user) {
-      res.write(`data: ${JSON.stringify(user.matches)}\n\n`);
+      // Map over the matches to restructure the data as needed
+      const matchesInfo = user.matches.map((match) => ({
+        username: match.username,
+        firstName: match.profile.firstName,
+        lastName: match.profile.lastName,
+        profilePicture: match.profile.profilePicture,
+      }));
+      res.write(`data: ${JSON.stringify(matchesInfo)}\n\n`);
     } else {
       res.write("data: []\n\n"); // Send empty array if no user found
     }
@@ -52,15 +66,6 @@ const getUserMatches = async (req, res, next) => {
     console.error("Error setting up change stream:", error);
     res.status(500).send("Failed to set up change stream");
   }
-  // // Send a simple event every second
-  // const intervalId = setInterval(() => {
-  //   res.write(`data: ${new Date().toLocaleTimeString()}\n\n`);
-  // }, 1000);
-
-  // req.on("close", () => {
-  //   clearInterval(intervalId);
-  //   res.end();
-  // });
 };
 
 module.exports = getUserMatches;
