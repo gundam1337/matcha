@@ -645,11 +645,16 @@ main {
 
 .connect .message .profile-photo {
   position: relative;
-  overflow: visible;
+  overflow: hidden;
+  width: 60px; /* Set the size of the circle */
+  height: 60px; /* Equal to the width for a perfect circle */
+  border-radius: 50%; /* Circular shape */
 }
 
 .connect .profile-photo img {
-  border-radius: 50%;
+  width: 100%; /* Ensures the image covers the container */
+  height: 100%; /* Ensures the image covers the container */
+  object-fit: cover; /* Ensures the image covers the space without distortion */
 }
 
 .connect .messages .message:last-child {

@@ -39,24 +39,25 @@ const getUserMatches = async (req, res, next) => {
     }
 
     // Set up the change stream to listen for updates on the matches
-    // const changeStream = User.watch([
-    //   {
-    //     $match: {
-    //       "updateDescription.updatedFields.matches": { $exists: true },
-    //     },
-    //   },
-    // ]);
+    //TODO : fix the format that I send to the end client 
+    const changeStream = User.watch([
+      {
+        $match: {
+          "updateDescription.updatedFields.matches": { $exists: true },
+        },
+      },
+    ]);
 
-    // changeStream.on("change", (change) => {
-    //   if (change.operationType === "update") {
-    //     // Check if the 'matches' array was updated
-    //     const updatedMatches = change.updateDescription.updatedFields.matches;
-    //     if (updatedMatches) {
-    //       // Sending the updated 'matches' array to the client
-    //       res.write(`data: ${JSON.stringify(updatedMatches)}\n\n`);
-    //     }
-    //   }
-    // });
+    changeStream.on("change", (change) => {
+      if (change.operationType === "update") {
+        // Check if the 'matches' array was updated
+        const updatedMatches = change.updateDescription.updatedFields.matches;
+        if (updatedMatches) {
+          // Sending the updated 'matches' array to the client
+          res.write(`data: ${JSON.stringify(updatedMatches)}\n\n`);
+        }
+      }
+    });
 
     req.on("close", () => {
       //changeStream.close();

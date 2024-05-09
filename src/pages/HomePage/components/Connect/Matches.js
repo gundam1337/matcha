@@ -30,6 +30,8 @@ const Matches = () => {
     };
   }, [user]); // Dependency array includes 'user' to re-run useEffect when user changes
 
+  //TODO : fix the size of the image 
+  //TODO : add the date to the matches
   return (
     <div>
       {matches.map(match => (
