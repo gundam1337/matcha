@@ -643,6 +643,12 @@ main {
   align-items: start;
 }
 
+.scrollable-container {
+  max-height: 400px; /* Adjust the height as needed */
+  overflow-y: auto; /* Enables vertical scrolling */
+  border: 1px solid #ccc; /* Optional: adds a border around the container */
+}
+
 .connect .message .profile-photo {
   position: relative;
   overflow: hidden;

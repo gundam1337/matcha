@@ -15,9 +15,13 @@ const Matches = () => {
     const eventSource = new EventSource(url);
 
     eventSource.onmessage = (event) => {
-      const data = JSON.parse(event.data); // Parse the JSON data
-      console.log("data ", data);
-      setMatches(data); // Update state with new matches
+      const eventData = JSON.parse(event.data);      //
+      console.log("data ", eventData);
+      if (eventData.type === 'existed_match') {
+        setMatches(eventData.details); // Set the initial matches
+      } else if (eventData.type === 'new_match') {
+        setMatches(prevMatches => [...prevMatches, eventData.details]); // Append new matches to the existing state
+      }
     };
 
     eventSource.onerror = (error) => {
@@ -33,7 +37,7 @@ const Matches = () => {
   //TODO : fix the size of the image 
   //TODO : add the date to the matches
   return (
-    <div>
+    <div className="scrollable-container">
       {matches.map(match => (
         <div key={match.username} className="message">
           <div className="profile-photo">

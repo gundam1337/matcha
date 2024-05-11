@@ -8,7 +8,7 @@ const getUserMatches = async (req, res, next) => {
   //the userId is undifiend at this point
 
   const username = req.query.username;
-  console.log("user ID ", username);
+  // console.log("user ID ", username);
   if (!username) {
     res.status(400).send("User ID is required");
     return;
@@ -33,13 +33,13 @@ const getUserMatches = async (req, res, next) => {
         lastName: match.profile.lastName,
         profilePicture: match.profile.profilePicture,
       }));
-      res.write(`data: ${JSON.stringify(matchesInfo)}\n\n`);
+      res.write(`data: ${JSON.stringify({type: "existed_match", details: matchesInfo})}\n\n`);
     } else {
       res.write("data: []\n\n"); // Send empty array if no user found
     }
 
     // Set up the change stream to listen for updates on the matches
-    //TODO : fix the format that I send to the end client 
+    //FIXME : fix the format that I send to the end client
     const changeStream = User.watch([
       {
         $match: {
@@ -48,13 +48,55 @@ const getUserMatches = async (req, res, next) => {
       },
     ]);
 
-    changeStream.on("change", (change) => {
+    // changeStream.on("change", (change) => {
+    //   if (change.operationType === "update") {
+    //     // Check if the 'matches' array was updated
+    //     const updatedMatches = change.updateDescription.updatedFields.matches;
+    //     if (updatedMatches) {
+    //       // Sending the updated 'matches' array to the client
+    //       console.log("matches in the changeStream :", updatedMatches);
+    //       // res.write(`data: ${JSON.stringify(updatedMatches)}\n\n`);
+    //     }
+    //   }
+    // });
+
+    changeStream.on("change", async (change) => {
       if (change.operationType === "update") {
-        // Check if the 'matches' array was updated
-        const updatedMatches = change.updateDescription.updatedFields.matches;
-        if (updatedMatches) {
-          // Sending the updated 'matches' array to the client
-          res.write(`data: ${JSON.stringify(updatedMatches)}\n\n`);
+        const updateFields = change.updateDescription.updatedFields;
+        if (updateFields.hasOwnProperty("matches")) {
+          // Access the matches array directly if it's the updated field
+          const matchesArray = updateFields.matches;
+          if (Array.isArray(matchesArray) && matchesArray.length > 0) {
+            const latestMatchId = matchesArray[matchesArray.length - 1]; // Get the last element (latest match)
+
+            try {
+              // Query the database to fetch the user details using the latestMatchId
+              const userData = await User.findById(latestMatchId)
+                .select(
+                  "username profile.firstName profile.lastName profile.profilePicture"
+                )
+                .exec();
+
+              if (userData) {
+                const userDetail = {
+                  username: userData.username,
+                  firstName: userData.profile.firstName,
+                  lastName: userData.profile.lastName,
+                  profilePicture: userData.profile.profilePicture,
+                };
+
+                console.log("Sending new match details:", userDetail);
+                // Send this data to the client
+                res.write(`data: ${JSON.stringify({type: "new_match", details: userDetail})}\n\n`);
+              } else {
+                console.log("No user found with the given ID:", latestMatchId);
+              }
+            } catch (error) {
+              console.error("Error fetching user details:", error);
+            }
+          } else {
+            console.log("Matches array is empty or not an array.");
+          }
         }
       }
     });
