@@ -48,17 +48,6 @@ const getUserMatches = async (req, res, next) => {
       },
     ]);
 
-    // changeStream.on("change", (change) => {
-    //   if (change.operationType === "update") {
-    //     // Check if the 'matches' array was updated
-    //     const updatedMatches = change.updateDescription.updatedFields.matches;
-    //     if (updatedMatches) {
-    //       // Sending the updated 'matches' array to the client
-    //       console.log("matches in the changeStream :", updatedMatches);
-    //       // res.write(`data: ${JSON.stringify(updatedMatches)}\n\n`);
-    //     }
-    //   }
-    // });
 
     changeStream.on("change", async (change) => {
       if (change.operationType === "update") {

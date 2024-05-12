@@ -1,26 +1,36 @@
 import { useState, useEffect } from "react";
 import { useSelector } from "react-redux";
 
-const Matches = () => {
+//FIXME : each time I render this compon
+//FIXME : the CROS problem in the request 
+
+
+const Matches = ({ setMatchesCount }) => {
   const [matches, setMatches] = useState([]); // State to store the matches
   const user = useSelector((state) => state.data);
 
   useEffect(() => {
     const username = user?.data?.username; // Safely access username
     if (!username) {
-      console.error('Username is not defined');
+      console.error("Username is not defined");
       return;
     }
-    const url = `http://localhost:3001/matches?username=${encodeURIComponent(username)}`;
+    const url = `http://localhost:3001/matches?username=${encodeURIComponent(
+      username
+    )}`;
     const eventSource = new EventSource(url);
 
     eventSource.onmessage = (event) => {
-      const eventData = JSON.parse(event.data);      //
+      const eventData = JSON.parse(event.data); //
       console.log("data ", eventData);
-      if (eventData.type === 'existed_match') {
+      if (eventData.type === "existed_match") {
         setMatches(eventData.details); // Set the initial matches
-      } else if (eventData.type === 'new_match') {
-        setMatches(prevMatches => [...prevMatches, eventData.details]); // Append new matches to the existing state
+      } else if (eventData.type === "new_match") {
+        setMatches((prevMatches) => {
+          const updatedMatches = [...prevMatches, eventData.details];
+          setMatchesCount(updatedMatches.length); // Update count on receiving new match
+          return updatedMatches;
+        });
       }
     };
 
@@ -32,13 +42,11 @@ const Matches = () => {
     return () => {
       eventSource.close();
     };
-  }, [user]); // Dependency array includes 'user' to re-run useEffect when user changes
+  }, [user]);
 
-  //TODO : fix the size of the image 
-  //TODO : add the date to the matches
   return (
     <div className="scrollable-container">
-      {matches.map(match => (
+      {matches.map((match) => (
         <div key={match.username} className="message">
           <div className="profile-photo">
             <img src={match.profilePicture[0]} alt={match.firstName} />

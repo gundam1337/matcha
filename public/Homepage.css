@@ -581,7 +581,6 @@ main {
 }
 
 /* =============== Connect ============== */
-
 .connect {
   position: absolute;
   left: 20px;
@@ -632,7 +631,7 @@ main {
   border-color: var(--color-dark);
 }
 
-.connect .messages .message-requests {
+.connect .messages .requests {
   color: var(--color-primary);
 }
 
