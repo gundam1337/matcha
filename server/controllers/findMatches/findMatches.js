@@ -18,8 +18,8 @@ const User = require("../../models/user");
 //Location Filtering
 
 //DONE: remove the duplicate
-//TODO : just send the necessary data to the server
-//TODO : to calculate the user age
+//DONE : just send the necessary data to the server
+//DONE : to calculate the user age
 
 // const calculateAge = (birthdateString) => {
 //   const birthDate = new Date(birthdateString);

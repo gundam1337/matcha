@@ -8,6 +8,7 @@ import SearchBar from "./SearchBar";
 const Category = () => {
   const [activeCategory, setActiveCategory] = useState(null);
   const [matchesCount, setMatchesCount] = useState(0);
+  const [selectedMatch, setSelectedMatch] = useState(null);
 
   // Handler to toggle category details
   const handleCategoryClick = (category) => {
@@ -15,6 +16,12 @@ const Category = () => {
       prevCategory === category ? null : category
     );
     setMatchesCount(0);
+  };
+
+  const handleMatchClick = (match) => {
+    console.log(match);
+    setSelectedMatch(match);
+    setActiveCategory('primary'); // Switch to the Primary component to show the clicked match
   };
 
   return (
@@ -42,9 +49,9 @@ const Category = () => {
           Likes (7)
         </h6>
       </div>
-      {activeCategory === "primary" && <Primary />}
+      {activeCategory === "primary" && <Primary selectedMatch = {selectedMatch} />}
       {activeCategory === "matches" && (
-        <Matches setMatchesCount={setMatchesCount} />
+        <Matches setMatchesCount={setMatchesCount} onMatchClick={handleMatchClick} />
       )}
       {activeCategory === "likes" && <Likes />}
     </div>

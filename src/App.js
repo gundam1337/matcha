@@ -1,5 +1,6 @@
 //TODO: how to handle the "not exist" url field
 //TODO : if the user Is aleardy login if enter the / navigate them to the home page
+//TODO : if the connection get cut at any stage of that app s
 
 import Authentication from "./pages/Authentication/Authentication";
 import Homepage from "./pages/HomePage/HomePage";

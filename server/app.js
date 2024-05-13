@@ -11,6 +11,7 @@ const authRoutes = require("./routes/auth.routes");
 const profileRoute = require("./routes/profile.routes");
 const homeRoute = require("./routes/home.routes")
 const findMatches = require("./routes/findMatches.routes")
+const chatHistory = require("./routes/connection.routes")
 
 app.use(cookieParser());
 app.use(helmet());
@@ -58,6 +59,10 @@ app.use("/", profileRoute);
 app.use("/",homeRoute)
 
 app.use("/",findMatches)
+
+app.use("/",chatHistory)
+
+
 
 app.get("*", (req, res) => {
   res.sendFile(path.join(__dirname, "..", "build", "index.html"));

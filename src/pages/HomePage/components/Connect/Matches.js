@@ -5,7 +5,7 @@ import { useSelector } from "react-redux";
 //FIXME : the CROS problem in the request 
 
 
-const Matches = ({ setMatchesCount }) => {
+const Matches = ({ setMatchesCount ,onMatchClick}) => {
   const [matches, setMatches] = useState([]); // State to store the matches
   const user = useSelector((state) => state.data);
 
@@ -47,7 +47,7 @@ const Matches = ({ setMatchesCount }) => {
   return (
     <div className="scrollable-container">
       {matches.map((match) => (
-        <div key={match.username} className="message">
+        <div key={match.username} className="message" onClick={() => onMatchClick(match)}>
           <div className="profile-photo">
             <img src={match.profilePicture[0]} alt={match.firstName} />
           </div>
