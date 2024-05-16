@@ -1,19 +1,16 @@
 import React, { useEffect, useState } from "react";
 import axiosInstance from "../../../../API/axiosConfig";
 
-//load 10 old messages
-//for all the last hsitory
+//load all the conversation and the least meessages
 
 const History = () => {
-  const [messages, setMessages] = useState([]);
-
-  
+  const [conversations, setConversations] = useState([]);
 
   useEffect(() => {
     const fetchMessages = async () => {
       try {
         const response = await axiosInstance.get("/chat_history");
-        setMessages(response.data);
+        setConversations(response.data);
       } catch (error) {
         console.error("Error fetching messages:", error);
       }
@@ -39,15 +36,15 @@ const History = () => {
   );
 };
 
-const Chat = ({selectedMatch}) => {
+const Chat = ({ selectedMatch }) => {
   //send and recive messages and render them
-  console.log("the selected matched ",selectedMatch)
+  console.log("the selected matched ", selectedMatch);
 };
 
-const Primary = ({selectedMatch}) => {
+const Primary = ({ selectedMatch }) => {
   return (
     <div>
-      <History selectedMatch = {selectedMatch}></History>
+      <History selectedMatch={selectedMatch}></History>
     </div>
   );
 };
