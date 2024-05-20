@@ -18,33 +18,34 @@ const chatHistory = async (req, res, next) => {
     }
 
     // Step 2: Find all conversations that the user is a participant in
-    const conversations = await Conversation.find()
-      .populate('participants', 'username profile')
+    const conversations = await Conversation.find({ participants: user._id })
+      .populate("participants", "username profile")
       .populate({
-        path: 'lastMessage',
-        select: 'text timestamp',
+        path: "lastMessage",
+        select: "text timestamp",
         populate: {
-          path: 'sender',
-          select: 'username profile',
+          path: "sender",
+          select: "username profile",
         },
       })
       .exec();
 
     const formattedConversations = conversations.map((conversation) => {
-      const participants = conversation.participants.map((participant) => ({
-        userID: participant._id,
-        username: participant.username,
-        profile: participant.profile,
-      }));
+      const participants = conversation.participants
+        .filter((participant) => !participant._id.equals(user._id))
+        .map((participant) => ({
+          userID: participant._id,
+          username: participant.username,
+          profile: participant.profile,
+        }));
 
       return {
-        conversationID: conversation._id,
         participants,
         lastMessage: {
-          text: conversation.lastMessage?.text || '',
-          timestamp: conversation.lastMessage?.timestamp || '',
+          text: conversation.lastMessage?.text || "",
+          timestamp: conversation.lastMessage?.timestamp || "",
           sender: {
-            username: conversation.lastMessage?.sender?.username || '',
+            username: conversation.lastMessage?.sender?.username || "",
             profile: conversation.lastMessage?.sender?.profile || {},
           },
         },
@@ -52,26 +53,14 @@ const chatHistory = async (req, res, next) => {
       };
     });
 
+    console.log("formattedConversations", formattedConversations);
 
-    // Step 3: Retrieve the last 10 messages for each conversation
-    // const conversationHistories = await Promise.all(
-    //   conversations.map(async (conversation) => {
-    //     const messages = await Message.find({ conversation: conversation._id })
-    //       .sort({ timestamp: -1 }) // Sort by timestamp in descending order
-    //       .limit(10) // Get the last 10 messages
-    //       .lean();
-
-    //     return {
-    //       conversationId: conversation._id,
-    //       messages,
-    //     };
-    //   })
-    // );
-
-    res.send(conversations);
+    res.send(formattedConversations);
   } catch (error) {
     res.status(500).send("Server error");
   }
 };
+
+module.exports = chatHistory;
 
 module.exports = chatHistory;
