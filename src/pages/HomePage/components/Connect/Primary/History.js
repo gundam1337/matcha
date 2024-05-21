@@ -1,18 +1,13 @@
 import React, { useEffect, useState } from "react";
-import axiosInstance from "../../../../API/axiosConfig";
+import axiosInstance from "../../../../../API/axiosConfig";
 
-//load all the conversation and the least meessages
-//store the fetched conversation data in a global state
-//add Loading.. if the conversation is not complet
-
-const History = () => {
+const History = ({ onSelectConversation }) => {
   const [conversations, setConversations] = useState([]);
 
   useEffect(() => {
     const fetchMessages = async () => {
       try {
         const response = await axiosInstance.get("/chat_history");
-
         console.log("response ->", response.data);
 
         // Process the response data to extract necessary information
@@ -39,7 +34,11 @@ const History = () => {
   return (
     <div className="chat">
       {conversations.map((conversation, index) => (
-        <div key={index} className="message">
+        <div
+          key={index}
+          className="message"
+          onClick={() => onSelectConversation(conversation)}
+        >
           <div className="profile-photo">
             <img src={conversation.profilePhoto} alt="Profile" />
           </div>
@@ -53,17 +52,4 @@ const History = () => {
   );
 };
 
-const Chat = ({ selectedMatch }) => {
-  //send and recive messages and render them
-  console.log("the selected matched ", selectedMatch);
-};
-
-const Primary = ({ selectedMatch }) => {
-  return (
-    <div>
-      <History selectedMatch={selectedMatch}></History>
-    </div>
-  );
-};
-
-export default Primary;
+export default History;

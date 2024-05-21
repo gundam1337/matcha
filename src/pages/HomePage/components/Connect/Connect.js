@@ -2,7 +2,7 @@ import { useState } from "react";
 
 import Likes from "./Likes";
 import Matches from "./Matches";
-import Primary from "./Primary";
+import Primary from "./Primary/Primary";
 import SearchBar from "./SearchBar";
 
 const Category = () => {

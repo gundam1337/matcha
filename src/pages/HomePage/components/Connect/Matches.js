@@ -3,6 +3,7 @@ import { useSelector } from "react-redux";
 
 //FIXME : each time I render this compon
 //FIXME : the CROS problem in the request 
+//useMemo for prevantiong the re-rendring 
 
 
 const Matches = ({ setMatchesCount ,onMatchClick}) => {
