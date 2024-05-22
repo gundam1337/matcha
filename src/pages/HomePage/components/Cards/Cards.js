@@ -15,7 +15,7 @@ const UserProfileCard = ({ matches }) => {
     return <div>Loading...</div>; // Show loading or some other placeholder
   }
 
-  console.log("inside the card",matches)
+  // console.log("inside the card",matches)
   return (
     <div className="photo">
       <img
@@ -62,7 +62,7 @@ const Cards = () => {
   const fetchUsers = async () => {
     try {
       const username = user.data.username;
-      console.log("a new request to the server");
+      // console.log("a new request to the server");
       const res = await axiosInstance.post("/findMatches", { username });
       if (res) {
         setMatches(res.data);
@@ -70,8 +70,8 @@ const Cards = () => {
       } else {
         console.error("Fetch failed: Empty response");
       }
-      console.log("the request is sent to server");
     } catch (error) {
+      // console.log("the request is sent to server");
       console.error("Error fetching new users:", error);
     }
   };

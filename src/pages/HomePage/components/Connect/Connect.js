@@ -27,12 +27,16 @@ const Category = () => {
   return (
     <div>
       <div className="category">
+
+        
         <h6
           onClick={() => handleCategoryClick("primary")}
           className={activeCategory === "primary" ? "active" : ""}
         >
           Primary
         </h6>
+
+
         <h6
           onClick={() => handleCategoryClick("matches")}
           className={`${matchesCount !== 0 ? "requests" : ""}${
@@ -41,6 +45,8 @@ const Category = () => {
         >
           Matches({matchesCount})
         </h6>
+
+
         <h6
           onClick={() => handleCategoryClick("likes")}
           // requests is a class name for highlitiing the text
@@ -48,6 +54,7 @@ const Category = () => {
         >
           Likes (7)
         </h6>
+
       </div>
       {activeCategory === "primary" && <Primary selectedMatch = {selectedMatch} />}
       {activeCategory === "matches" && (
@@ -69,7 +76,7 @@ const Connect = () => {
         </div>
 
         {/* SEARCH BAR */}
-        <SearchBar></SearchBar>
+        {/* <SearchBar></SearchBar> */}
 
         {/*  CATEGORY */}
         <Category></Category>

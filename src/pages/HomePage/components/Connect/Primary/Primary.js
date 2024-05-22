@@ -1,26 +1,37 @@
-import React, { useEffect, useState } from "react";
-import axiosInstance from "../../../../../API/axiosConfig";
+import React, {useState } from "react";
 
 import History from "./History";
 import Chat from "./Chat";
 
 
-const Primary = () => {
+const Primary = ({ selectedMatch }) => {
+  console.log("selectedMatch", selectedMatch);
   const [selectedConversation, setSelectedConversation] = useState(null);
 
   const handleSelectConversation = (conversation) => {
     setSelectedConversation(conversation);
   };
 
+  const handleBack = () => {
+    setSelectedConversation(null);
+  };
+
+  console.log("conversation:", selectedConversation);
+
   return (
     <div>
-      {selectedConversation ? (
-        <Chat selectedMatch={selectedConversation} />
+      {selectedMatch || selectedConversation ? (
+        <Chat 
+          selectedMatch={selectedMatch} 
+          selectedConversation={selectedConversation} 
+          onBack={handleBack}
+        />
       ) : (
         <History onSelectConversation={handleSelectConversation} />
       )}
     </div>
   );
 };
+
 
 export default Primary;
