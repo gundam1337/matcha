@@ -28,6 +28,5 @@ axiosInstance.interceptors.request.use(
   }
 );
 
-// Optionally, you can add a response interceptor to handle global response errors
 
 export default axiosInstance;

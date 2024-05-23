@@ -1,18 +1,15 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { IoArrowBackCircleSharp } from "react-icons/io5";
+import axiosInstance from "../../../../../API/axiosConfig";
 //this will contain 3 component
 
 //DONE 0- print the user I want to chat with
 //DONE 1 - is for get back and display the user info
-//1.1 - add the get back and make it functionnal 
+//1.1 - add the get back and make it functionnal
 //2 - is for the chat history and receving new msg
 //3 - is for the sending msg
-const ChatHeader = ({ user,onBack }) => {
+const ChatHeader = ({ user, onBack }) => {
   console.log("user in that chat header ", user);
-
-  // const onBack = () => {
-  //   console.log("going back ... ");
-  // };
 
   return (
     <div className="chat-header">
@@ -26,7 +23,18 @@ const ChatHeader = ({ user,onBack }) => {
   );
 };
 
+//TODO
+//1- send the an HTTP request with the current user and user that we talk to
 const ChatHistory = ({ messages }) => {
+  useEffect(() => {
+    const fatchingChat = async()=>{
+
+      const data = {
+        participant : "omar"
+      }
+      const fetchChat = await axiosInstance.post('chat-history',data)
+    }
+  }, []);
   return (
     <div className="chat-history">
       {messages.map((message, index) => (
@@ -63,7 +71,7 @@ const ChatInput = ({ sendMessage }) => {
   );
 };
 
-const Chat = ({ selectedMatch, selectedConversation,onBack }) => {
+const Chat = ({ selectedMatch, selectedConversation, onBack }) => {
   const user = selectedMatch
     ? {
         username: selectedMatch.username,

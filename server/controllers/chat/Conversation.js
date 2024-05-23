@@ -8,7 +8,7 @@ const Conversation = require("../../models/Conversations");
 // For each conversation, fetch the last 10 messages
 
 //
-const chatHistory = async (req, res, next) => {
+const conversationHistory = async (req, res, next) => {
   try {
     const { username } = req.user;
     // Step 1: Find the user by username
@@ -61,6 +61,5 @@ const chatHistory = async (req, res, next) => {
   }
 };
 
-module.exports = chatHistory;
+module.exports = conversationHistory;
 
-module.exports = chatHistory;

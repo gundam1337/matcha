@@ -1,13 +1,15 @@
 const express = require("express");
 const verifyTokens = require("../controllers/auth/verifyTokens")
 const router = express.Router();
-const FetchChatHistory =  require ("../controllers/chat/chatHistory")
-
+const FetchConversation =  require ("../controllers/chat/Conversation")
+const FetchChatHistory = require("../controllers/chat/ChatHistory")
 
 router.use(verifyTokens);
 
 
-router.get('/chat_history', verifyTokens,FetchChatHistory);
+router.get('/conversation', verifyTokens,FetchConversation);
+
+router.get('/chat-history',verifyTokens,FetchChatHistory)
 
 
 

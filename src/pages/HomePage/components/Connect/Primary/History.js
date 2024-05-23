@@ -7,7 +7,7 @@ const History = ({ onSelectConversation }) => {
   useEffect(() => {
     const fetchMessages = async () => {
       try {
-        const response = await axiosInstance.get("/chat_history");
+        const response = await axiosInstance.get("/conversation");
         console.log("response ->", response.data);
 
         // Process the response data to extract necessary information
