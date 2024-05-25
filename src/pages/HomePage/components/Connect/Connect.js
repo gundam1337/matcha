@@ -19,7 +19,7 @@ const Category = () => {
   };
 
   const handleMatchClick = (match) => {
-    console.log(match);
+    //console.log(match);
     setSelectedMatch(match);
     setActiveCategory('primary'); // Switch to the Primary component to show the clicked match
   };

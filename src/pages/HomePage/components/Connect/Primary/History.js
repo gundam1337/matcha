@@ -8,7 +8,7 @@ const History = ({ onSelectConversation }) => {
     const fetchMessages = async () => {
       try {
         const response = await axiosInstance.get("/conversation");
-        console.log("response ->", response.data);
+        //console.log("response ->", response.data);
 
         // Process the response data to extract necessary information
         const processedConversations = response.data.map((conversation) => {

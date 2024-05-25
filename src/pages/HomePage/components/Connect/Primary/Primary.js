@@ -5,7 +5,7 @@ import Chat from "./Chat";
 
 
 const Primary = ({ selectedMatch }) => {
-  console.log("selectedMatch", selectedMatch);
+  //console.log("selectedMatch", selectedMatch);
   const [selectedConversation, setSelectedConversation] = useState(null);
 
   const handleSelectConversation = (conversation) => {
@@ -16,7 +16,7 @@ const Primary = ({ selectedMatch }) => {
     setSelectedConversation(null);
   };
 
-  console.log("conversation:", selectedConversation);
+  //console.log("conversation:", selectedConversation);
 
   return (
     <div>

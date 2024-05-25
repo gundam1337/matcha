@@ -53,7 +53,7 @@ const conversationHistory = async (req, res, next) => {
       };
     });
 
-    console.log("formattedConversations", formattedConversations);
+    //console.log("formattedConversations", formattedConversations);
 
     res.send(formattedConversations);
   } catch (error) {

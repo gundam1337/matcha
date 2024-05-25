@@ -6,10 +6,9 @@ const FetchChatHistory = require("../controllers/chat/ChatHistory")
 
 router.use(verifyTokens);
 
-
 router.get('/conversation', verifyTokens,FetchConversation);
 
-router.get('/chat-history',verifyTokens,FetchChatHistory)
+router.post('/chat-history',verifyTokens,FetchChatHistory)
 
 
 

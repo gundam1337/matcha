@@ -23,7 +23,7 @@ const Matches = ({ setMatchesCount ,onMatchClick}) => {
 
     eventSource.onmessage = (event) => {
       const eventData = JSON.parse(event.data); //
-      console.log("data ", eventData);
+      //console.log("data ", eventData);
       if (eventData.type === "existed_match") {
         setMatches(eventData.details); // Set the initial matches
       } else if (eventData.type === "new_match") {
