@@ -55,7 +55,7 @@ const conversationHistory = async (req, res, next) => {
 
     //console.log("formattedConversations", formattedConversations);
 
-    res.send(formattedConversations);
+    res.status(200).json(formattedConversations);
   } catch (error) {
     res.status(500).send("Server error");
   }

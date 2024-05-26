@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import axiosInstance from "../../../../../../API/axiosConfig";
 
-//TODO : send a request to the server that contains the curent user and chatpartner
+
 
 const ChatHistory = ({ messages }) => {
   const [page, setPage] = useState(1);

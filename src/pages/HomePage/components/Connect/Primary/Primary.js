@@ -1,6 +1,6 @@
 import React, {useState } from "react";
 
-import History from "./History";
+import ConversationHistory from "./History";
 import Chat from "./Chat";
 
 
@@ -27,7 +27,7 @@ const Primary = ({ selectedMatch }) => {
           onBack={handleBack}
         />
       ) : (
-        <History onSelectConversation={handleSelectConversation} />
+        <ConversationHistory onSelectConversation={handleSelectConversation} />
       )}
     </div>
   );

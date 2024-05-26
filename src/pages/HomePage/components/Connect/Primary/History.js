@@ -7,9 +7,11 @@ const History = ({ onSelectConversation }) => {
   useEffect(() => {
     const fetchMessages = async () => {
       try {
-        const response = await axiosInstance.get("/conversation");
-      console.log("conversations memebers ->", response.data);
 
+        console.log("the request has sent in the conversation History")
+        const response = await axiosInstance.get("/conversation");
+
+        
         // Process the response data to extract necessary information
         const processedConversations = response.data.map((conversation) => {
           const lastMessage = conversation.lastMessage;

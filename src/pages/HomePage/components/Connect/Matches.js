@@ -21,6 +21,7 @@ const Matches = ({ setMatchesCount ,onMatchClick}) => {
     )}`;
     const eventSource = new EventSource(url);
 
+    console.log("the request has sent in the Matches")
     eventSource.onmessage = (event) => {
       const eventData = JSON.parse(event.data); //
       //console.log("data ", eventData);
