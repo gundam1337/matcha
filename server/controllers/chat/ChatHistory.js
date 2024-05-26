@@ -8,26 +8,61 @@ const Conversation = require("../../models/Conversations");
 
 //output : the messages + thier times 
 //the format of the out put should look like something like this 
-//  {
-//    
-//
-//  }
+
+
 
 //TODO use the pagination to get the messageses 
 
 const chatHistory = async (req, res, next) => {
   try {
-
-    const { currentUser, chatPartner,page  } = req.query; 
+    const { currentUser, chatPartner,page  } = req.body; 
     const limit = 10;
+    const pageNumber = parseInt(page) || 1;
 
+    //Fetch User IDs
+    const currentUserDoc = await User.findOne({ username: currentUser });
+    const chatPartnerDoc = await User.findOne({ username: chatPartner });
 
-    const messages = await Message.find({ conversation: conversationId })
-    .sort({ timestamp: -1 }) // Sort messages by timestamp descending
-    .skip((page - 1) * limit) // Calculate the number of documents to skip
-    .limit(parseInt(limit, 10)); // Limit the number of documents returned
-    
-    res.status(200).send("I got the message");
+    if (!currentUserDoc || !chatPartnerDoc) {
+      return res.status(404).send('User not found');
+    }
+
+    const currentUserId = currentUserDoc._id;
+    const chatPartnerId = chatPartnerDoc._id;
+
+    // Find the conversation
+    const conversation = await Conversation.findOne({
+      participants: { $all: [currentUserId, chatPartnerId] }
+    });
+
+    if (!conversation) {
+      return res.status(404).send('Conversation not found');
+    }
+
+    const messages = await Message.find({ conversation: conversation._id })
+    .sort({ timestamp: -1 })
+    .skip((pageNumber - 1) * limit)
+    .limit(limit)
+    .populate('sender', 'username'); // Populate sender with username
+
+    // Format the output
+    const formattedMessages = messages.map(msg => ({
+      sender: { username: msg.sender.username },
+      text: msg.text,
+      timestamp: msg.timestamp,
+    }));
+
+    const response = {
+      participants: [
+        { username: currentUser },
+        { username: chatPartner },
+      ],
+      messages: formattedMessages,
+      lastUpdated: conversation.lastUpdated,
+    };
+
+    console.log(JSON.stringify(response, null, 4));
+    res.status(200).send("object the contains the ");
   } catch (error) {
     res.status(500).send("Server error");
   }
@@ -35,39 +70,6 @@ const chatHistory = async (req, res, next) => {
 
 
 
-// {
-//   "conversationId": "60d0fe4f5311236168a109ca",
-//   "participants": [
-//     {
-//       "userId": "60d0fe4f5311236168a109cb",
-//       "username": "JohnDoe"
-//     },
-//     {
-//       "userId": "60d0fe4f5311236168a109cc",
-//       "username": "JaneSmith"
-//     }
-//   ],
-//   "messages": [
-//     {
-//       "messageId": "60d0fe4f5311236168a109cd",
-//       "sender": {
-//         "userId": "60d0fe4f5311236168a109cb",
-//         "username": "JohnDoe"
-//       },
-//       "text": "Hello, how are you?",
-//       "timestamp": "2023-05-25T12:34:56.789Z"
-//     },
-//     {
-//       "messageId": "60d0fe4f5311236168a109ce",
-//       "sender": {
-//         "userId": "60d0fe4f5311236168a109cc",
-//         "username": "JaneSmith"
-//       },
-//       "text": "I'm good, thank you! How about you?",
-//       "timestamp": "2023-05-25T12:35:56.789Z"
-//     }
-//   ],
-//   "lastUpdated": "2023-05-25T12:36:56.789Z"
-// }
+
 
 module.exports = chatHistory;
