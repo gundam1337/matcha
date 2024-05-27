@@ -1,21 +1,26 @@
-import React, { useState, useMemo } from "react";
+import React, { useState, useContext } from "react";
+
+import { MyProvider ,MyContext}  from '../../../../context/NavigationProvider'
 
 import Likes from "./Likes";
 import Matches from "./Matches";
 import Primary from "./Primary/Primary";
-import SearchBar from "./SearchBar";
+// import SearchBar from "./SearchBar";
 
+//TODO : 
 const Category = () => {
   const [activeCategory, setActiveCategory] = useState("primary");
   const [matchesCount, setMatchesCount] = useState(0);
-  const [selectedMatch, setSelectedMatch] = useState(null);
+  //const [selectedMatch, setSelectedMatch] = useState(null);
+
+  const {selectedMatched, setSelectedMatched} = useContext(MyContext)
 
   const handleCategoryClick = (category) => {
     setActiveCategory(category);
   };
 
   const handleMatchClick = (match) => {
-    setSelectedMatch(match);
+    setSelectedMatched(match);
     setActiveCategory("primary"); // Switch to the Primary component to show the clicked match
   };
 
@@ -47,7 +52,7 @@ const Category = () => {
         <div
           style={{ display: activeCategory === "primary" ? "block" : "none" }}
         >
-          <Primary selectedMatch={selectedMatch} />
+          <Primary/>
         </div>
         <div
           style={{ display: activeCategory === "matches" ? "block" : "none" }}
@@ -80,7 +85,9 @@ const Connect = () => {
 
         {/*  CATEGORY */}
         {/* TODO  use the context API to  */}
+        <MyProvider>
         <Category></Category>
+        </MyProvider>
       </div>
     </div>
   );

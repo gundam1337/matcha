@@ -1,12 +1,15 @@
-import React, {useState } from "react";
-
+import React, { useState ,useContext,useEffect} from "react";
 import ConversationHistory from "./History";
 import Chat from "./Chat";
+import {MyContext} from '../../../../../context/NavigationProvider'; 
 
-
-const Primary = ({ selectedMatch }) => {
-  //console.log("selectedMatch", selectedMatch);
+const Primary = () => {
   const [selectedConversation, setSelectedConversation] = useState(null);
+  const {selectedMatched,setSelectedMatched} = useContext(MyContext) 
+
+  useEffect(()=>{
+    console.log("from the useEffect of useContext",selectedMatched)
+  },[selectedMatched])
 
   const handleSelectConversation = (conversation) => {
     setSelectedConversation(conversation);
@@ -14,24 +17,34 @@ const Primary = ({ selectedMatch }) => {
 
   const handleBack = () => {
     setSelectedConversation(null);
+    setSelectedMatched(null)
   };
 
-  //console.log("conversation:", selectedConversation);
+  const showChat = selectedMatched || selectedConversation ;
+
+
+  const styles = {
+    visible: {
+      display: 'block'
+    },
+    hidden: {
+      display: 'none'
+    }
+  };
 
   return (
     <div>
-      {selectedMatch || selectedConversation ? (
-        <Chat 
-          selectedMatch={selectedMatch} 
-          selectedConversation={selectedConversation} 
+      <div style={showChat ? styles.visible : styles.hidden}>
+        <Chat
+          selectedConversation={selectedConversation}
           onBack={handleBack}
         />
-      ) : (
+      </div>
+      <div style={!showChat ? styles.visible : styles.hidden}>
         <ConversationHistory onSelectConversation={handleSelectConversation} />
-      )}
+      </div>
     </div>
   );
 };
-
 
 export default Primary;

@@ -1,14 +1,17 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect ,useContext} from "react";
 import { useSelector } from "react-redux";
+import {MyContext} from '../../../../context/NavigationProvider'
 
-//FIXME : each time I render this compon
 //FIXME : the CROS problem in the request 
 //useMemo for prevantiong the re-rendring 
+//Instead I used some CSS 
 
 
-const Matches = ({ setMatchesCount ,onMatchClick}) => {
+const Matches = ({ setMatchesCount }) => {
   const [matches, setMatches] = useState([]); // State to store the matches
   const user = useSelector((state) => state.data);
+
+  const {selectedMatched, setSelectedMatched } = useContext(MyContext);
 
   useEffect(() => {
     const username = user?.data?.username; // Safely access username
@@ -49,7 +52,7 @@ const Matches = ({ setMatchesCount ,onMatchClick}) => {
   return (
     <div className="scrollable-container">
       {matches.map((match) => (
-        <div key={match.username} className="message" onClick={() => onMatchClick(match)}>
+        <div key={match.username} className="message" onClick={() => setSelectedMatched(match)}>
           <div className="profile-photo">
             <img src={match.profilePicture[0]} alt={match.firstName} />
           </div>

@@ -1,12 +1,13 @@
 import { IoArrowBackCircleSharp } from "react-icons/io5";
 
 
+
 //FIXME : the get back is not working in the case of the conv
 //1.1 - add the get back and make it functionnal
 
 const ChatHeader = ({ user, onBack }) => {
     //console.log("user in that chat header ", user);
-  
+    
     return (
       <div className="chat-header">
         <IoArrowBackCircleSharp onClick={onBack} className="back-icon" />

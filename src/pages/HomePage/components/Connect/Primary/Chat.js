@@ -1,26 +1,34 @@
-import React, { useState, useEffect } from "react";
-import axiosInstance from "../../../../../API/axiosConfig";
+import React, { useState, useEffect, useContext } from "react";
+import { MyContext } from '../../../../../context/NavigationProvider';
 
-import ChatHeader from "./chat/ChatHeader"
-import ChatHistory from "./chat/ChatHistory"
-import ChatInput from "./chat/ChatInput"
+import ChatHeader from "./chat/ChatHeader";
+import ChatHistory from "./chat/ChatHistory";
 
+const Chat = ({ selectedConversation, onBack }) => {
+  const { selectedMatched } = useContext(MyContext);
+  const [user, setUser] = useState({});
 
-const Chat = ({ selectedMatch, selectedConversation, onBack }) => {
+  useEffect(() => {
+    console.log("from the useEffect of useContext", selectedMatched);
 
-  const user = selectedMatch
-    ? {
-        username: selectedMatch.username,
-        photo: selectedMatch.profilePicture[0],
-      }
-    : selectedConversation
-    ? {
-        username: selectedConversation.senderName,
-        photo: selectedConversation.profilePhoto,
-      }
-    : {};
+    const newUser = selectedMatched
+      ? {
+          username: selectedMatched.username,
+          photo: Array.isArray(selectedMatched.profilePicture) && selectedMatched.profilePicture.length > 0
+            ? selectedMatched.profilePicture[0]
+            : null,
+        }
+      : selectedConversation
+      ? {
+          username: selectedConversation.senderName,
+          photo: selectedConversation.profilePhoto,
+        }
+      : {};
 
-  user.status = "online";
+    newUser.status = "online";
+    setUser(newUser);
+  }, [selectedMatched, selectedConversation]);
+
   return (
     <div>
       <ChatHeader user={user} onBack={onBack}></ChatHeader>
