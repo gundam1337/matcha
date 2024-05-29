@@ -5,13 +5,19 @@ const logger = require("./utils/logger");
 const http = require("http"); // Required for Socket.IO
 const socketIo = require("socket.io"); // Import Socket.IO
 const handleSocketConnection = require("./routes/handleSocketConnection");
-
 const jwt = require("jsonwebtoken");
+
+// Initialize Socket.IO server
+const initializeSocketIO = require("../server/sockets/socketHandlers");
+
+
+
 require("dotenv").config({ path: "./config.env" });
 const accessTokenSecret = process.env.ACCESS_TOKEN_SECRET;
 
 const startServer = async () => {
   try {
+    //connect to DB
     await mongoose.connect(config.uri, {
       useNewUrlParser: true,
       useUnifiedTopology: true,
@@ -22,36 +28,8 @@ const startServer = async () => {
     const httpServer = http.createServer(app);
 
     // Initialize Socket.IO server
-    const io = socketIo(httpServer, {
-      cors: {
-        origin: ["http://localhost:3000", "http://localhost:3001"], // Adjust according to your security requirements
-        methods: ["GET", "POST"],
-      },
-    });
 
-    io.use((socket, next) => {
-      const token = socket.handshake.auth.token;
-      jwt.verify(
-        token,
-        accessTokenSecret,
-        { ignoreExpiration: true },
-        (err, decoded) => {
-          if (err) return next(new Error("Authentication error"));
-
-          socket.decoded = decoded;
-          // console.log("decode is = ", decoded);
-          next();
-        }
-      );
-    });
-
-    // Socket.IO connection handler
-    io.on("connection", (socket) => {
-      logger.info(`New client connected: ${socket.id}`);
-
-      handleSocketConnection(socket);
-      socket.on("disconnect", () => {});
-    });
+    initializeSocketIO(httpServer);
 
     // Listen on the created HTTP server
     httpServer.listen(config.port, () => {

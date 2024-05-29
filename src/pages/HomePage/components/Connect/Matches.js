@@ -5,7 +5,7 @@ import {MyContext} from '../../../../context/NavigationProvider'
 //FIXME : the CROS problem in the request 
 //useMemo for prevantiong the re-rendring 
 //Instead I used some CSS 
-
+//TODO if the user click on the match I should put the the div on invisible mode 
 
 const Matches = ({ setMatchesCount }) => {
   const [matches, setMatches] = useState([]); // State to store the matches

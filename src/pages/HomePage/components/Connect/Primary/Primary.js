@@ -21,6 +21,9 @@ const Primary = () => {
   };
 
   const showChat = selectedMatched || selectedConversation ;
+  console.log("in primary the selectedMatched is ",selectedMatched);
+  console.log("showChat is :",showChat)
+
 
 
   const styles = {

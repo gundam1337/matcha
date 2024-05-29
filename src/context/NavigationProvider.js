@@ -4,7 +4,7 @@ import React, { createContext, useState } from 'react';
 const MyContext = createContext();
 
 const MyProvider = ({ children }) => {
-  const [selectedMatched, setSelectedMatched] = useState({});
+  const [selectedMatched, setSelectedMatched] = useState(null);
 
   return (
     <MyContext.Provider value={{ selectedMatched, setSelectedMatched }}>

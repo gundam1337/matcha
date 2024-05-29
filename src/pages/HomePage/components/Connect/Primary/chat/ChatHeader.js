@@ -1,7 +1,4 @@
 import { IoArrowBackCircleSharp } from "react-icons/io5";
-
-
-
 //FIXME : the get back is not working in the case of the conv
 //1.1 - add the get back and make it functionnal
 
