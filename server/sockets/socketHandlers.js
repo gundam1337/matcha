@@ -1,7 +1,10 @@
 const socketIo = require("socket.io");
 const jwt = require("jsonwebtoken");
+
+
 const handleSocketConnection = require("../routes/handleSocketConnection");
 const logger = require("../utils/logger");
+const handleChatMessage = require("../controllers/messaging/handleChatMessage")
 
 const initializeSocketIO = (httpServer) => {
   const io = socketIo(httpServer, {
@@ -13,7 +16,9 @@ const initializeSocketIO = (httpServer) => {
 
   const accessTokenSecret = process.env.ACCESS_TOKEN_SECRET;
 
-  io.use((socket, next) => {
+  //NOTE : This middleware function is used to authenticate socket connections in a Socket.IO application.
+
+  /*io.use((socket, next) => {
     const token = socket.handshake.auth.token;
     jwt.verify(
       token,
@@ -26,14 +31,19 @@ const initializeSocketIO = (httpServer) => {
         next();
       }
     );
-  });
+   });*/
 
   io.on("connection", (socket) => {
     logger.info(`New client connected: ${socket.id}`);
 
+    //this is for the notification system
     handleSocketConnection(socket);
     
+    //create a one for the message
+    handleChatMessage(socket)
+
     socket.on("disconnect", () => {
+      //
       logger.info(`Client disconnected: ${socket.id}`);
     });
   });

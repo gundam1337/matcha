@@ -61,8 +61,8 @@ const chatHistory = async (req, res, next) => {
       lastUpdated: conversation.lastUpdated,
     };
 
-    console.log(JSON.stringify(response, null, 4));
-    res.status(200).send("object the contains the ");
+    //console.log(JSON.stringify(response, null, 4));
+    res.status(200).send(response);
   } catch (error) {
     res.status(500).send("Server error");
   }

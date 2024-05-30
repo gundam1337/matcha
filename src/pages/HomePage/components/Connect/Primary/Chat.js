@@ -3,6 +3,7 @@ import { MyContext } from '../../../../../context/NavigationProvider';
 
 import ChatHeader from "./chat/ChatHeader";
 import ChatHistory from "./chat/ChatHistory";
+import ChatSender from "./chat/ChatSender";
 
 const Chat = ({ selectedConversation, onBack }) => {
   const { selectedMatched } = useContext(MyContext);
@@ -33,6 +34,7 @@ const Chat = ({ selectedConversation, onBack }) => {
     <div>
       <ChatHeader user={user} onBack={onBack}></ChatHeader>
       <ChatHistory></ChatHistory>
+      <ChatSender></ChatSender>
     </div>
   );
 };

@@ -27,8 +27,7 @@ const startServer = async () => {
     // Create HTTP server from the Express app
     const httpServer = http.createServer(app);
 
-    // Initialize Socket.IO server
-
+    //NOTE:  Initialize Socket.IO server
     initializeSocketIO(httpServer);
 
     // Listen on the created HTTP server

@@ -1,7 +1,8 @@
 import React, { useState, useEffect } from "react";
 import axiosInstance from "../../../../../../API/axiosConfig";
 
-
+//TODO  : render the messages
+//TODO  : listent to new messages using the socket IO 
 
 const ChatHistory = ({ messages }) => {
   const [page, setPage] = useState(1);

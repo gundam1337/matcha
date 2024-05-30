@@ -12,6 +12,8 @@ import BottomNavBar from "./components/BottomNavBar/BottomNavBar";
 
 import socketService from "../../API/SocketService"
 
+//FIXME : this code cause the re-rendring
+
 function HomePage() {
   const dispatch = useDispatch();
  
