@@ -40,7 +40,7 @@ const initializeSocketIO = (httpServer) => {
     handleSocketConnection(socket);
     
     //create a one for the message
-    handleChatMessage(socket)
+    handleChatMessage(socket,io)
 
     socket.on("disconnect", () => {
       //
