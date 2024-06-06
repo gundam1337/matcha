@@ -19,6 +19,9 @@ const ChatSender = () => {
       timestamp: new Date().toISOString(),
     };
     socket.emit("sendMessage", messageObject);
+
+
+    //listen to a new messages 
     setMessageInput("");
   };
 
