@@ -53,59 +53,73 @@ async function storeMessage(senderUsername, recipientUsername, messageText, time
 }
 
 const handleChatMessage = (socket, io) => {
-  socket.on("sendMessage", async (messageObject, callback) => {
-    const { sender, recipient, message, timestamp } = messageObject;
+  // socket.on("sendMessage", async (messageObject, callback) => {
+  //   const { sender, recipient, message, timestamp } = messageObject;
 
+  //   console.log("sendMessage ",sender, recipient, message, timestamp)
+  //   // try {
+  //   //   // Check if the recipient is connected by checking if they are in a room
+  //   //   const isRecipientConnected = io.sockets.adapter.rooms.has(recipient);
+
+  //   //   if (isRecipientConnected) {
+  //   //     // If the recipient is connected, emit the message to their room with an acknowledgement
+  //   //     io.to(recipient).emit(
+  //   //       "newMessage",
+  //   //       {
+  //   //         sender,
+  //   //         message,
+  //   //         timestamp,
+  //   //       },
+  //   //       (acknowledgement) => {
+  //   //         if (acknowledgement) {
+  //   //           // Message was successfully received by the recipient
+  //   //           // Save the message in the database using a promise
+  //   //           storeMessage(sender, recipient, message, timestamp)
+  //   //             .then(() => {
+  //   //               // Message stored successfully
+  //   //               // Invoke the callback to acknowledge the message sending
+  //   //               callback({ success: true });
+  //   //             })
+  //   //             .catch((error) => {
+  //   //               // Error occurred while storing the message
+  //   //               console.error("Error storing message:", error);
+  //   //               callback({ success: false, error: "Error storing message" });
+  //   //             });
+  //   //         } else {
+  //   //           // Message was not acknowledged by the recipient
+  //   //           callback({
+  //   //             success: false,
+  //   //             error: "Message not acknowledged by the recipient",
+  //   //           });
+  //   //         }
+  //   //       }
+  //   //     );
+  //   //   } else {
+  //   //     // If the recipient is not connected, handle the situation accordingly
+  //   //     console.log(
+  //   //       `Recipient ${recipient} is not connected. Message not sent.`
+  //   //     );
+  //   //     callback({ success: false, error: "Recipient not connected" });
+  //   //   }
+  //   // } catch (error) {
+  //   //   console.error("Error handling chat message:", error);
+  //   //   callback({
+  //   //     success: false,
+  //   //     error: "An error occurred while sending the message",
+  //   //   });
+  //   // }
+  // });
+
+  socket.on("sendMessage", (messageString) => {
     try {
-      // Check if the recipient is connected by checking if they are in a room
-      const isRecipientConnected = io.sockets.adapter.rooms.has(recipient);
-
-      if (isRecipientConnected) {
-        // If the recipient is connected, emit the message to their room with an acknowledgement
-        io.to(recipient).emit(
-          "newMessage",
-          {
-            sender,
-            message,
-            timestamp,
-          },
-          (acknowledgement) => {
-            if (acknowledgement) {
-              // Message was successfully received by the recipient
-              // Save the message in the database using a promise
-              storeMessage(sender, recipient, message, timestamp)
-                .then(() => {
-                  // Message stored successfully
-                  // Invoke the callback to acknowledge the message sending
-                  callback({ success: true });
-                })
-                .catch((error) => {
-                  // Error occurred while storing the message
-                  console.error("Error storing message:", error);
-                  callback({ success: false, error: "Error storing message" });
-                });
-            } else {
-              // Message was not acknowledged by the recipient
-              callback({
-                success: false,
-                error: "Message not acknowledged by the recipient",
-              });
-            }
-          }
-        );
-      } else {
-        // If the recipient is not connected, handle the situation accordingly
-        console.log(
-          `Recipient ${recipient} is not connected. Message not sent.`
-        );
-        callback({ success: false, error: "Recipient not connected" });
-      }
+      const messageObject = JSON.parse(messageString);
+      console.log("Received message:", messageObject);
+      // Access the properties of messageObject
+      const { sender, recipient, message, timestamp } = messageObject;
+      // Process the message
+      // ...
     } catch (error) {
-      console.error("Error handling chat message:", error);
-      callback({
-        success: false,
-        error: "An error occurred while sending the message",
-      });
+      console.error("Error parsing JSON message:", error);
     }
   });
 };
