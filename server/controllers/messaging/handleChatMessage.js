@@ -82,7 +82,11 @@ async function storeMessage(
 
       await client.set(conversationKey, JSON.stringify(conversation));
     } else {
-      conversation = JSON.parse(conversation);
+      // Parse the conversation object from JSON string
+      const parsedConversation = JSON.parse(conversation);
+
+      // Create a new Mongoose document instance from the parsed conversation object
+      conversation = new Conversation(parsedConversation);
     }
 
     // Create a new message
@@ -102,7 +106,7 @@ async function storeMessage(
     await conversation.save();
 
     // Update the cached conversation data in Redis
-    //await client.set(conversationKey, JSON.stringify(conversation));
+    await client.set(conversationKey, JSON.stringify(conversation));
 
     console.log("Message stored successfully");
   } catch (error) {
@@ -113,16 +117,18 @@ async function storeMessage(
 
 const handleChatMessage = (socket, io) => {
   socket.on("sendMessage", async (messageString, callback) => {
-    //that beacuse I am using the postman
     const messageObject = JSON.parse(messageString);
     const { sender, recipient, message, timestamp } = messageObject;
 
     console.log("sendMessage ", sender, recipient, message, timestamp);
     try {
+      // Save the message in the database
+      await storeMessage(sender, recipient, message, timestamp);
+
       // Check if the recipient is connected by checking if they are in a room
       const isRecipientConnected = io.sockets.adapter.rooms.has(recipient);
       if (isRecipientConnected) {
-        console.log(`the user ${recipient} is connected `);
+        console.log(`the user ${recipient} is connected`);
         // If the recipient is connected, emit the message to their room with an acknowledgement
         io.to(recipient).emit(
           "newMessage",
@@ -134,18 +140,8 @@ const handleChatMessage = (socket, io) => {
           (acknowledgement) => {
             if (acknowledgement) {
               // Message was successfully received by the recipient
-              // Save the message in the database using a promise
-              storeMessage(sender, recipient, message, timestamp)
-                .then(() => {
-                  // Message stored successfully
-                  // Invoke the callback to acknowledge the message sending
-                  //callback({ success: true });
-                })
-                .catch((error) => {
-                  // Error occurred while storing the message
-                  console.error("Error storing message:", error);
-                  //callback({ success: false, error: "Error storing message" });
-                });
+              // Invoke the callback to acknowledge the message sending
+              //callback({ success: true });
             } else {
               // Message was not acknowledged by the recipient
               // callback({
@@ -158,16 +154,16 @@ const handleChatMessage = (socket, io) => {
       } else {
         // If the recipient is not connected, handle the situation accordingly
         console.log(
-          `Recipient ${recipient} is not connected. Message not sent.`
+          `Recipient ${recipient} is not connected. Message saved in the database.`
         );
-        //callback({ success: false, error: "Recipient not connected" });
+        //callback({ success: true, message: "Message saved in the database" });
       }
     } catch (error) {
       console.error("Error handling chat message:", error);
-      callback({
-        success: false,
-        error: "An error occurred while sending the message",
-      });
+      // callback({
+      //   success: false,
+      //   error: "An error occurred while sending the message",
+      // });
     }
   });
 };
