@@ -2,6 +2,8 @@ const socketIo = require("socket.io");
 const jwt = require("jsonwebtoken");
 
 
+const connectedUsers = new Map();
+
 const handleSocketConnection = require("../routes/handleSocketConnection");
 const logger = require("../utils/logger");
 const handleChatMessage = require("../controllers/messaging/handleChatMessage")
@@ -36,6 +38,12 @@ const initializeSocketIO = (httpServer) => {
   io.on("connection", (socket) => {
     logger.info(`New client connected: ${socket.id}`);
 
+    //this part is for testing 
+    const username = socket.handshake.query.username;
+    console.log(`User ${username} connected with socket ID ${socket.id}`);
+
+    // Store the username in the socket object for later use
+    socket.join(username);
     //this is for the notification system
     handleSocketConnection(socket);
     

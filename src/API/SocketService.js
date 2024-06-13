@@ -9,9 +9,14 @@ class SocketService {
   }
 
   connect() {
+    const username = "john_doe";
     this.socket = io(SOCKET_URL, {
       auth: {
         token: accessToken,
+      },
+      //this is only for testing 
+      query: {
+        username: username,
       },
     });
     this.socket.on("connect", () => console.log("Connected to server"));

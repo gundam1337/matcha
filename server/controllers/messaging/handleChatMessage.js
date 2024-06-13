@@ -1,32 +1,88 @@
 const Conversation = require("../../models/Conversations");
-const User = require ("../../models/user")
+const User = require("../../models/user");
 const Message = require("../../models/Messages");
 
-async function storeMessage(senderUsername, recipientUsername, messageText, timestamp) {
+const redis = require("redis");
+const client = redis.createClient({
+  host: "localhost", // Replace with your Redis host
+  port: 6379, // Replace with your Redis port
+});
+
+client.on("connect", () => {
+  console.log("Connected to Redis");
+});
+
+client.on("error", (error) => {
+  console.error("Redis connection error:", error);
+});
+
+//TODO create a function that cach the converstation
+
+async function storeMessage(
+  senderUsername,
+  recipientUsername,
+  messageText,
+  timestamp
+) {
   try {
-    //USE THE redis to store the these two users for a 1 houre 
-    // Find the sender and recipient users by their usernames
-    const [senderUser, recipientUser] = await Promise.all([
-      User.findOne({ username: senderUsername }),
-      User.findOne({ username: recipientUsername }),
+    if (!client.isOpen) {
+      await client.connect();
+    }
+    // Create Redis keys for sender and recipient user data
+    const senderUserKey = `user:${senderUsername}`;
+    const recipientUserKey = `user:${recipientUsername}`;
+
+    // Check if the sender and recipient user data is cached in Redis
+    let [senderUser, recipientUser] = await Promise.all([
+      client.get(senderUserKey),
+      client.get(recipientUserKey),
     ]);
 
-    if (!senderUser || !recipientUser) {
-      throw new Error('Sender or recipient not found');
+    // If sender user data is not cached, fetch it from the database and cache it
+    if (!senderUser) {
+      senderUser = await User.findOne({ username: senderUsername });
+      if (!senderUser) {
+        throw new Error("Sender not found");
+      }
+      await client.set(senderUserKey, JSON.stringify(senderUser));
+    } else {
+      senderUser = JSON.parse(senderUser);
     }
 
-    // Check if a conversation between the sender and recipient already exists
-    //NOTE : this not important 
-    let conversation = await Conversation.findOne({
-      participants: { $all: [senderUser._id, recipientUser._id] },
-    });
+    // If recipient user data is not cached, fetch it from the database and cache it
+    if (!recipientUser) {
+      recipientUser = await User.findOne({ username: recipientUsername });
+      if (!recipientUser) {
+        throw new Error("Recipient not found");
+      }
+      await client.set(recipientUserKey, JSON.stringify(recipientUser));
+    } else {
+      recipientUser = JSON.parse(recipientUser);
+    }
 
-    // If the conversation doesn't exist, create a new one
+    // Create a Redis key for the conversation data
+    const conversationKey = `conversation:${senderUser._id}:${recipientUser._id}`;
+
+    // Check if the conversation data is cached in Redis
+    let conversation = await client.get(conversationKey);
+
+    // If the conversation data is not cached, fetch it from the database and cache it
     if (!conversation) {
-      conversation = new Conversation({
-        participants: [senderUser._id, recipientUser._id],
+      conversation = await Conversation.findOne({
+        participants: { $all: [senderUser._id, recipientUser._id] },
       });
-      await conversation.save();
+
+      // If the conversation doesn't exist, create a new one
+      if (!conversation) {
+        conversation = new Conversation({
+          participants: [senderUser._id, recipientUser._id],
+        });
+        await conversation.save();
+      }
+
+      await client.set(conversationKey, JSON.stringify(conversation));
+    } else {
+      conversation = JSON.parse(conversation);
     }
 
     // Create a new message
@@ -45,81 +101,73 @@ async function storeMessage(senderUsername, recipientUsername, messageText, time
     conversation.lastUpdated = timestamp;
     await conversation.save();
 
-    console.log('Message stored successfully');
+    // Update the cached conversation data in Redis
+    //await client.set(conversationKey, JSON.stringify(conversation));
+
+    console.log("Message stored successfully");
   } catch (error) {
-    console.error('Error storing message:', error);
+    console.error("Error storing message:", error);
     throw error;
   }
 }
 
 const handleChatMessage = (socket, io) => {
-  // socket.on("sendMessage", async (messageObject, callback) => {
-  //   const { sender, recipient, message, timestamp } = messageObject;
+  socket.on("sendMessage", async (messageString, callback) => {
+    //that beacuse I am using the postman
+    const messageObject = JSON.parse(messageString);
+    const { sender, recipient, message, timestamp } = messageObject;
 
-  //   console.log("sendMessage ",sender, recipient, message, timestamp)
-  //   // try {
-  //   //   // Check if the recipient is connected by checking if they are in a room
-  //   //   const isRecipientConnected = io.sockets.adapter.rooms.has(recipient);
-
-  //   //   if (isRecipientConnected) {
-  //   //     // If the recipient is connected, emit the message to their room with an acknowledgement
-  //   //     io.to(recipient).emit(
-  //   //       "newMessage",
-  //   //       {
-  //   //         sender,
-  //   //         message,
-  //   //         timestamp,
-  //   //       },
-  //   //       (acknowledgement) => {
-  //   //         if (acknowledgement) {
-  //   //           // Message was successfully received by the recipient
-  //   //           // Save the message in the database using a promise
-  //   //           storeMessage(sender, recipient, message, timestamp)
-  //   //             .then(() => {
-  //   //               // Message stored successfully
-  //   //               // Invoke the callback to acknowledge the message sending
-  //   //               callback({ success: true });
-  //   //             })
-  //   //             .catch((error) => {
-  //   //               // Error occurred while storing the message
-  //   //               console.error("Error storing message:", error);
-  //   //               callback({ success: false, error: "Error storing message" });
-  //   //             });
-  //   //         } else {
-  //   //           // Message was not acknowledged by the recipient
-  //   //           callback({
-  //   //             success: false,
-  //   //             error: "Message not acknowledged by the recipient",
-  //   //           });
-  //   //         }
-  //   //       }
-  //   //     );
-  //   //   } else {
-  //   //     // If the recipient is not connected, handle the situation accordingly
-  //   //     console.log(
-  //   //       `Recipient ${recipient} is not connected. Message not sent.`
-  //   //     );
-  //   //     callback({ success: false, error: "Recipient not connected" });
-  //   //   }
-  //   // } catch (error) {
-  //   //   console.error("Error handling chat message:", error);
-  //   //   callback({
-  //   //     success: false,
-  //   //     error: "An error occurred while sending the message",
-  //   //   });
-  //   // }
-  // });
-
-  socket.on("sendMessage", (messageString) => {
+    console.log("sendMessage ", sender, recipient, message, timestamp);
     try {
-      const messageObject = JSON.parse(messageString);
-      console.log("Received message:", messageObject);
-      // Access the properties of messageObject
-      const { sender, recipient, message, timestamp } = messageObject;
-      // Process the message
-      // ...
+      // Check if the recipient is connected by checking if they are in a room
+      const isRecipientConnected = io.sockets.adapter.rooms.has(recipient);
+      if (isRecipientConnected) {
+        console.log(`the user ${recipient} is connected `);
+        // If the recipient is connected, emit the message to their room with an acknowledgement
+        io.to(recipient).emit(
+          "newMessage",
+          {
+            sender,
+            message,
+            timestamp,
+          },
+          (acknowledgement) => {
+            if (acknowledgement) {
+              // Message was successfully received by the recipient
+              // Save the message in the database using a promise
+              storeMessage(sender, recipient, message, timestamp)
+                .then(() => {
+                  // Message stored successfully
+                  // Invoke the callback to acknowledge the message sending
+                  //callback({ success: true });
+                })
+                .catch((error) => {
+                  // Error occurred while storing the message
+                  console.error("Error storing message:", error);
+                  //callback({ success: false, error: "Error storing message" });
+                });
+            } else {
+              // Message was not acknowledged by the recipient
+              // callback({
+              //   success: false,
+              //   error: "Message not acknowledged by the recipient",
+              // });
+            }
+          }
+        );
+      } else {
+        // If the recipient is not connected, handle the situation accordingly
+        console.log(
+          `Recipient ${recipient} is not connected. Message not sent.`
+        );
+        //callback({ success: false, error: "Recipient not connected" });
+      }
     } catch (error) {
-      console.error("Error parsing JSON message:", error);
+      console.error("Error handling chat message:", error);
+      callback({
+        success: false,
+        error: "An error occurred while sending the message",
+      });
     }
   });
 };
