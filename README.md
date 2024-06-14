@@ -51,5 +51,5 @@ The back-end of this application is built using Node.js and Express.js, providin
 -**Form Validation**: Express Validator is used for validating and sanitizing user input, ensuring data integrity and preventing potential security vulnerabilities.
 -**Secure Headers**: Helmet is employed to secure Express applications by setting various HTTP headers, enhancing the application's security posture.
 -**Faker.js**: Faker.js is included to generate realistic fake data for testing and development purposes, providing a convenient way to populate the application with sample data.
-
+-**Firebase Admin SDK**: The Firebase Admin SDK is integrated to store user images securely. It provides a reliable and scalable storage solution, allowing users to upload and retrieve their profile pictures efficiently.
 
