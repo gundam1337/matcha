@@ -1,1 +1,0 @@
-[View the README in HTML format](README.html)
