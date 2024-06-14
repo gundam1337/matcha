@@ -1,76 +1,159 @@
-##Matcha - Full Stack Chat Web App
-![Screenshot from 2024-06-14 14-05-11](https://github.com/gundam1337/matcha/assets/108071018/c217f59f-2839-4825-859a-07eaf6fde115)
-![Screenshot from 2024-06-14 14-06-10](https://github.com/gundam1337/matcha/assets/108071018/eabd0d1a-7d09-454e-87b4-de4e70a24eb9)
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Matcha - Full Stack Chat Web App</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      line-height: 1.6;
+      margin: 0;
+      padding: 20px;
+    }
+    h1 {
+      color: #4CAF50;
+      text-align: center;
+    }
+    h2 {
+      color: #333;
+      border-bottom: 1px solid #ccc;
+      padding-bottom: 10px;
+    }
+    ul {
+      padding-left: 20px;
+    }
+    code {
+      background-color: #f4f4f4;
+      padding: 2px 4px;
+      border-radius: 4px;
+    }
+    .container {
+      max-width: 800px;
+      margin: 0 auto;
+    }
+    .section {
+      margin-bottom: 30px;
+    }
+    .logo {
+      display: block;
+      margin: 0 auto;
+      max-width: 200px;
+    }
+    .badge {
+      display: inline-block;
+      margin-right: 5px;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <img src="https://example.com/logo.png" alt="Matcha Logo" class="logo">
 
+    <h1>🌿 Matcha - Full Stack Chat Web App</h1>
 
-Matcha is a full-stack chat web application that allows users to communicate with each other in real-time. This project showcases my skills in developing a complete web application from scratch, utilizing various technologies and frameworks for both the front-end and back-end.
-🌟 Features
+    <div class="section">
+      <img src="https://img.shields.io/badge/license-MIT-blue.svg" alt="License" class="badge">
+      <img src="https://img.shields.io/github/stars/your-username/matcha.svg" alt="GitHub Stars" class="badge">
+      <img src="https://img.shields.io/github/issues/your-username/matcha.svg" alt="GitHub Issues" class="badge">
+    </div>
 
-⚡ Real-time chat functionality
-🔒 User authentication and authorization
-📱 Responsive and intuitive user interface
-🌐 Integration with Socket.IO for instant messaging
-🛡️ Secure backend API with Express.js and MongoDB
-🚀 Deployment-ready configuration
+    <p>Matcha is a full-stack chat web application that allows users to communicate with each other in real-time. This project showcases my skills in developing a complete web application from scratch, utilizing various technologies and frameworks for both the front-end and back-end.</p>
 
-🛠️ Technologies Used
-🖥️ Front-end
+    <div class="section">
+      <h2>🌟 Features</h2>
+      <ul>
+        <li>⚡ Real-time chat functionality</li>
+        <li>🔒 User authentication and authorization</li>
+        <li>📱 Responsive and intuitive user interface</li>
+        <li>🌐 Integration with Socket.IO for instant messaging</li>
+        <li>🛡️ Secure backend API with Express.js and MongoDB</li>
+        <li>🚀 Deployment-ready configuration</li>
+      </ul>
+    </div>
 
-React.js: A popular JavaScript library for building user interfaces
-Redux: A predictable state container for managing application state
-Axios: A promise-based HTTP client for making API requests
-Socket.IO Client: A library for enabling real-time, bidirectional communication between the browser and the server
-Formik: A library for building forms in React
-Yup: A JavaScript schema validation library
-Styled Components: A CSS-in-JS library for styling React components
-Leaflet: An open-source JavaScript library for mobile-friendly interactive maps
-React Router: A routing library for navigating between different pages in a React application
+    <div class="section">
+      <h2>🛠️ Technologies Used</h2>
+      <h3>🖥️ Front-end</h3>
+      <ul>
+        <li><strong>React.js</strong>: A popular JavaScript library for building user interfaces</li>
+        <li><strong>Redux</strong>: A predictable state container for managing application state</li>
+        <li><strong>Axios</strong>: A promise-based HTTP client for making API requests</li>
+        <li><strong>Socket.IO Client</strong>: A library for enabling real-time, bidirectional communication between the browser and the server</li>
+        <li><strong>Formik</strong>: A library for building forms in React</li>
+        <li><strong>Yup</strong>: A JavaScript schema validation library</li>
+        <li><strong>Styled Components</strong>: A CSS-in-JS library for styling React components</li>
+        <li><strong>Leaflet</strong>: An open-source JavaScript library for mobile-friendly interactive maps</li>
+        <li><strong>React Router</strong>: A routing library for navigating between different pages in a React application</li>
+      </ul>
 
-⚙️ Back-end
+      <h3>⚙️ Back-end</h3>
+      <ul>
+        <li><strong>Node.js</strong>: A JavaScript runtime for executing server-side code</li>
+        <li><strong>Express.js</strong>: A fast and minimalist web application framework for Node.js</li>
+        <li><strong>MongoDB</strong>: A NoSQL database for storing and retrieving data</li>
+        <li><strong>Mongoose</strong>: An Object Data Modeling (ODM) library for MongoDB and Node.js</li>
+        <li><strong>Socket.IO</strong>: A library for enabling real-time, bidirectional communication between the server and the clients</li>
+        <li><strong>JSON Web Token (JWT)</strong>: A compact and self-contained way of securely transmitting information between parties as a JSON object</li>
+        <li><strong>Bcrypt</strong>: A library for hashing passwords</li>
+        <li><strong>Nodemailer</strong>: A module for sending emails from Node.js applications</li>
+        <li><strong>Helmet</strong>: A middleware for securing Express applications by setting various HTTP headers</li>
+        <li><strong>Winston</strong>: A logger for Node.js applications</li>
+        <li><strong>Yup</strong>: A JavaScript schema validation library</li>
+      </ul>
+    </div>
 
-Node.js: A JavaScript runtime for executing server-side code
-Express.js: A fast and minimalist web application framework for Node.js
-MongoDB: A NoSQL database for storing and retrieving data
-Mongoose: An Object Data Modeling (ODM) library for MongoDB and Node.js
-Socket.IO: A library for enabling real-time, bidirectional communication between the server and the clients
-JSON Web Token (JWT): A compact and self-contained way of securely transmitting information between parties as a JSON object
-Bcrypt: A library for hashing passwords
-Nodemailer: A module for sending emails from Node.js applications
-Helmet: A middleware for securing Express applications by setting various HTTP headers
-Winston: A logger for Node.js applications
-Yup: A JavaScript schema validation library
+    <div class="section">
+      <h2>📥 Installation</h2>
+      <ol>
+        <li>
+          Clone the repository:
+          <pre><code>git clone https://github.com/your-username/matcha.git</code></pre>
+        </li>
+        <li>
+          Navigate to the project directory:
+          <pre><code>cd matcha</code></pre>
+        </li>
+        <li>
+          Install the dependencies for both the front-end and back-end:
+          <pre><code>npm install
+cd server &amp;&amp; npm install</code></pre>
+        </li>
+        <li>
+          Set up the environment variables:
+          <ul>
+            <li>Create a <code>.env</code> file in the root directory and provide the necessary configuration (e.g., database connection URL, JWT secret key).</li>
+          </ul>
+        </li>
+        <li>
+          Start the development server:
+          <pre><code>npm run dev</code></pre>
+          <p>This command will concurrently run the front-end and back-end servers.</p>
+        </li>
+        <li>
+          Open your browser and visit <code>http://localhost:3000</code> to see the application running.
+        </li>
+      </ol>
+    </div>
 
-📥 Installation
+    <div class="section">
+      <h2>🚀 Usage</h2>
+      <ol>
+        <li>Register a new account or log in with an existing account.</li>
+        <li>Start chatting with other users in real-time.</li>
+        <li>Explore the various features of the chat application, such as user profiles, message history, and online user status.</li>
+      </ol>
+    </div>
 
-Clone the repository:
-Copy codegit clone https://github.com/your-username/matcha.git
+    <div class="section">
+      <h2>🤝 Contributing</h2>
+      <p>Contributions are welcome! If you find any bugs or have suggestions for improvements, please open an issue or submit a pull request. Make sure to follow the existing code style and guidelines.</p>
+    </div>
 
-Navigate to the project directory:
-Copy codecd matcha
-
-Install the dependencies for both the front-end and back-end:
-Copy codenpm install
-cd server && npm install
-
-Set up the environment variables:
-
-Create a .env file in the root directory and provide the necessary configuration (e.g., database connection URL, JWT secret key).
-
-
-Start the development server:
-Copy codenpm run dev
-This command will concurrently run the front-end and back-end servers.
-Open your browser and visit http://localhost:3000 to see the application running.
-
-🚀 Usage
-
-Register a new account or log in with an existing account.
-Start chatting with other users in real-time.
-Explore the various features of the chat application, such as user profiles, message history, and online user status.
-
-🤝 Contributing
-Contributions are welcome! If you find any bugs or have suggestions for improvements, please open an issue or submit a pull request. Make sure to follow the existing code style and guidelines.
-📄 License
-This project is licensed under the MIT License.
-
-Feel free to customize the styling further based on your preferences and the specific details of your project. You can add more sections, include screenshots or GIFs, and use different emoji or formatting to make your README even more engaging and informative.
+    <div class="section">
+      <h2>📄 License</h2>
+      <p>This project is licensed under the <a href="LICENSE">MIT License</a>.</p>
+    </div>
+  </div>
+</body>
+</html>
