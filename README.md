@@ -28,15 +28,44 @@ Matcha is a full-stack chat web application that allows users to communicate wit
 
 ### 🖥️ Front-end
 
-- **React.js**: A popular JavaScript library for building user interfaces
-- **Redux**: A predictable state container for managing application state
-- **Axios**: A promise-based HTTP client for making API requests
-- **Socket.IO Client**: A library for enabling real-time, bidirectional communication between the browser and the server
-- **Formik**: A library for building forms in React
-- **Yup**: A JavaScript schema validation library
-- **Styled Components**: A CSS-in-JS library for styling React components
-- **Leaflet**: An open-source JavaScript library for mobile-friendly interactive maps
-- **React Router**: A routing library for navigating between different pages in a React application
+<table>
+  <tr>
+    <td><strong>React.js</strong></td>
+    <td>A popular JavaScript library for building user interfaces</td>
+  </tr>
+  <tr>
+    <td><strong>Redux</strong></td>
+    <td>A predictable state container for managing application state</td>
+  </tr>
+  <tr>
+    <td><strong>Axios</strong></td>
+    <td>A promise-based HTTP client for making API requests</td>
+  </tr>
+  <tr>
+    <td><strong>Socket.IO Client</strong></td>
+    <td>A library for enabling real-time, bidirectional communication between the browser and the server</td>
+  </tr>
+  <tr>
+    <td><strong>Formik</strong></td>
+    <td>A library for building forms in React</td>
+  </tr>
+  <tr>
+    <td><strong>Yup</strong></td>
+    <td>A JavaScript schema validation library</td>
+  </tr>
+  <tr>
+    <td><strong>Styled Components</strong></td>
+    <td>A CSS-in-JS library for styling React components</td>
+  </tr>
+  <tr>
+    <td><strong>Leaflet</strong></td>
+    <td>An open-source JavaScript library for mobile-friendly interactive maps</td>
+  </tr>
+  <tr>
+    <td><strong>React Router</strong></td>
+    <td>A routing library for navigating between different pages in a React application</td>
+  </tr>
+</table>
 
 ### ⚙️ Back-end
 🚀 Back-end Features
