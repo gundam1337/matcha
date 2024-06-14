@@ -1,21 +1,17 @@
 
 # 🌿 Matcha - Full Stack Chat Web App (MERN)
 
-<table>
+table>
   <tr>
-    <td colspan="2" align="center"><strong>Laptop Version</strong></td>
+    <td align="center"><strong>Mobile Version</strong></td>
+    <td align="center"><strong>Laptop Version</strong></td>
   </tr>
   <tr>
-    <td colspan="2" align="center">
-      <img src="https://github.com/gundam1337/matcha/assets/108071018/5e5b11ee-2893-44ec-a28d-6e343f83b950" alt="Laptop Screenshot">
+    <td align="center">
+      <img src="https://github.com/gundam1337/matcha/assets/108071018/3a54b5b5-9676-438e-a711-7e59d192f37f" alt="Mobile Screenshot" width="300">
     </td>
-  </tr>
-  <tr>
-    <td colspan="2" align="center"><strong>Mobile Version</strong></td>
-  </tr>
-  <tr>
-    <td colspan="2" align="center">
-      <img src="https://github.com/gundam1337/matcha/assets/108071018/3a54b5b5-9676-438e-a711-7e59d192f37f" alt="Mobile Screenshot">
+    <td align="center">
+      <img src="https://github.com/gundam1337/matcha/assets/108071018/5e5b11ee-2893-44ec-a28d-6e343f83b950" alt="Laptop Screenshot" width="500">
     </td>
   </tr>
 </table>
