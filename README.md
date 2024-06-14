@@ -45,6 +45,3 @@ Matcha is a full-stack chat web application that allows users to communicate wit
 - **Winston**: A logger for Node.js applications
 - **Yup**: A JavaScript schema validation library
 
-## 📥 Installation
-
-1. Clone the repository:
