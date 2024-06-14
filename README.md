@@ -1,7 +1,7 @@
 
 # 🌿 Matcha - Full Stack Chat Web App (MERN)
 
-table>
+<table>
   <tr>
     <td align="center"><strong>Mobile Version</strong></td>
     <td align="center"><strong>Laptop Version</strong></td>
