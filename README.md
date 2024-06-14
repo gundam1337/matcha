@@ -14,6 +14,24 @@
       <img src="https://github.com/gundam1337/matcha/assets/108071018/5e5b11ee-2893-44ec-a28d-6e343f83b950" alt="Laptop Screenshot" width="500">
     </td>
   </tr>
+
+  <tr>
+    <td align="center">
+      <img src="https://github.com/gundam1337/matcha/assets/108071018/6b1272fb-25e7-4c8c-aa29-a2ce011ecbc7" alt="Mobile Screenshot" width="300">
+    </td>
+    <td align="center">
+      <img src="https://github.com/gundam1337/matcha/assets/108071018/c408b5ef-c315-4ecd-8630-1c05fdc962c7" alt="Laptop Screenshot" width="500">
+    </td>
+  </tr>
+
+  <tr>
+    <td align="center">
+      <img src="https://github.com/gundam1337/matcha/assets/108071018/1f677142-6e17-4246-b80d-f02d6ba173a5" alt="Mobile Screenshot" width="300">
+    </td>
+    <td align="center">
+      <img src="https://github.com/gundam1337/matcha/assets/108071018/d00e2ca8-5cdc-4e68-adac-9905178dcd94" alt="Laptop Screenshot" width="500">
+    </td>
+  </tr>
 </table>
 
 
