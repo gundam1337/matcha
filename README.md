@@ -42,14 +42,46 @@ Matcha is a full-stack chat web application that allows users to communicate wit
 🚀 Back-end Features
 The back-end of this application is built using Node.js and Express.js, providing a robust and scalable foundation. It incorporates the following features and technologies:
 
-- **Real-time Communication**: Leveraging the power of Socket.IO, the back-end enables real-time communication between the server and clients. This allows for instant messaging, live updates, and seamless interaction within the application.
-- **Authentication and Security**: User authentication and security are handled using JSON Web Tokens (JWT) and bcrypt for password hashing. This ensures secure user registration, login, and authorization processes.
--**Database Management**: MongoDB is used as the database solution, with Mongoose as the ODM (Object Data Modeling) library. This allows for efficient storage, retrieval, and manipulation of application data.
--**Caching with Redis**: Redis is employed as an in-memory data store for caching frequently accessed data. By caching key information, the application achieves improved performance and reduced latency.
--**Email Functionality**: Nodemailer is integrated to enable email sending capabilities. This allows for user notifications, password reset functionality, and other email-based features.
--**Logging and Monitoring**: Winston is utilized for logging purposes, providing comprehensive logging capabilities for monitoring application behavior and debugging.
--**Form Validation**: Express Validator is used for validating and sanitizing user input, ensuring data integrity and preventing potential security vulnerabilities.
--**Secure Headers**: Helmet is employed to secure Express applications by setting various HTTP headers, enhancing the application's security posture.
--**Faker.js**: Faker.js is included to generate realistic fake data for testing and development purposes, providing a convenient way to populate the application with sample data.
--**Firebase Admin SDK**: The Firebase Admin SDK is integrated to store user images securely. It provides a reliable and scalable storage solution, allowing users to upload and retrieve their profile pictures efficiently.
+<table>
+  <tr>
+    <td><strong>Real-time Communication</strong></td>
+    <td>Leveraging the power of Socket.IO, the back-end enables real-time communication between the server and clients. This allows for instant messaging, live updates, and seamless interaction within the application.</td>
+  </tr>
+  <tr>
+    <td><strong>Authentication and Security</strong></td>
+    <td>User authentication and security are handled using JSON Web Tokens (JWT) and bcrypt for password hashing. This ensures secure user registration, login, and authorization processes.</td>
+  </tr>
+  <tr>
+    <td><strong>Database Management</strong></td>
+    <td>MongoDB is used as the database solution, with Mongoose as the ODM (Object Data Modeling) library. This allows for efficient storage, retrieval, and manipulation of application data.</td>
+  </tr>
+  <tr>
+    <td><strong>Caching with Redis</strong></td>
+    <td>Redis is employed as an in-memory data store for caching frequently accessed data. By caching key information, the application achieves improved performance and reduced latency.</td>
+  </tr>
+  <tr>
+    <td><strong>Email Functionality</strong></td>
+    <td>Nodemailer is integrated to enable email sending capabilities. This allows for user notifications, password reset functionality, and other email-based features.</td>
+  </tr>
+  <tr>
+    <td><strong>Logging and Monitoring</strong></td>
+    <td>Winston is utilized for logging purposes, providing comprehensive logging capabilities for monitoring application behavior and debugging.</td>
+  </tr>
+  <tr>
+    <td><strong>Form Validation</strong></td>
+    <td>Express Validator is used for validating and sanitizing user input, ensuring data integrity and preventing potential security vulnerabilities.</td>
+  </tr>
+  <tr>
+    <td><strong>Secure Headers</strong></td>
+    <td>Helmet is employed to secure Express applications by setting various HTTP headers, enhancing the application's security posture.</td>
+  </tr>
+  <tr>
+    <td><strong>Faker.js</strong></td>
+    <td>Faker.js is included to generate realistic fake data for testing and development purposes, providing a convenient way to populate the application with sample data.</td>
+  </tr>
+  <tr>
+    <td><strong>Firebase Admin SDK</strong></td>
+    <td>The Firebase Admin SDK is integrated to store user images securely. It provides a reliable and scalable storage solution, allowing users to upload and retrieve their profile pictures efficiently.</td>
+  </tr>
+</table>
 
