@@ -1,8 +1,16 @@
 
 # 🌿 Matcha - Full Stack Chat Web App
 
-![Screenshot from 2024-06-14 14-05-11](https://github.com/gundam1337/matcha/assets/108071018/5e5b11ee-2893-44ec-a28d-6e343f83b950)
-![Screenshot from 2024-06-14 14-06-10](https://github.com/gundam1337/matcha/assets/108071018/3a54b5b5-9676-438e-a711-7e59d192f37f)
+<table>
+  <tr>
+    <td>
+      <img src="https://github.com/gundam1337/matcha/assets/108071018/5e5b11ee-2893-44ec-a28d-6e343f83b950" alt="Screenshot 1">
+    </td>
+    <td>
+      <img src="https://github.com/gundam1337/matcha/assets/108071018/3a54b5b5-9676-438e-a711-7e59d192f37f" alt="Screenshot 2">
+    </td>
+  </tr>
+</table>
 
 
 Matcha is a full-stack chat web application that allows users to communicate with each other in real-time. This project showcases my skills in developing a complete web application from scratch, utilizing various technologies and frameworks for both the front-end and back-end.
